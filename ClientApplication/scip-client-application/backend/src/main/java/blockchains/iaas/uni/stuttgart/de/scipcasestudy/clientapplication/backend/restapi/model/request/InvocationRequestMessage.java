@@ -1,11 +1,8 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.model.request;
 
 import java.util.List;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.Parameter;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.Parameter;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 

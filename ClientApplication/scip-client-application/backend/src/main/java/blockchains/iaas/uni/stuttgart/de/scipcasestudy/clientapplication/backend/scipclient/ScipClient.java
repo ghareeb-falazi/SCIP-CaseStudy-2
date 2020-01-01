@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.exceptions.BalException;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.exceptions.ExceptionCode;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.InvocationRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.SubscriptionRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.InvokeResponse;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.SubscribeResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.model.request.InvocationRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.model.request.SubscriptionRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.InvokeResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.SubscribeResponse;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.JsonRpcIdGenerator;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.correlation.AsyncRequestCorrelationManager;
 import com.github.arteam.simplejsonrpc.client.JsonRpcClient;

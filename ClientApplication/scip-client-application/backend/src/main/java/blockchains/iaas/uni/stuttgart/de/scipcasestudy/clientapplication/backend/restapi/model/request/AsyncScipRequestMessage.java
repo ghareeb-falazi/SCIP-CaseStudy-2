@@ -1,14 +1,17 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.model.request;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-@SuperBuilder
+@Setter
 @Getter
-public abstract class AbstractScipResponse {
+@SuperBuilder
+public abstract class AsyncScipRequestMessage extends ScipRequestMessage {
     protected String correlationIdentifier;
+    protected String callbackUrl;
 
     public String toString() {
         try {

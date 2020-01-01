@@ -1,6 +1,6 @@
 package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.jsonrpc.ClientApplicationService;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.ClientApplicationService;
 import com.github.arteam.simplejsonrpc.server.JsonRpcServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

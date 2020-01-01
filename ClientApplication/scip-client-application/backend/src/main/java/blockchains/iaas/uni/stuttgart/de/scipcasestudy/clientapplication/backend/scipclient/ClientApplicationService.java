@@ -1,10 +1,10 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.jsonrpc;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient;
 
 import java.util.List;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.GenericResponseMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.Occurrence;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.Parameter;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.GenericResponseMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.Occurrence;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.Parameter;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.correlation.AsyncRequestCorrelationManager;
 import com.github.arteam.simplejsonrpc.core.annotation.JsonRpcMethod;
 import com.github.arteam.simplejsonrpc.core.annotation.JsonRpcOptional;
