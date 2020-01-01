@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.LogEntry;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.LogEntry;
 
 public class LogsHandler {
     private static LogsHandler instance;

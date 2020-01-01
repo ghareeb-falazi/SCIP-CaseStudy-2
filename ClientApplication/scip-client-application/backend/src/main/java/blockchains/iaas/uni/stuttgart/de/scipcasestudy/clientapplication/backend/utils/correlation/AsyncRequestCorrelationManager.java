@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.GenericResponseMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.GenericResponseMessage;
 
 public class AsyncRequestCorrelationManager {
     private static AsyncRequestCorrelationManager instance;

@@ -1,8 +1,8 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.model.request;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request;
 
 import java.util.List;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.Parameter;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Parameter;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 

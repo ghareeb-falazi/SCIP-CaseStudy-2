@@ -7,9 +7,9 @@ import java.util.concurrent.ExecutionException;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.model.request.InvocationRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.InvokeResponse;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.Parameter;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.InvocationRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.InvokeResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Parameter;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.ScipClient;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;

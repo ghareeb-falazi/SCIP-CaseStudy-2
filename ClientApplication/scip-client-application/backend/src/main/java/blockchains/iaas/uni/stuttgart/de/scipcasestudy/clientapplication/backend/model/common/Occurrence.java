@@ -9,7 +9,7 @@
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
 
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common;
 
 import java.util.List;
 

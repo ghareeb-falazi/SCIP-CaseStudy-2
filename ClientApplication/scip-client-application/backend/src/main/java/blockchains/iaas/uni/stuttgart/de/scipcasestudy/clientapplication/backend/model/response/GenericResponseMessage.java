@@ -1,7 +1,9 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response;
 
 import java.util.List;
 
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Occurrence;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Parameter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -7,10 +7,12 @@ import java.util.concurrent.Executors;
 
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.exceptions.BalException;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.exceptions.ExceptionCode;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.model.request.InvocationRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.model.request.SubscriptionRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.InvokeResponse;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.response.SubscribeResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.InvocationRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.QueryRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.SubscriptionRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.InvokeResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.QueryResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.SubscribeResponse;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.JsonRpcIdGenerator;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.correlation.AsyncRequestCorrelationManager;
 import com.github.arteam.simplejsonrpc.client.JsonRpcClient;
@@ -109,6 +111,22 @@ public class ScipClient {
         });
     }
 
+    public CompletableFuture<QueryResponse> query(String scl, QueryRequestMessage request) {
+        log.info("Sending Qurey request message to gateway at: {}", scl);
+        CompletableFuture<QueryResponse> result = new CompletableFuture<>();
+
+        this.getExecutorService().submit(() -> {
+            try {
+                QueryResponse response = this.performQuery(scl, request);
+                result.complete(response);
+            } catch (Exception e) {
+                result.completeExceptionally(e);
+            }
+        });
+
+        return result;
+    }
+
     private void performInvoke(String scl, InvocationRequestMessage request) throws BalException {
         try {
             final String METHOD_NAME = "Invoke";
@@ -158,6 +176,32 @@ public class ScipClient {
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new BalException("Unable to subscribe to events. Reason: " + e.getMessage(), ExceptionCode.InvocationError);
+        }
+    }
+
+    private QueryResponse performQuery(String scl, QueryRequestMessage request) throws BalException {
+        try {
+            final String METHOD_NAME = "Query";
+            JsonRpcClient client = new JsonRpcClient(createNewTransport(scl));
+
+            QueryResponse response = (QueryResponse) client.createRequest()
+                    .method(METHOD_NAME)
+                    .id(JsonRpcIdGenerator.getInstance().getNextId())
+                    .param("parameters", request.getParameters())
+                    .param("eventIdentifier", request.getEventIdentifier())
+                    .param("filter", request.getFilter())
+                    .param("timeframe", request.getTimeframe())
+                    .execute();
+
+            log.info("Received: {} from gateway at {}", response, scl);
+
+            return response;
+        } catch (JsonRpcException e) {
+            log.error(e.getMessage());
+            throw new BalException(e.getErrorMessage().getMessage(), e.getErrorMessage().getCode());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new BalException("Unable to query events. Reason: " + e.getMessage(), ExceptionCode.InvocationError);
         }
     }
 
