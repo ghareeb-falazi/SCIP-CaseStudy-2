@@ -44,8 +44,8 @@ contract Seafood {
     /* packageId => retailerName */
     mapping (string => string) inventory;
     
-    /* list of packageId */
-    string[] sales;
+    /* list of packageId sold by all retailer */
+    string [] sales;
     
     /****************** Events  ********************/
     

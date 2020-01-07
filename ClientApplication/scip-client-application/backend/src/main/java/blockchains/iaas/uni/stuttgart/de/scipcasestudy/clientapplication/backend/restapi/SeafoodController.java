@@ -1,11 +1,15 @@
 package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.rest.RegisterFishRequest;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.rest.RegisterInInventoryRequest;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.rest.RegisterPackageRequest;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.rest.RegisterSellingRequest;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.rest.RegisterShipmentRequest;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.rest.RegisterTransportationRequest;
+import java.util.ArrayList;
+import java.util.List;
+
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.rest.Fish;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.rest.FishPackage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.rest.FishShipment;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.rest.InventoryEntry;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.rest.PackageSelling;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.rest.PackageTransportation;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.rest.SeafoodProvenance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -26,38 +30,80 @@ public class SeafoodController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/seafood/fish", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerCapturedFish(RegisterFishRequest request) {
+    @RequestMapping(value = "/seafood/fish", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public String registerCapturedFish(Fish request) {
         return "OK";
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/seafood/shipment", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerShipment(RegisterShipmentRequest request) {
+    @RequestMapping(value = "/seafood/fish", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<Fish> getAllRegisteredFish() {
+        return new ArrayList<>();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/seafood/shipment", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public String registerShipment(FishShipment request) {
         return "OK";
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/seafood/package", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerPackage(RegisterPackageRequest request) {
+    @RequestMapping(value = "/seafood/shipment", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<FishShipment> getAllRegisteredShipments() {
+        return new ArrayList<>();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/seafood/package", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public String registerPackage(FishPackage request) {
         return "OK";
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/seafood/transportation", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerTransportation(RegisterTransportationRequest request) {
+    @RequestMapping(value = "/seafood/package", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<FishPackage> getAllRegisteredPackages() {
+        return new ArrayList<>();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/seafood/transportation", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public String registerTransportation(PackageTransportation request) {
         return "OK";
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/seafood/inventory", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerInInventory(RegisterInInventoryRequest request) {
+    @RequestMapping(value = "/seafood/transportation", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<PackageTransportation> getAllRegisteredTransportations() {
+        return new ArrayList<>();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/seafood/inventory", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public String registerInInventory(InventoryEntry request) {
         return "OK";
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/seafood/selling", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerSelling(RegisterSellingRequest request) {
+    @RequestMapping(value = "/seafood/inventory", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<InventoryEntry> getAllPackagesRegisteredInInventories() {
+        return new ArrayList<>();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/seafood/selling", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public String registerSelling(PackageSelling request) {
         return "OK";
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/seafood/selling", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public List<PackageSelling> getAllSoldPackages() {
+        return new ArrayList<>();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/seafood/provenance", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    public SeafoodProvenance retrieveProvenance(String packageId) {
+
     }
 }
