@@ -22,7 +22,7 @@
 // const infuraKey = "fj4jll3k.....";
 //
 // const fs = require('fs');
-const mnemonic = 'smart contract composition';
+// const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
   /**
@@ -42,11 +42,11 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
-    development: {
-     host: "172.16.238.12",     // Localhost (default: none)
-     port: 8545,            // Standard Ethereum port (default: none)
-     network_id: "*",       // Any network (default: none)
-    },
+    // development: {
+      host: "172.16.238.12",     // Localhost (default: none)
+      port: 8545,            // Standard Ethereum port (default: none)
+      network_id: "*",       // Any network (default: none)
+    // },
 
     // Another network with more advanced options...
     // advanced: {

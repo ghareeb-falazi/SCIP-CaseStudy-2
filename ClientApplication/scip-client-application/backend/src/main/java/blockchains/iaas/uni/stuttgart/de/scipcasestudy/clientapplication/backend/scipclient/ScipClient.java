@@ -7,9 +7,9 @@ import java.util.concurrent.Executors;
 
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.exceptions.BalException;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.exceptions.ExceptionCode;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.InvocationRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.QueryRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.SubscriptionRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip.InvocationRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip.QueryRequestMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip.SubscriptionRequestMessage;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.InvokeResponse;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.QueryResponse;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.SubscribeResponse;

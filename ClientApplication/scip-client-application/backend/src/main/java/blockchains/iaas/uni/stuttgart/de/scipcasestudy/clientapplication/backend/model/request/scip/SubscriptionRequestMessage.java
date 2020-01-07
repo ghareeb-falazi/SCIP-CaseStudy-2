@@ -1,4 +1,4 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip;
 
 import java.util.List;
 

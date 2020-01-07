@@ -1,4 +1,4 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
