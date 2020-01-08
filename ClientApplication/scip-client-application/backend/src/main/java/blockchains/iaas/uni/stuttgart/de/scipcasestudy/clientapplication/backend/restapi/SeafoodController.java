@@ -104,6 +104,6 @@ public class SeafoodController {
     @CrossOrigin
     @RequestMapping(value = "/seafood/provenance", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     public SeafoodProvenance retrieveProvenance(String packageId) {
-
+        return new SeafoodProvenance();
     }
 }
