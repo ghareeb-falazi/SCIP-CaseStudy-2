@@ -1,4 +1,4 @@
-# Smart Contract Invocation Protocol (SCIP) Case Study
+# Smart Contract Invocation Protocol (SCIP) Supply Chains Case Study
 
 ## Introduction
 
