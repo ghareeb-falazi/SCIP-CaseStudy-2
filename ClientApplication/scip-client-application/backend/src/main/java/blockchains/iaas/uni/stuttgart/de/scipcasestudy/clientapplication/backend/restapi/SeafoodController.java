@@ -35,14 +35,13 @@ public class SeafoodController {
     private final String callbackUrl;
 
     public SeafoodController() {
-        // todo set to the production address!
-        scl = UrlProvider.getInstance().getSeafoodBalUrl() + "/webapi?blockchain=ethereum&blockchain-id=eth-0&address=0xEfA31950097772ceE947d0Ce67927b375997220e";
-        callbackUrl = UrlProvider.getInstance().getCallbackUrl();
+        scl = SclProvider.getInstance().getSeafoodScl();
+        callbackUrl = SclProvider.getInstance().getCallbackUrl();
     }
 
     @CrossOrigin
     @RequestMapping(value = "/seafood/fish", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerCapturedFish(Fish request) {
+    public String registerCapturedFish(@RequestBody Fish request) {
         return this.performScipInvocation("registerFish", request);
     }
 
@@ -59,7 +58,7 @@ public class SeafoodController {
 
     @CrossOrigin
     @RequestMapping(value = "/seafood/shipment", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerShipment(FishShipment request) {
+    public String registerShipment(@RequestBody FishShipment request) {
         return this.performScipInvocation("registerShipment", request);
     }
 
@@ -76,7 +75,7 @@ public class SeafoodController {
 
     @CrossOrigin
     @RequestMapping(value = "/seafood/package", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerPackage(FishPackage request) {
+    public String registerPackage(@RequestBody FishPackage request) {
         return this.performScipInvocation("registerPackage", request);
     }
 
@@ -93,7 +92,7 @@ public class SeafoodController {
 
     @CrossOrigin
     @RequestMapping(value = "/seafood/transportation", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerTransportation(PackageTransportation request) {
+    public String registerTransportation(@RequestBody PackageTransportation request) {
         return this.performScipInvocation("registerTransportation", request);
     }
 
@@ -110,7 +109,7 @@ public class SeafoodController {
 
     @CrossOrigin
     @RequestMapping(value = "/seafood/inventory", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public String registerInInventory(InventoryEntry request) {
+    public String registerInInventory(@RequestBody InventoryEntry request) {
         return this.performScipInvocation("registerInInventory", request);
     }
 

@@ -184,13 +184,14 @@ public class ScipClient {
             final String METHOD_NAME = "Query";
             JsonRpcClient client = new JsonRpcClient(createNewTransport(scl));
 
-            QueryResponse response = (QueryResponse) client.createRequest()
+            QueryResponse response = client.createRequest()
                     .method(METHOD_NAME)
                     .id(JsonRpcIdGenerator.getInstance().getNextId())
                     .param("parameters", request.getParameters())
                     .param("eventIdentifier", request.getEventIdentifier())
                     .param("filter", request.getFilter())
                     .param("timeframe", request.getTimeframe())
+                    .returnAs(QueryResponse.class)
                     .execute();
 
             log.info("Received: {} from gateway at {}", response, scl);

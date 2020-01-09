@@ -6,13 +6,17 @@ import java.util.List;
 
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Parameter;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.ScdlTypes;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class FishShipment extends SupplyChainAction {
-    private List<String> fishIds;
+    private List<String> fishIds = null;
     private String toLocation;
     private String shipmentCompanyName;
 
@@ -43,7 +47,7 @@ public class FishShipment extends SupplyChainAction {
     @Override
     public List<Parameter> getAsParameters() {
         List<Parameter> result = new ArrayList<>();
-        String paramValue = fishIds.stream().reduce((fishId1, fishId2) -> fishId1 + "," + fishId2).orElse("");
+        String paramValue = fishIds == null ? "" : fishIds.stream().reduce((fishId1, fishId2) -> fishId1 + "," + fishId2).orElse("");
         result.add(Parameter.builder().type(ScdlTypes.STRING).name("fishIds").value(paramValue).build());
         result.add(Parameter.builder().type(ScdlTypes.STRING).name("toLocation").value(toLocation).build());
         result.add(Parameter.builder().type(ScdlTypes.STRING).name("shipmentCompanyName").value(shipmentCompanyName).build());

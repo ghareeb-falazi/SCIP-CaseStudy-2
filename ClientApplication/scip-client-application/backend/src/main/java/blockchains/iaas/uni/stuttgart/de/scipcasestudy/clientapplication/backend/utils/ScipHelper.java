@@ -16,7 +16,7 @@ public class ScipHelper {
                 .outputs(Collections.emptyList())
                 .functionIdentifier(functionId)
                 .callbackUrl(callbackUrl)
-                .correlationIdentifier(action.getClass().getName().concat("_").concat(RandomStringUtils.random(10, true, true)))
+                .correlationIdentifier(action.getClass().getSimpleName().concat("_").concat(RandomStringUtils.random(10, true, true)))
                 .signature("")
                 .build();
     }
