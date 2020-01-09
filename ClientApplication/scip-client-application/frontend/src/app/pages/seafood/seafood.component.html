@@ -1,0 +1,120 @@
+<h1>{{ title }}</h1>
+<h2>
+  <a href="https://github.com/ghareeb-falazi/SCIP-CaseStudy-2">Case Study</a>
+</h2>
+
+<mat-tab-group>
+  <!-- FISH -->
+  <mat-tab label="Fisherman">
+    <h2>
+      You can register a new captured fish by filling the form and clicking on
+      the <em>Register Fish</em> button.
+    </h2>
+    <div class="wrapper">
+      <div class="left form-box">
+        <form
+          [formGroup]="fishForm"
+          (ngSubmit)="onRegisterFish(fishForm.value)"
+        >
+          <mat-form-field>
+            <input matInput formControlName="fishId" placeholder="Fish ID" />
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput formControlName="location" placeholder="Location" />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="fishermanName"
+              placeholder="Fisherman Name"
+            />
+          </mat-form-field>
+          <button class="button" type="submit">Register Fish</button>
+        </form>
+      </div>
+      <div class="right">
+        TODO
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- PACKAGE -->
+  <mat-tab label="Processing Facility">
+    <h2>
+      You can register a new shipment fish by filling the form and clicking on
+      the <em>Register Package</em> button.
+    </h2>
+    <div class="wrapper">
+      <div class="left form-box">
+        <form
+          [formGroup]="packageForm"
+          (ngSubmit)="onRegisterPackage(packageForm.value)"
+        >
+          <mat-form-field>
+            <mat-chip-list
+              #packageFishIds
+              formArrayName="fishdIds"
+              aria-label="Ids selection"
+            >
+              <mat-chip
+                *ngFor="let id of idsForPackage"
+                [selectable]="selectable"
+                [removable]="removable"
+                (removed)="removeIdFromPackage(id)"
+              >
+                {{ id }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input
+                placeholder="New fish id..."
+                [matChipInputFor]="packageFishIds"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addIdInPackage($event)"
+              />
+            </mat-chip-list>
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="packageId"
+              placeholder="Package ID"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="processingFacilityName"
+              placeholder="Facility Name"
+            />
+          </mat-form-field>
+          <button class="button" type="submit">Register Package</button>
+        </form>
+      </div>
+      <div class="right">
+        TODO
+      </div>
+    </div>
+  </mat-tab>
+
+  <!-- SHIPMENT -->
+  <mat-tab label="Shipment Company"></mat-tab>
+
+  <!-- TRANSPORTATION -->
+  <mat-tab label="Distributor"></mat-tab>
+
+  <!-- INVENTORY -->
+  <mat-tab label="Inventory"></mat-tab>
+
+  <!-- SALES -->
+  <mat-tab label="Retailer"></mat-tab>
+
+  <!-- QUERY -->
+  <mat-tab label="Query">
+    <h2>
+      You can query all data that was registered on the seafood supply chain,
+      for instance you can retrieve all registered fishes or all sold fish
+      packages and so on.
+    </h2>
+  </mat-tab>
+</mat-tab-group>
