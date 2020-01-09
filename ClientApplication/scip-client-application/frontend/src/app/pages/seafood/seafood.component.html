@@ -3,7 +3,7 @@
   <a href="https://github.com/ghareeb-falazi/SCIP-CaseStudy-2">Case Study</a>
 </h2>
 
-<mat-tab-group>
+<mat-tab-group (selectedTabChange)="onTabClick($event)">
   <!-- FISH -->
   <mat-tab label="Fisherman">
     <h2>
@@ -17,23 +17,39 @@
           (ngSubmit)="onRegisterFish(fishForm.value)"
         >
           <mat-form-field>
-            <input matInput formControlName="fishId" placeholder="Fish ID" />
+            <input matInput formControlName="fishId" placeholder="Fish id.." />
           </mat-form-field>
           <mat-form-field>
-            <input matInput formControlName="location" placeholder="Location" />
+            <input
+              matInput
+              formControlName="location"
+              placeholder="Location.."
+            />
           </mat-form-field>
           <mat-form-field>
             <input
               matInput
               formControlName="fishermanName"
-              placeholder="Fisherman Name"
+              placeholder="Fisherman name.."
             />
           </mat-form-field>
           <button class="button" type="submit">Register Fish</button>
         </form>
       </div>
-      <div class="right">
-        TODO
+      <div class="result-box">
+        <div *ngIf="performing" class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div *ngIf="!performing">
+          {{ result }}
+        </div>
       </div>
     </div>
   </mat-tab>
@@ -41,7 +57,7 @@
   <!-- PACKAGE -->
   <mat-tab label="Processing Facility">
     <h2>
-      You can register a new shipment fish by filling the form and clicking on
+      You can register a new fishes' package by filling the form and clicking on
       the <em>Register Package</em> button.
     </h2>
     <div class="wrapper">
@@ -53,7 +69,7 @@
           <mat-form-field>
             <mat-chip-list
               #packageFishIds
-              formArrayName="fishdIds"
+              formControlName="fishIds"
               aria-label="Ids selection"
             >
               <mat-chip
@@ -66,7 +82,7 @@
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
               </mat-chip>
               <input
-                placeholder="New fish id..."
+                placeholder="Fish ids.."
                 [matChipInputFor]="packageFishIds"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 [matChipInputAddOnBlur]="addOnBlur"
@@ -78,36 +94,250 @@
             <input
               matInput
               formControlName="packageId"
-              placeholder="Package ID"
+              placeholder="Package id.."
             />
           </mat-form-field>
           <mat-form-field>
             <input
               matInput
               formControlName="processingFacilityName"
-              placeholder="Facility Name"
+              placeholder="Facility name.."
             />
           </mat-form-field>
           <button class="button" type="submit">Register Package</button>
         </form>
       </div>
-      <div class="right">
-        TODO
+      <div class="result-box">
+        <div *ngIf="performing" class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div *ngIf="!performing">
+          {{ result }}
+        </div>
       </div>
     </div>
   </mat-tab>
 
   <!-- SHIPMENT -->
-  <mat-tab label="Shipment Company"></mat-tab>
+  <mat-tab label="Shipment Company">
+    <h2>
+      You can register a new shipment of fishes by filling the form and clicking
+      on the <em>Register Shipment</em> button.
+    </h2>
+    <div class="wrapper">
+      <div class="left form-box">
+        <form
+          [formGroup]="shipmentForm"
+          (ngSubmit)="onRegisterShipment(shipmentForm.value)"
+        >
+          <mat-form-field>
+            <mat-chip-list
+              #shipmentFishIds
+              formControlName="fishIds"
+              aria-label="Ids selection"
+            >
+              <mat-chip
+                *ngFor="let id of idsForShipment"
+                [selectable]="selectable"
+                [removable]="removable"
+                (removed)="removeIdFromShipment(id)"
+              >
+                {{ id }}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input
+                placeholder="Fish ids.."
+                [matChipInputFor]="shipmentFishIds"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="addIdInShipment($event)"
+              />
+            </mat-chip-list>
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="toLocation"
+              placeholder="To location.."
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="shipmentCompanyName"
+              placeholder="Company name.."
+            />
+          </mat-form-field>
+          <button class="button" type="submit">Register Shipment</button>
+        </form>
+      </div>
+      <div class="result-box">
+        <div *ngIf="performing" class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div *ngIf="!performing">
+          {{ result }}
+        </div>
+      </div>
+    </div>
+  </mat-tab>
 
   <!-- TRANSPORTATION -->
-  <mat-tab label="Distributor"></mat-tab>
+  <mat-tab label="Distributor">
+    <h2>
+      You can register a transportation by filling the form and clicking on the
+      <em>Register Transportation</em> button.
+    </h2>
+    <div class="wrapper">
+      <div class="left form-box">
+        <form
+          [formGroup]="transportationForm"
+          (ngSubmit)="onRegisterTransportation(transportationForm.value)"
+        >
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="packageId"
+              placeholder="Package id.."
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="toLocation"
+              placeholder="To location.."
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="distributorName"
+              placeholder="Distributor name.."
+            />
+          </mat-form-field>
+          <button class="button" type="submit">Register Transportation</button>
+        </form>
+      </div>
+      <div class="result-box">
+        <div *ngIf="performing" class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div *ngIf="!performing">
+          {{ result }}
+        </div>
+      </div>
+    </div>
+  </mat-tab>
 
   <!-- INVENTORY -->
-  <mat-tab label="Inventory"></mat-tab>
+  <mat-tab label="Inventory">
+    <h2>
+      You can register a new inventory entry by filling the form and clicking on
+      the
+      <em>Register Entry</em> button.
+    </h2>
+    <div class="wrapper">
+      <div class="left form-box">
+        <form
+          [formGroup]="inventoryEntryForm"
+          (ngSubmit)="onRegisterInInventory(inventoryEntryForm.value)"
+        >
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="packageId"
+              placeholder="Package id.."
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="retailerName"
+              placeholder="Retailer name.."
+            />
+          </mat-form-field>
+          <button class="button" type="submit">Register Entry</button>
+        </form>
+      </div>
+      <div class="result-box">
+        <div *ngIf="performing" class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div *ngIf="!performing">
+          {{ result }}
+        </div>
+      </div>
+    </div>
+  </mat-tab>
 
   <!-- SALES -->
-  <mat-tab label="Retailer"></mat-tab>
+  <mat-tab label="Retailer">
+    <h2>
+      You can register a new fishes' package sale by filling the form and
+      clicking on the
+      <em>Register Sale</em> button.
+    </h2>
+    <div class="wrapper">
+      <div class="left form-box">
+        <form
+          [formGroup]="sellingForm"
+          (ngSubmit)="onRegisterSelling(sellingForm.value)"
+        >
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="packageId"
+              placeholder="Package id.."
+            />
+          </mat-form-field>
+          <button class="button" type="submit">Register Sale</button>
+        </form>
+      </div>
+      <div class="result-box">
+        <div *ngIf="performing" class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div *ngIf="!performing">
+          {{ result }}
+        </div>
+      </div>
+    </div>
+  </mat-tab>
 
   <!-- QUERY -->
   <mat-tab label="Query">
