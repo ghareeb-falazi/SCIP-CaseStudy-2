@@ -24,7 +24,7 @@ public class TestController {
 
     @RequestMapping(value = "test/invoke", method = RequestMethod.POST)
     public String testInvocation() throws ExecutionException, InterruptedException {
-        final String scl = UrlProvider.getInstance().getEmsBalUrl() + "/webapi?blockchain=fabric&blockchain-id=fabric-0&address=mychannel/ems";
+        final String scl = UrlProvider.getInstance().getSeafoodBalUrl() + "/webapi?blockchain=fabric&blockchain-id=fabric-0&address=mychannel/ems";
         InvocationRequestMessage requestMessage = InvocationRequestMessage.builder()
                 .inputs(new ArrayList<>())
                 .outputs(Collections.singletonList(Parameter.builder().name("Result").type("{\"type\": \"string\"}").build()))

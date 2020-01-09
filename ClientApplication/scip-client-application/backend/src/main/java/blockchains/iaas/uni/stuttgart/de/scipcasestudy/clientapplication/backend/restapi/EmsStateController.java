@@ -30,7 +30,7 @@ public class EmsStateController {
     private final String callbackUrl;
 
     public EmsStateController() {
-        sclEms = UrlProvider.getInstance().getEmsBalUrl() + "/webapi?blockchain=fabric&blockchain-id=fabric-0&address=mychannel/ems";
+        sclEms = UrlProvider.getInstance().getSeafoodBalUrl() + "/webapi?blockchain=fabric&blockchain-id=fabric-0&address=mychannel/ems";
         callbackUrl = UrlProvider.getInstance().getCallbackUrl();
     }
 

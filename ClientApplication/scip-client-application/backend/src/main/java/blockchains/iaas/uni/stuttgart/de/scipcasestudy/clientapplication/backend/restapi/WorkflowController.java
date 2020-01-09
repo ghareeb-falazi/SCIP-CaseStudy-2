@@ -39,8 +39,8 @@ public class WorkflowController {
                     "}";
 
     public WorkflowController() {
-        sclEms = UrlProvider.getInstance().getEmsBalUrl() + "/webapi?blockchain=fabric&blockchain-id=fabric-0&address=mychannel/ems";
-        sclDigest = UrlProvider.getInstance().getDigestBalUrl() + "/webapi?blockchain=ethereum&blockchain-id=eth-0&address=0x75f17644EAEb3cC6511764a6F1138F14B3e33D0f";
+        sclEms = UrlProvider.getInstance().getSeafoodBalUrl() + "/webapi?blockchain=fabric&blockchain-id=fabric-0&address=mychannel/ems";
+        sclDigest = UrlProvider.getInstance().getDairytBalUrl() + "/webapi?blockchain=ethereum&blockchain-id=eth-0&address=0x75f17644EAEb3cC6511764a6F1138F14B3e33D0f";
         callbackUrl = UrlProvider.getInstance().getCallbackUrl();
     }
 

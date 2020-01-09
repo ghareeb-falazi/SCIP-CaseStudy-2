@@ -17,8 +17,8 @@ public class UrlProvider {
         return instance;
     }
 
-    public String getEmsBalUrl() {
-        String envVar = System.getenv("EMS_BAL_URL");
+    public String getSeafoodBalUrl() {
+        String envVar = System.getenv("SEAFOOD_BAL_URL");
 
         if (Strings.isNullOrEmpty(envVar)) {
             return "http://localhost:8090";
@@ -27,8 +27,8 @@ public class UrlProvider {
         return envVar;
     }
 
-    public String getDigestBalUrl() {
-        String envVar = System.getenv("DIGEST_BAL_URL");
+    public String getDairytBalUrl() {
+        String envVar = System.getenv("DAIRY_BAL_URL");
 
         if (Strings.isNullOrEmpty(envVar)) {
             return "http://localhost:8090";
