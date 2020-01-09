@@ -346,6 +346,326 @@
       for instance you can retrieve all registered fishes or all sold fish
       packages and so on.
     </h2>
-    <div class="query-box"><!-- TODO: --></div>
+    <div class="query-box">
+      <!-- FISH -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Registered Fishes</mat-card-title>
+          <mat-card-subtitle>
+            you can retrieve all registered fishes by clicking on the
+            <em>Query</em> button
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="fishPerforming" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <table
+            *ngIf="!fishPerforming"
+            mat-table
+            [dataSource]="fishes"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="fishId">
+              <th mat-header-cell *matHeaderCellDef>Fish Id</th>
+              <td mat-cell *matCellDef="let element">{{ element.fishId }}</td>
+            </ng-container>
+            <ng-container matColumnDef="location">
+              <th mat-header-cell *matHeaderCellDef>Location</th>
+              <td mat-cell *matCellDef="let element">{{ element.location }}</td>
+            </ng-container>
+            <ng-container matColumnDef="fishermanName">
+              <th mat-header-cell *matHeaderCellDef>Fisherman Name</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.fishermanName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="fishColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: fishColumns"></tr>
+          </table>
+          <div *ngIf="fishError !== ''" class="error-box">
+            {{ fishError }}
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="button" mat-button class="button" (click)="getFishes()">
+            Query
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- PACKAGE -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Registered Packages</mat-card-title>
+          <mat-card-subtitle>
+            you can retrieve all registered packages by clicking on the
+            <em>Query</em> button
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="packagePerforming" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <table
+            *ngIf="!packagePerforming"
+            mat-table
+            [dataSource]="packages"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="fishIds">
+              <th mat-header-cell *matHeaderCellDef>Fish Ids</th>
+              <td mat-cell *matCellDef="let element">{{ element.fishIds }}</td>
+            </ng-container>
+            <ng-container matColumnDef="packageId">
+              <th mat-header-cell *matHeaderCellDef>Package Id</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.packageId }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="processingFacilityName">
+              <th mat-header-cell *matHeaderCellDef>
+                Processing Facility Name
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.processingFacilityName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="packageColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: packageColumns"></tr>
+          </table>
+          <div *ngIf="packageError !== ''" class="error-box">
+            {{ packageError }}
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="button" mat-button class="button" (click)="getPackages()">
+            Query
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- SHIPMENTS -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Registered Fish Shipments</mat-card-title>
+          <mat-card-subtitle>
+            you can retrieve all registered fish shipments by clicking on the
+            <em>Query</em> button
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="shipmentPerforming" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <table
+            *ngIf="!shipmentPerforming"
+            mat-table
+            [dataSource]="shipments"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="fishIds">
+              <th mat-header-cell *matHeaderCellDef>Fish Ids</th>
+              <td mat-cell *matCellDef="let element">{{ element.fishIds }}</td>
+            </ng-container>
+            <ng-container matColumnDef="toLocation">
+              <th mat-header-cell *matHeaderCellDef>To Location</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.toLocation }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="shipmentCompanyName">
+              <th mat-header-cell *matHeaderCellDef>
+                Shipment Company Name
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.shipmentCompanyName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="shipmentColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: shipmentColumns"></tr>
+          </table>
+          <div *ngIf="shipmentError !== ''" class="error-box">
+            {{ shipmentError }}
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="button" mat-button class="button" (click)="getShipments()">
+            Query
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- TRANSPORTATION -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Registered Package Transportations</mat-card-title>
+          <mat-card-subtitle>
+            you can retrieve all registered package transportation by clicking on the
+            <em>Query</em> button
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="transportationPerforming" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <table
+            *ngIf="!transportationPerforming"
+            mat-table
+            [dataSource]="transportations"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="packageId">
+              <th mat-header-cell *matHeaderCellDef>Package Id</th>
+              <td mat-cell *matCellDef="let element">{{ element.packageId }}</td>
+            </ng-container>
+            <ng-container matColumnDef="toLocation">
+              <th mat-header-cell *matHeaderCellDef>To Location</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.toLocation }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="distributorName">
+              <th mat-header-cell *matHeaderCellDef>
+                Distributor Name
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.distributorName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="transportationColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: transportationColumns"></tr>
+          </table>
+          <div *ngIf="transportationError !== ''" class="error-box">
+            {{ transportationError }}
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="button" mat-button class="button" (click)="getTransportations()">
+            Query
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+      <!-- INVENTORY -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Packages In Inventory </mat-card-title>
+          <mat-card-subtitle>
+            you can retrieve all packages registered in inventory by clicking on the
+            <em>Query</em> button
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="entryPerforming" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <table
+            *ngIf="!entryPerforming"
+            mat-table
+            [dataSource]="entries"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="packageId">
+              <th mat-header-cell *matHeaderCellDef>Package Id</th>
+              <td mat-cell *matCellDef="let element">{{ element.packageId }}</td>
+            </ng-container>
+            <ng-container matColumnDef="retailerName">
+              <th mat-header-cell *matHeaderCellDef>Retailer Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.retailerName }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="entryColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: entryColumns"></tr>
+          </table>
+          <div *ngIf="entryError !== ''" class="error-box">
+            {{ entryError }}
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="button" mat-button class="button" (click)="getEntries()">
+            Query
+          </button>
+        </mat-card-actions>
+      </mat-card>
+      
+      <!-- SELLING -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Sold Packages</mat-card-title>
+          <mat-card-subtitle>
+            you can retrieve all sold packages by clicking on the
+            <em>Query</em> button
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="salePerforming" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <table
+            *ngIf="!salePerforming"
+            mat-table
+            [dataSource]="sales"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="packageId">
+              <th mat-header-cell *matHeaderCellDef>Package Id</th>
+              <td mat-cell *matCellDef="let element">{{ element.packageId }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="saleColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: saleColumns"></tr>
+          </table>
+          <div *ngIf="saleError !== ''" class="error-box">
+            {{ saleError }}
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button type="button" mat-button class="button" (click)="getSales()">
+            Query
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
   </mat-tab>
 </mat-tab-group>
