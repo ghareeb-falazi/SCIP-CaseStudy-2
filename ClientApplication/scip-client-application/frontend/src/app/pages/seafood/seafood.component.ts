@@ -39,7 +39,7 @@ export class SeafoodComponent implements OnInit {
 
   fishes: Fish[] = [];
   fishColumns = ['fishId', 'location', 'fishermanName'];
-  fishPerforming = true;
+  fishPerforming = false;
   fishError = '';
   packages: FishPackage[] = [];
   packageColumns = ['fishIds', 'packageId', 'processingFacilityName'];

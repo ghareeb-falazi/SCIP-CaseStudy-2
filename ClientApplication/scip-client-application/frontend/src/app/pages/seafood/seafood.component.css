@@ -12,10 +12,13 @@ form {
 .form-box {
   width: 45%;
   padding: 10px;
+  background-color: rgb(206, 204, 204);
 }
 
 .result-box {
   width: 55%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
