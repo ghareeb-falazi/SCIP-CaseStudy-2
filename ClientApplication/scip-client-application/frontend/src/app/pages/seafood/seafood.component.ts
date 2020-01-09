@@ -39,23 +39,28 @@ export class SeafoodComponent implements OnInit {
 
   fishes: Fish[] = [];
   fishColumns = ['fishId', 'location', 'fishermanName'];
-  fishPerforming = false;
+  fishPerforming = true;
+  fishError = '';
   packages: FishPackage[] = [];
   packageColumns = ['fishIds', 'packageId', 'processingFacilityName'];
   packagePerforming = false;
+  packageError = '';
   shipments: FishShipment[] = [];
   shipmentColumns = ['fishIds', 'toLocation', 'shipmentCompanyName'];
   shipmentPerforming = false;
+  shipmentError = '';
   transportations: PackageTransportation[] = [];
   transportationColumns = ['packageId', 'toLocation', 'distributorName'];
   transportationPerforming = false;
+  transportationError = '';
   sales: PackageSelling[] = [];
   saleColumns = ['packageId'];
   salePerforming = false;
+  saleError = '';
   entries: InventoryEntry[] = [];
   entryColumns = ['packageId', 'retailerName'];
   entryPerforming = false;
-  error: any = null;
+  entryError = '';
 
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.fishForm = this.formBuilder.group({
@@ -193,7 +198,7 @@ export class SeafoodComponent implements OnInit {
           this.fishPerforming = false;
         },
         err => {
-          this.error = err.message;
+          this.fishError = err.message;
           this.fishPerforming = false;
         }
       );
@@ -208,7 +213,7 @@ export class SeafoodComponent implements OnInit {
           this.packagePerforming = false;
         },
         err => {
-          this.error = err.message;
+          this.packageError = err.message;
           this.packagePerforming = false;
         }
       );
@@ -223,7 +228,7 @@ export class SeafoodComponent implements OnInit {
           this.shipmentPerforming = false;
         },
         err => {
-          this.error = err.message;
+          this.shipmentError = err.message;
           this.shipmentPerforming = false;
         }
       );
@@ -238,7 +243,7 @@ export class SeafoodComponent implements OnInit {
           this.transportationPerforming = false;
         },
         err => {
-          this.error = err.message;
+          this.transportationError = err.message;
           this.transportationPerforming = false;
         }
       );
@@ -253,7 +258,7 @@ export class SeafoodComponent implements OnInit {
           this.salePerforming = false;
         },
         err => {
-          this.error = err.message;
+          this.saleError = err.message;
           this.salePerforming = false;
         }
       );
@@ -268,7 +273,7 @@ export class SeafoodComponent implements OnInit {
           this.entryPerforming = false;
         },
         err => {
-          this.error = err.message;
+          this.entryError = err.message;
           this.entryPerforming = false;
         }
       );
@@ -323,10 +328,10 @@ export class SeafoodComponent implements OnInit {
 
   onTabClick(event) {
     if (event.index !== this.prevIndex) {
-      console.log('changing tab to ' + event.index);
       this.result = null;
       this.performing = false;
       this.prevIndex = event.index;
+      this.fishError = this.packageError = this.shipmentError = this.transportationError = this.entryError = this.saleError = '';
     }
   }
 }

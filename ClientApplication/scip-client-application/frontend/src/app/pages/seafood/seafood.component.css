@@ -26,7 +26,37 @@ form {
   width: 100%;
 }
 
-table {
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+mat-card-content table {
+  width: 100%;
+}
+
+mat-card-content .error-box {
+  text-align: center;
+  margin-top: 15px;
+  color: rgb(192, 4, 4);
+}
+
+mat-card {
+  background-color: rgb(185, 184, 184);
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card mat-card-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+mat-card mat-card-actions button {
+  background-color: rgb(238, 236, 236);
   width: 100%;
 }
 
