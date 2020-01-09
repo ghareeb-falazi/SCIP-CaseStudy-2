@@ -9,7 +9,7 @@ import { MaterialModule } from './material.module';
 import { ScipClientService } from './ScipClientService';
 import { ApiService } from './api.service';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SeafoodComponent } from './pages/seafood/seafood.component';
 import { DairyComponent } from './pages/dairy/dairy.component';
 import { IndexComponent } from './pages/index/index.component';
@@ -28,7 +28,8 @@ import { IndexComponent } from './pages/index/index.component';
     AppRoutingModule,
     MaterialModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [ApiService, ScipClientService, HttpClientModule],
   bootstrap: [AppComponent]

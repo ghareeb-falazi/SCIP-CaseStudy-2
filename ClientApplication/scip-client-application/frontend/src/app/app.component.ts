@@ -18,11 +18,11 @@ export class AppComponent implements OnInit {
   bulkPrice: number;
 
   ngOnInit(): void {
-    this.changingPrice = true;
-    this.scipService.queryState().then(result => {
-      this.bulkPrice = parseInt(result.powerPlantPrice, 10);
-      this.changingPrice = false;
-    });
+    // this.changingPrice = true;
+    // this.scipService.queryState().then(result => {
+    //   this.bulkPrice = parseInt(result.powerPlantPrice, 10);
+    //   this.changingPrice = false;
+    // });
   }
 
   constructor(private scipService: ScipClientService, private snackBar: MatSnackBar) {
