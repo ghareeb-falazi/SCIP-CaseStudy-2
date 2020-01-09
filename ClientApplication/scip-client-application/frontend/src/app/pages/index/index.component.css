@@ -1,0 +1,20 @@
+.main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.main button {
+  margin: 20px;
+  width: 20%;
+  height: 180px;
+}
+
+.main .to-seafood {
+  background-color: rgb(45, 198, 209);
+}
+
+.main .to-dairy {
+  background-color: rgb(255, 228, 196);
+}
