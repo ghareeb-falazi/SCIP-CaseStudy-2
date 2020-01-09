@@ -3,6 +3,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApiService } from 'src/app/api.service';
 import { MatChipInputEvent } from '@angular/material/chips';
+import Fish from 'src/app/models/Fish';
+import FishPackage from 'src/app/models/FishPackage';
+import FishShipment from 'src/app/models/FishShipment';
+import PackageTransportation from 'src/app/models/PackageTransportation';
+import PackageSelling from 'src/app/models/PackageSelling';
+import InventoryEntry from 'src/app/models/InventoryEntry';
 
 @Component({
   selector: 'app-seafood',
@@ -29,6 +35,27 @@ export class SeafoodComponent implements OnInit {
   performing = false;
   result: any = null;
   prevIndex = 0;
+
+
+  fishes: Fish[] = [];
+  fishColumns = ['fishId', 'location', 'fishermanName'];
+  fishPerforming = false;
+  packages: FishPackage[] = [];
+  packageColumns = ['fishIds', 'packageId', 'processingFacilityName'];
+  packagePerforming = false;
+  shipments: FishShipment[] = [];
+  shipmentColumns = ['fishIds', 'toLocation', 'shipmentCompanyName'];
+  shipmentPerforming = false;
+  transportations: PackageTransportation[] = [];
+  transportationColumns = ['packageId', 'toLocation', 'distributorName'];
+  transportationPerforming = false;
+  sales: PackageSelling[] = [];
+  saleColumns = ['packageId'];
+  salePerforming = false;
+  entries: InventoryEntry[] = [];
+  entryColumns = ['packageId', 'retailerName'];
+  entryPerforming = false;
+  error: any = null;
 
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.fishForm = this.formBuilder.group({
@@ -156,6 +183,97 @@ export class SeafoodComponent implements OnInit {
       });
     this.sellingForm.reset();
   }
+
+  getFishes() {
+    this.fishPerforming = true;
+    this.apiService.getAllRegisteredFishes()
+      .subscribe(
+        res => {
+          this.fishes = res;
+          this.fishPerforming = false;
+        },
+        err => {
+          this.error = err.message;
+          this.fishPerforming = false;
+        }
+      );
+  }
+
+  getPackages() {
+    this.packagePerforming = true;
+    this.apiService.getAllRegisteredPackages()
+      .subscribe(
+        res => {
+          this.packages = res;
+          this.packagePerforming = false;
+        },
+        err => {
+          this.error = err.message;
+          this.packagePerforming = false;
+        }
+      );
+  }
+
+  getShipments() {
+    this.shipmentPerforming = true;
+    this.apiService.getAllRegisteredShipments()
+      .subscribe(
+        res => {
+          this.shipments = res;
+          this.shipmentPerforming = false;
+        },
+        err => {
+          this.error = err.message;
+          this.shipmentPerforming = false;
+        }
+      );
+  }
+
+  getTransportations() {
+    this.transportationPerforming = true;
+    this.apiService.getAllRegisteredTransportations()
+      .subscribe(
+        res => {
+          this.transportations = res;
+          this.transportationPerforming = false;
+        },
+        err => {
+          this.error = err.message;
+          this.transportationPerforming = false;
+        }
+      );
+  }
+
+  getSales() {
+    this.salePerforming = true;
+    this.apiService.getAllSoldPackages()
+      .subscribe(
+        res => {
+          this.sales = res;
+          this.salePerforming = false;
+        },
+        err => {
+          this.error = err.message;
+          this.salePerforming = false;
+        }
+      );
+  }
+
+  getEntries() {
+    this.entryPerforming = true;
+    this.apiService.getAllPackagesRegisteredInInventories()
+      .subscribe(
+        res => {
+          this.entries = res;
+          this.entryPerforming = false;
+        },
+        err => {
+          this.error = err.message;
+          this.entryPerforming = false;
+        }
+      );
+  }
+
 
   removeIdFromPackage(id: string) {
     const controller = this.packageForm.controls.fishIds;

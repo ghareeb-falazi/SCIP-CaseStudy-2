@@ -23,7 +23,7 @@ export class ApiService {
     return this.http.post(url, fish, { responseType: 'text' });
   }
 
-  public getAllRegisteredFish(): Observable<Fish[]> {
+  public getAllRegisteredFishes(): Observable<Fish[]> {
     const url = `${environment.apiUrl}/seafood/fish`;
     return this.http.get<Fish[]>(url);
   }
