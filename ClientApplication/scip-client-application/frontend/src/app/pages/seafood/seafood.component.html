@@ -11,7 +11,7 @@
       the <em>Register Fish</em> button.
     </h2>
     <div class="wrapper">
-      <div class="left form-box">
+      <div class="left form-box mat-elevation-z3">
         <form
           [formGroup]="fishForm"
           (ngSubmit)="onRegisterFish(fishForm.value)"
@@ -61,7 +61,7 @@
       the <em>Register Package</em> button.
     </h2>
     <div class="wrapper">
-      <div class="left form-box">
+      <div class="left form-box mat-elevation-z3">
         <form
           [formGroup]="packageForm"
           (ngSubmit)="onRegisterPackage(packageForm.value)"
@@ -132,7 +132,7 @@
       on the <em>Register Shipment</em> button.
     </h2>
     <div class="wrapper">
-      <div class="left form-box">
+      <div class="left form-box mat-elevation-z3">
         <form
           [formGroup]="shipmentForm"
           (ngSubmit)="onRegisterShipment(shipmentForm.value)"
@@ -203,7 +203,7 @@
       <em>Register Transportation</em> button.
     </h2>
     <div class="wrapper">
-      <div class="left form-box">
+      <div class="left form-box mat-elevation-z3">
         <form
           [formGroup]="transportationForm"
           (ngSubmit)="onRegisterTransportation(transportationForm.value)"
@@ -258,7 +258,7 @@
       <em>Register Entry</em> button.
     </h2>
     <div class="wrapper">
-      <div class="left form-box">
+      <div class="left form-box mat-elevation-z3">
         <form
           [formGroup]="inventoryEntryForm"
           (ngSubmit)="onRegisterInInventory(inventoryEntryForm.value)"
@@ -306,7 +306,7 @@
       <em>Register Sale</em> button.
     </h2>
     <div class="wrapper">
-      <div class="left form-box">
+      <div class="left form-box mat-elevation-z3">
         <form
           [formGroup]="sellingForm"
           (ngSubmit)="onRegisterSelling(sellingForm.value)"
@@ -346,5 +346,6 @@
       for instance you can retrieve all registered fishes or all sold fish
       packages and so on.
     </h2>
+    <div class="query-box"><!-- TODO: --></div>
   </mat-tab>
 </mat-tab-group>
