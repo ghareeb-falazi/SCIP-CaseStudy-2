@@ -32,7 +32,7 @@ public class SclProvider {
         return String.format("%s/webapi?blockchain=ethereum&blockchain-id=eth-0&address=%s", url, scAddress);
     }
 
-    public String getDairytScl() {
+    public String getDairyScl() {
         String url = System.getenv("DAIRY_BAL_URL");
         String scAddress = System.getenv("DAIRY_SC_ADDRESS");
 
