@@ -62,25 +62,6 @@ export class ApiService {
 
   public getAllRegisteredTransportations(): Observable<PackageTransportation[]> {
     const url = `${environment.apiUrl}/seafood/transportation`;
-    // const packages: PackageTransportation[] = [
-    //   {
-    //     packageId: 'abcd',
-    //     toLocation: 'Milano',
-    //     distributorName: 'UPS'
-    //   },
-    //   {
-    //     packageId: '1224',
-    //     toLocation: 'Verona',
-    //     distributorName: 'Bartolini'
-    //   },
-    //   {
-    //     packageId: 'ab34',
-    //     toLocation: 'Cremona',
-    //     distributorName: 'Poste Italiane'
-    //   }
-    // ];
-    // const pr: Promise<PackageTransportation[]> = Promise.all(packages);
-    // return (from(pr)) as Observable<PackageTransportation[]>;
     return this.http.get<PackageTransportation[]>(url);
   }
 
@@ -110,75 +91,8 @@ export class ApiService {
 
   /******************************* PROVENANCE *******************************/
 
-  // TODO: how should I pass the packageId? as query param?
   public retrieveProvenance(packageId: string): Observable<SeafoodProvenance> {
     const url = `${environment.apiUrl}/seafood/provenance`;
-    // const prov = {
-    //   sellingOccurrence: {
-    //     isoTimestamp: '123423435',
-    //     occurrence: {
-    //       packageId: 'abcdefg'
-    //     }
-    //   },
-    //   inventoryOccurrence: {
-    //     isoTimestamp: '459843759324',
-    //     occurrence: {
-    //       packageId: 'abcdefg',
-    //       retailerName: 'Pippo Franco'
-    //     }
-    //   },
-    //   transportationOccurrence: {
-    //     isoTimestamp: '43574385743294',
-    //     occurrence: {
-    //       packageId: 'abcdefg',
-    //       toLocation: 'Milan',
-    //       distributorName: 'UPS'
-    //     }
-    //   },
-    //   packagingOccurrence: {
-    //     isoTimestamp: '58748439842932',
-    //     occurrence: {
-    //       fishIds: ['1', '2', '3'],
-    //       packageId: 'abcdefg',
-    //       processingFacilityName: 'SeaMar'
-    //     }
-    //   },
-    //   fishShipmentOccurrence: {
-    //     isoTimestamp: '4562389478324',
-    //     occurrence: {
-    //       fishIds: ['1', '2', '3'],
-    //       toLocation: 'Genova',
-    //       shipmentCompanyName: 'SeaMarTransport',
-    //     }
-    //   },
-    //   fishCatchingOccurrences: [
-    //     {
-    //       isoTimestamp: '29875239489384',
-    //       occurrence: {
-    //         fishId: '1',
-    //         location: 'Genova',
-    //         fishermanName: 'Giorgio',
-    //       }
-    //     },
-    //     {
-    //       isoTimestamp: '29875239489384',
-    //       occurrence: {
-    //         fishId: '2',
-    //         location: 'Genova',
-    //         fishermanName: 'Giorgio',
-    //       }
-    //     },
-    //     {
-    //       isoTimestamp: '29875239489384',
-    //       occurrence: {
-    //         fishId: '3',
-    //         location: 'Genova',
-    //         fishermanName: 'Giorgio',
-    //       }
-    //     }
-    //   ],
-    // };
-    // return of(prov);
     return this.http.get<SeafoodProvenance>(url);
   }
 }

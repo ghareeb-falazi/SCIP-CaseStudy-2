@@ -337,8 +337,8 @@ export class SeafoodComponent implements OnInit {
       .subscribe(
         res => {
           this.fishesProv = res.fishCatchingOccurrences;
+          this.shipmentsProv = res.fishShipmentOccurrences;
           this.packagesProv = [res.packagingOccurrence];
-          this.shipmentsProv = [res.fishShipmentOccurrence];
           this.transportationsProv = [res.transportationOccurrence];
           this.salesProv = [res.sellingOccurrence];
           this.entriesProv = [res.inventoryOccurrence];

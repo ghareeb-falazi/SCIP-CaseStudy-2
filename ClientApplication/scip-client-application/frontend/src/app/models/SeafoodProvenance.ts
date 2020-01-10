@@ -11,6 +11,6 @@ export default interface SeafoodProvenance {
     inventoryOccurrence: SeafoodOccurrence<InventoryEntry>;
     transportationOccurrence: SeafoodOccurrence<PackageTransportation>;
     packagingOccurrence: SeafoodOccurrence<FishPackage>;
-    fishShipmentOccurrence: SeafoodOccurrence<FishShipment>;
+    fishShipmentOccurrences: SeafoodOccurrence<FishShipment>[];
     fishCatchingOccurrences: SeafoodOccurrence<Fish>[];
 }
