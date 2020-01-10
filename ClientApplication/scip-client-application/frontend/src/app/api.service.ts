@@ -92,7 +92,7 @@ export class ApiService {
   /******************************* PROVENANCE *******************************/
 
   public retrieveProvenance(packageId: string): Observable<SeafoodProvenance> {
-    const url = `${environment.apiUrl}/seafood/provenance`;
+    const url = `${environment.apiUrl}/seafood/provenance?packageId=${packageId}`;
     return this.http.get<SeafoodProvenance>(url);
   }
 }

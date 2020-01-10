@@ -1,6 +1,7 @@
 <h1>{{ title }}</h1>
 <h2>
-  <a href="https://github.com/ghareeb-falazi/SCIP-CaseStudy-2">Case Study</a>
+  Using this user interface, you can interact with the Seafood supply chain.
+  Check the <a href="https://github.com/ghareeb-falazi/SCIP-CaseStudy-2">sample case study</a> for a more detailed description what is involved.
 </h2>
 
 <mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabClick($event)">
@@ -723,7 +724,10 @@
             <div></div>
           </div>
         </div>
-        <div *ngIf="!performing" class="prov-tables-box">
+        <div *ngIf="!performing && error !== ''" class="error-box">
+          <h3>{{ error }}</h3>
+        </div>
+        <div *ngIf="!performing && error === ''" class="prov-tables-box">
           <h3> Selling Occurence </h3>
           <table
             mat-table

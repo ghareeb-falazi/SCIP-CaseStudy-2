@@ -113,6 +113,16 @@ mat-card mat-card-actions .query-btn {
   margin: 40px;
 }
 
+.prov-result-box .error-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prov-result-box .error-box h3 {
+  color: rgb(192, 4, 4);
+}
+
 .prov-result-box .prov-tables-box {
   display: flex;
   flex-direction: column;

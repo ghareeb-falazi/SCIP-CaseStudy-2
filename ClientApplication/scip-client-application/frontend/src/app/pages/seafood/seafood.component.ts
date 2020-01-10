@@ -409,6 +409,7 @@ export class SeafoodComponent implements OnInit {
   onTabClick(event) {
     if (event.index !== this.prevIndex) {
       this.result = null;
+      this.error = '';
       this.performing = false;
       this.prevIndex = event.index;
       this.fishError = this.packageError = this.shipmentError = this.transportationError = this.entryError = this.saleError = '';
