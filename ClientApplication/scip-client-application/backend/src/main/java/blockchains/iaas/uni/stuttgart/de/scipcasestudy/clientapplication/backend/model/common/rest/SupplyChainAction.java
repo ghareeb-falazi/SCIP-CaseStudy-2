@@ -2,9 +2,9 @@ package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backen
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Parameter;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.rest.SeafoodOccurrence;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public abstract class SupplyChainAction implements Serializable {

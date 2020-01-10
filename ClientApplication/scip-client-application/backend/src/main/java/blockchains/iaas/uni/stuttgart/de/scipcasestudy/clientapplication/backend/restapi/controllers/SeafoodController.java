@@ -1,5 +1,6 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -13,8 +14,10 @@ import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.rest.SupplyChainAction;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip.InvocationRequestMessage;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip.QueryRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.QueryResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.rest.SeafoodOccurrence;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.rest.SeafoodProvenance;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.scip.QueryResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.SclProvider;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.ScipClient;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.ScipHelper;
 import org.slf4j.Logger;
@@ -144,7 +147,85 @@ public class SeafoodController {
     @CrossOrigin
     @RequestMapping(value = "/seafood/provenance", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
     public SeafoodProvenance retrieveProvenance(String packageId) {
-        return new SeafoodProvenance();
+        SeafoodProvenance result = new SeafoodProvenance();
+        String filter = String.format("packageId === '%s'", packageId);
+
+        // first we query if the package is sold
+        QueryResponse response = performQuery("packageSold", new PackageSelling(), filter);
+        String currentTimestamp;
+
+        if (response.getOccurrences() != null && response.getOccurrences().size() > 0) {
+            PackageSelling selling = new PackageSelling(response.getOccurrences().get(0).getParameters());
+            currentTimestamp = response.getOccurrences().get(0).getIsoTimestamp();
+            result.setSellingOccurrence(new SeafoodOccurrence<>(currentTimestamp, selling));
+        }
+
+        // next, we query the inventory entry
+        response = performQuery("packageRegisteredInInventory", new InventoryEntry(), filter);
+
+        if (response.getOccurrences() != null && response.getOccurrences().size() > 0) {
+            InventoryEntry inventoryEntry = new InventoryEntry(response.getOccurrences().get(0).getParameters());
+            currentTimestamp = response.getOccurrences().get(0).getIsoTimestamp();
+            result.setInventoryOccurrence(new SeafoodOccurrence<>(currentTimestamp, inventoryEntry));
+        }
+
+        // next, we query the distribution of the package
+        response = performQuery("packageTransported", new PackageTransportation(), filter);
+
+        if (response.getOccurrences() != null && response.getOccurrences().size() > 0) {
+            PackageTransportation transportation = new PackageTransportation(response.getOccurrences().get(0).getParameters());
+            currentTimestamp = response.getOccurrences().get(0).getIsoTimestamp();
+            result.setTransportationOccurrence(new SeafoodOccurrence<>(currentTimestamp, transportation));
+        }
+
+        // next, we query the packaging process
+        response = performQuery("packageRegistered", new FishPackage(), filter);
+
+        if (response.getOccurrences() != null && response.getOccurrences().size() > 0) {
+            FishPackage fishPackage = new FishPackage(response.getOccurrences().get(0).getParameters());
+            currentTimestamp = response.getOccurrences().get(0).getIsoTimestamp();
+            result.setPackagingOccurrence(new SeafoodOccurrence<>(currentTimestamp, fishPackage));
+            List<String> fishIds = fishPackage.getFishIds();
+            final List<SeafoodOccurrence<FishShipment>> shipments = new ArrayList<>();
+            final List<SeafoodOccurrence<Fish>> fishes = new ArrayList<>();
+            result.setFishShipmentOccurrences(shipments);
+            result.setFishCatchingOccurrences(fishes);
+
+            // for each fish id, we check shipments and catching events
+            fishIds.forEach(fishId -> {
+                // detect if a shipment contains the current fish id
+                String shipmentFilter = String.format("RegExp('id:%s\\.').test(fishIds)", fishId);
+                QueryResponse shipmentQueryResponse = performQuery("shipment", new FishShipment(), shipmentFilter);
+
+                if (shipmentQueryResponse.getOccurrences() != null && shipmentQueryResponse.getOccurrences().size() > 0) {
+                    FishShipment currentShipment = new FishShipment(shipmentQueryResponse.getOccurrences().get(0).getParameters());
+                    String currentShipmentTimestamp = shipmentQueryResponse.getOccurrences().get(0).getIsoTimestamp();
+                    SeafoodOccurrence<FishShipment> currentOccurrence = new SeafoodOccurrence<>(currentShipmentTimestamp, currentShipment);
+
+                    // add the detected shipment only if it is not added before.
+                    if (!shipments.contains(currentOccurrence)) {
+                        shipments.add(currentOccurrence);
+                    }
+                }
+            });
+
+            fishIds.forEach(fishId -> {
+                String fishFilter = String.format("fishId === '%s'", fishId);
+                QueryResponse fishQueryResponse = this.performQuery("fishRegistered", new Fish(), fishFilter);
+
+                if (fishQueryResponse.getOccurrences() != null && fishQueryResponse.getOccurrences().size() > 0) {
+                    Fish currentFish = new Fish(fishQueryResponse.getOccurrences().get(0).getParameters());
+                    String currentFishTimestamp = fishQueryResponse.getOccurrences().get(0).getIsoTimestamp();
+                    SeafoodOccurrence<Fish> currentFishOccurrence = new SeafoodOccurrence<>(currentFishTimestamp, currentFish);
+
+                    if (!fishes.contains(currentFishOccurrence)) {
+                        fishes.add(currentFishOccurrence);
+                    }
+                }
+            });
+        }
+
+        return result;
     }
 
     private String performScipInvocation(String functionId, SupplyChainAction action) {

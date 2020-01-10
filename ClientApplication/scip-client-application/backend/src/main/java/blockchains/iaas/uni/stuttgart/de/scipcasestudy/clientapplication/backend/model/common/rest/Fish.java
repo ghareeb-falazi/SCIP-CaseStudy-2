@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Parameter;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.rest.SeafoodOccurrence;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.ScdlTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,4 +52,5 @@ public class Fish extends SupplyChainAction {
 
         return result;
     }
+
 }

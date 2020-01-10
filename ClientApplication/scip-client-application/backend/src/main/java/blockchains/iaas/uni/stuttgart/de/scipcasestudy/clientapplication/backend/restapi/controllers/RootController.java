@@ -1,4 +1,4 @@
-package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi;
+package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.restapi.controllers;
 
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.scipclient.ClientApplicationService;
 import com.github.arteam.simplejsonrpc.server.JsonRpcServer;
