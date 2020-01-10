@@ -71,6 +71,59 @@ mat-card mat-card-actions .query-btn {
   width: 50%;
 }
 
+.prov-wrapper {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.prov-form-box {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 70%;
+  padding: 10px;
+  margin: 15px;
+  background-color: rgb(206, 204, 204);
+}
+
+.prov-form-box form > .submit-btn {
+  background-color: rgb(231, 225, 225);
+  margin: 10px 10px 4px 10px;
+}
+
+.prov-form-box form > .clear-btn {
+  background-color: rgb(235, 139, 139);
+  margin: 4px 10px 10px 10px;
+}
+
+.prov-result-box {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.prov-result-box .spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px;
+}
+
+.prov-result-box .prov-tables-box {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.prov-result-box .prov-tables-box table {
+  width: 100%;
+  margin: 10px;
+}
+
 /* SPINNER */
 
 .lds-roller {
