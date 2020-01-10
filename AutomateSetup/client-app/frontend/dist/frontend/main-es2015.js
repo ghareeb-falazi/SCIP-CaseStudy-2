@@ -984,9 +984,9 @@ let SeafoodComponent = class SeafoodComponent {
     clearEntries() {
         this.entries = [];
     }
-    retrieveProvenance(packageId) {
+    retrieveProvenance(provenanceForm) {
         this.performing = true;
-        this.apiService.retrieveProvenance(packageId.packageId)
+        this.apiService.retrieveProvenance(provenanceForm.packageId)
             .subscribe(res => {
             this.fishesProv = res.fishCatchingOccurrences;
             this.shipmentsProv = res.fishShipmentOccurrences;
