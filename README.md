@@ -1,16 +1,17 @@
-# Smart Contract Invocation Protocol (SCIP) Supply Chains Case Study
+# Unified Integration of Smart Contracts through Service Orientation - A Case-Study
 
 ## Introduction
 
-A case-study that shows how the [SCIP protocol](https://github.com/lampajr/scip) can be used in a heterogeneous multi-blockchain setup.
+A case-study that shows how the [Smart Contract Locator (SCL)](https://github.com/ghareeb-falazi/scl), the [Smart Contract Description Language (SCDL)](https://github.com/floriandanielit/scdl), and the [Smart Contract Invocation Protocol (SCIP)](https://github.com/lampajr/scip) can be used in combination to support the integration of heterogeneous multi-blockchain setups into client applications.
 
-The following picture highlights the architecture of the distributed system that is invloved in the case study:
+The following picture highlights the distributed system that is invloved in the case study:
 ![Arch.png](Arch.png)
-
+The system focuses on a retailer enterprise that is connected to two supply chains (one for seafood products and one for dairy products).
+The two supply chains are managed by two blockchains ([Ethereum](https://ethereum.org/) and [Hyperledger Fabric](https://www.hyperledger.org/projects/fabric)).
+Access to the blockchains is provided by two [SCIP Gateways](https://github.com/ghareeb-falazi/BlockchainAccessLayer), which can be activated using SCIP messages addressed at appropriate SCL addresses.
 We will create the various components of this system, bring it up and then run a sample the client application against it.
-The sample client application is described by the following figure:
-
-![CaseStudy](CaseStudy.png)
+The sample client application allows the various roles presented in the figure to update the corresponding blockchains with supply-chain-related actoins.
+Furthermore, it allows the end-customer to query the provenance of a given fish package or a milk carton.
 
 ## Prerequisits
 
@@ -43,40 +44,7 @@ The sample client application is described by the following figure:
  
 ## Demo
 
-- __A Video of this demo is [available on Youtube](https://youtu.be/oiN_rKdk2EM)__
-- Open the browser to http://localhost:4200 to open the frontend of the client applicaiton.
-- Click on the button __Query State__. This should result in the state of the energy management system (EMS) shown on the left side of the page.
-- Start the workflow demonstrated in the fiture above by clicking on the __Start Workflow__ button.
-- Then a stream of log messages from the backend of the client application is shown on the right side with a black background.
-- Wait until the _Subscribe_ request message is sent to the first Gateway and is confirmed by it.
-- Reduce the energy bulk price to below or equal 500, by either:
-   - Using the tab entitled `Power Plant Controls`, or
-   - Sending a POST message to the address: `http://localhost:8082/blockchain-access-layer/webapi?blockchain=fabric&blockchain-id=fabric-0&address=mychannel/ems`, which corresponds to the [SCL](https://github.com/ghareeb-falazi/scl) of the energy management system smart contract gateway of the Hyperledger Fabric permissioned blockchain, with the following body:
-
-     ```
-     {
-        "jsonrpc": 2.0,
-        "method": "Invoke",
-        "id": 1,
-        "params": {
-            "functionIdentifier": "changeBulkPrice",
-            "inputs": [{
-              "name": "newPrice",
-              "type": " {\"type\":\"integer\",\"minimum\": 0,\"maximum\":4294967295}",
-              "value": 500
-            } ],
-            "outputs": [],
-            "doc": 50,
-            "callbackUrl": "http://localhost:8081/webapi/submit-transaction/dummy",
-            "timeout": 100000,
-            "correlationIdentifier": "abc",
-            "signature": ""
-         }
-     }
-     ```
-     This has the effect of triggering the transaction that reduces the bulk energy price. You can use a tool like [Postman](https://www.getpostman.com/), or [curl](https://curl.haxx.se/) to achieve this task.
-- Go back to the initial tab (`Power Provider Controls`), and check how the log messages proceed according to the presercibed [workflow](https://github.com/ghareeb-falazi/SCIP-CaseStudy/blob/master/ClientApplication/scip-client-application/backend/src/main/java/blockchains/iaas/uni/stuttgart/de/scipcasestudy/clientapplication/backend/restapi/WorkflowController.java).
-- When the _Done!!!_ message is received, recheck the state of the EMS and notice how it is changed according to the workflow.
+- __A Video of this demo is [available on Youtube]()__
 
 ## Notes
 

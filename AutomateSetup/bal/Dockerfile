@@ -1,6 +1,6 @@
 FROM alpine/git as clone
 WORKDIR /app
-RUN git clone --single-branch --branch scip https://github.com/ghareeb-falazi/BlockchainAccessLayer
+RUN git clone https://github.com/ghareeb-falazi/BlockchainAccessLayer
 
 FROM maven:3.5-jdk-8-alpine as build
 WORKDIR /app
