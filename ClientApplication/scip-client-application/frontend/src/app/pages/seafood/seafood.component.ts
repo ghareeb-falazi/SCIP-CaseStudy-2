@@ -331,9 +331,9 @@ export class SeafoodComponent implements OnInit {
     this.entries = [];
   }
 
-  retrieveProvenance(packageId) {
+  retrieveProvenance(provenanceForm) {
     this.performing = true;
-    this.apiService.retrieveProvenance(packageId)
+    this.apiService.retrieveProvenance(provenanceForm.packageId)
       .subscribe(
         res => {
           this.fishesProv = res.fishCatchingOccurrences;
