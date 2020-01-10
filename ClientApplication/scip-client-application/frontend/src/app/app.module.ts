@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from './material.module';
-import { ScipClientService } from './ScipClientService';
 import { ApiService } from './api.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -31,7 +30,7 @@ import { IndexComponent } from './pages/index/index.component';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [ApiService, ScipClientService, HttpClientModule],
+  providers: [ApiService, HttpClientModule],
   bootstrap: [AppComponent]
 })
 export class AppModule {
