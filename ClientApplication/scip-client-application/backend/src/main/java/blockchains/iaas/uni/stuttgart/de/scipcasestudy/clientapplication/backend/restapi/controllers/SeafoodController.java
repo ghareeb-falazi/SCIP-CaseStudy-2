@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -146,7 +147,7 @@ public class SeafoodController {
 
     @CrossOrigin
     @RequestMapping(value = "/seafood/provenance", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public SeafoodProvenance retrieveProvenance(@RequestBody String packageId) {
+    public SeafoodProvenance retrieveProvenance(@RequestParam String packageId) {
         SeafoodProvenance result = new SeafoodProvenance();
         String filter = String.format("packageId === '%s'", packageId);
 
