@@ -204,6 +204,10 @@ export class SeafoodComponent implements OnInit {
       );
   }
 
+  clearFishes() {
+    this.fishes = [];
+  }
+
   getPackages() {
     this.packagePerforming = true;
     this.apiService.getAllRegisteredPackages()
@@ -217,6 +221,10 @@ export class SeafoodComponent implements OnInit {
           this.packagePerforming = false;
         }
       );
+  }
+
+  clearPackages() {
+    this.packages = [];
   }
 
   getShipments() {
@@ -234,6 +242,10 @@ export class SeafoodComponent implements OnInit {
       );
   }
 
+  clearShipments() {
+    this.shipments = [];
+  }
+
   getTransportations() {
     this.transportationPerforming = true;
     this.apiService.getAllRegisteredTransportations()
@@ -249,10 +261,16 @@ export class SeafoodComponent implements OnInit {
       );
   }
 
+  clearTransportations() {
+    this.transportations = [];
+  }
+
   getSales() {
+    console.log('retrieving sales..');
     this.salePerforming = true;
-    this.apiService.getAllSoldPackages()
-      .subscribe(
+    const obs = this.apiService.getAllSoldPackages();
+
+    obs.subscribe(
         res => {
           this.sales = res;
           this.salePerforming = false;
@@ -262,6 +280,10 @@ export class SeafoodComponent implements OnInit {
           this.salePerforming = false;
         }
       );
+  }
+
+  clearSales() {
+    this.sales = [];
   }
 
   getEntries() {
@@ -279,6 +301,9 @@ export class SeafoodComponent implements OnInit {
       );
   }
 
+  clearEntries() {
+    this.entries = [];
+  }
 
   removeIdFromPackage(id: string) {
     const controller = this.packageForm.controls.fishIds;

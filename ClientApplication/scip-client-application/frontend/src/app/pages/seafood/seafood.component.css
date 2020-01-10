@@ -54,13 +54,21 @@ mat-card {
 
 mat-card mat-card-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 
 mat-card mat-card-actions button {
-  background-color: rgb(238, 236, 236);
-  width: 100%;
+  width: 50%;
+}
+
+mat-card mat-card-actions .clear-btn {
+  background-color: rgb(235, 139, 139);
+}
+
+mat-card mat-card-actions .query-btn {
+  background-color: rgb(174, 219, 144);
+  width: 50%;
 }
 
 /* SPINNER */

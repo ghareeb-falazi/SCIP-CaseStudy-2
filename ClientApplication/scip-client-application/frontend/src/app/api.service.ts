@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { environment } from '../environments/environment';
 import Fish from './models/Fish';
 import FishShipment from './models/FishShipment';
@@ -61,6 +61,25 @@ export class ApiService {
 
   public getAllRegisteredTransportations(): Observable<PackageTransportation[]> {
     const url = `${environment.apiUrl}/seafood/transportation`;
+    // const packages: PackageTransportation[] = [
+    //   {
+    //     packageId: 'abcd',
+    //     toLocation: 'Milan',
+    //     distributorName: 'UPS'
+    //   },
+    //   {
+    //     packageId: '1224',
+    //     toLocation: 'Verona',
+    //     distributorName: 'Bartolini'
+    //   },
+    //   {
+    //     packageId: 'ab34',
+    //     toLocation: 'Cremona',
+    //     distributorName: 'Poste Italiane'
+    //   }
+    // ];
+    // const pr: Promise<PackageTransportation[]> = Promise.all(packages);
+    // return (from(pr)) as Observable<PackageTransportation[]>;
     return this.http.get<PackageTransportation[]>(url);
   }
 
