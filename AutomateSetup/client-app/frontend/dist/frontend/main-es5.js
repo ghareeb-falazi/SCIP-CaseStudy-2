@@ -1742,11 +1742,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         }
       }, {
         key: "retrieveProvenance",
-        value: function retrieveProvenance(packageId) {
+        value: function retrieveProvenance(provenanceForm) {
           var _this13 = this;
 
           this.performing = true;
-          this.apiService.retrieveProvenance(packageId.packageId).subscribe(function (res) {
+          this.apiService.retrieveProvenance(provenanceForm.packageId).subscribe(function (res) {
             _this13.fishesProv = res.fishCatchingOccurrences;
             _this13.shipmentsProv = res.fishShipmentOccurrences;
             _this13.packagesProv = [res.packagingOccurrence];

@@ -10,9 +10,9 @@ import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip.InvocationRequestMessage;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip.QueryRequestMessage;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.request.scip.SubscriptionRequestMessage;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.InvokeResponse;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.QueryResponse;
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.SubscribeResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.scip.InvokeResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.scip.QueryResponse;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.scip.SubscribeResponse;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.JsonRpcIdGenerator;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.correlation.AsyncRequestCorrelationManager;
 import com.github.arteam.simplejsonrpc.client.JsonRpcClient;
@@ -33,13 +33,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
+/**
+ * This class is responsible for triggering SCIP method calls.
+ */
 public class ScipClient {
     private static Logger log = LoggerFactory.getLogger(ScipClient.class);
     private static ScipClient instance;
     private ExecutorService executorService;
 
     private ScipClient() {
-
     }
 
     public static ScipClient getInstance() {
@@ -184,13 +186,14 @@ public class ScipClient {
             final String METHOD_NAME = "Query";
             JsonRpcClient client = new JsonRpcClient(createNewTransport(scl));
 
-            QueryResponse response = (QueryResponse) client.createRequest()
+            QueryResponse response = client.createRequest()
                     .method(METHOD_NAME)
                     .id(JsonRpcIdGenerator.getInstance().getNextId())
                     .param("parameters", request.getParameters())
                     .param("eventIdentifier", request.getEventIdentifier())
                     .param("filter", request.getFilter())
                     .param("timeframe", request.getTimeframe())
+                    .returnAs(QueryResponse.class)
                     .execute();
 
             log.info("Received: {} from gateway at {}", response, scl);

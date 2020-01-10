@@ -2,7 +2,7 @@ package blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backen
 
 import java.util.List;
 
-import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.GenericResponseMessage;
+import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.response.scip.GenericResponseMessage;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Occurrence;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.model.common.Parameter;
 import blockchains.iaas.uni.stuttgart.de.scipcasestudy.clientapplication.backend.utils.correlation.AsyncRequestCorrelationManager;
@@ -13,6 +13,9 @@ import com.github.arteam.simplejsonrpc.core.annotation.JsonRpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is responsible for handling asynchronous SCIP response messages.
+ */
 @JsonRpcService
 public class ClientApplicationService {
     private Logger log = LoggerFactory.getLogger(ClientApplicationService.class);
