@@ -146,7 +146,7 @@ public class SeafoodController {
 
     @CrossOrigin
     @RequestMapping(value = "/seafood/provenance", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
-    public SeafoodProvenance retrieveProvenance(String packageId) {
+    public SeafoodProvenance retrieveProvenance(@RequestBody String packageId) {
         SeafoodProvenance result = new SeafoodProvenance();
         String filter = String.format("packageId === '%s'", packageId);
 
@@ -195,7 +195,7 @@ public class SeafoodController {
             fishIds.forEach(fishId -> {
                 // detect if a shipment contains the current fish id
                 String shipmentFilter = String.format("RegExp('id:%s\\.').test(fishIds)", fishId);
-                QueryResponse shipmentQueryResponse = performQuery("shipment", new FishShipment(), shipmentFilter);
+                QueryResponse shipmentQueryResponse = performQuery("shipmentRegistered", new FishShipment(), shipmentFilter);
 
                 if (shipmentQueryResponse.getOccurrences() != null && shipmentQueryResponse.getOccurrences().size() > 0) {
                     FishShipment currentShipment = new FishShipment(shipmentQueryResponse.getOccurrences().get(0).getParameters());
