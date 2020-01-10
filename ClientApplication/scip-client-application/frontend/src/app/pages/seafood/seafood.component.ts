@@ -9,6 +9,7 @@ import FishShipment from 'src/app/models/FishShipment';
 import PackageTransportation from 'src/app/models/PackageTransportation';
 import PackageSelling from 'src/app/models/PackageSelling';
 import InventoryEntry from 'src/app/models/InventoryEntry';
+import SeafoodOccurrence from 'src/app/models/SeafoodOccurrence';
 
 @Component({
   selector: 'app-seafood',
@@ -24,6 +25,7 @@ export class SeafoodComponent implements OnInit {
   inventoryEntryForm: FormGroup;
   sellingForm: FormGroup;
   transportationForm: FormGroup;
+  provenanceForm: FormGroup;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   idsForPackage: string[] = [];
@@ -62,6 +64,27 @@ export class SeafoodComponent implements OnInit {
   entryPerforming = false;
   entryError = '';
 
+
+  fishesProv: SeafoodOccurrence<Fish>[] = [];
+  fishProvColumns = ['isoTimestamp', 'fishId', 'location', 'fishermanName'];
+
+  packagesProv: SeafoodOccurrence<FishPackage>[] = [];
+  packageProvColumns = ['isoTimestamp', 'fishIds', 'packageId', 'processingFacilityName'];
+
+  shipmentsProv: SeafoodOccurrence<FishShipment>[] = [];
+  shipmentProvColumns = ['isoTimestamp', 'fishIds', 'toLocation', 'shipmentCompanyName'];
+
+  transportationsProv: SeafoodOccurrence<PackageTransportation>[] = [];
+  transportationProvColumns = ['isoTimestamp', 'packageId', 'toLocation', 'distributorName'];
+
+  salesProv: SeafoodOccurrence<PackageSelling>[] = [];
+  saleProvColumns = ['isoTimestamp', 'packageId'];
+
+  entriesProv: SeafoodOccurrence<InventoryEntry>[] = [];
+  entryProvColumns = ['isoTimestamp', 'packageId', 'retailerName'];
+
+  error = '';
+
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.fishForm = this.formBuilder.group({
       fishId: '',
@@ -92,6 +115,9 @@ export class SeafoodComponent implements OnInit {
       retailerName: '',
     });
     this.sellingForm = this.formBuilder.group({
+      packageId: '',
+    });
+    this.provenanceForm = this.formBuilder.group({
       packageId: '',
     });
   }
@@ -303,6 +329,35 @@ export class SeafoodComponent implements OnInit {
 
   clearEntries() {
     this.entries = [];
+  }
+
+  retrieveProvenance(packageId) {
+    this.performing = true;
+    this.apiService.retrieveProvenance(packageId)
+      .subscribe(
+        res => {
+          this.fishesProv = res.fishCatchingOccurrences;
+          this.packagesProv = [res.packagingOccurrence];
+          this.shipmentsProv = [res.fishShipmentOccurrence];
+          this.transportationsProv = [res.transportationOccurrence];
+          this.salesProv = [res.sellingOccurrence];
+          this.entriesProv = [res.inventoryOccurrence];
+          this.performing = false;
+        },
+        err => {
+          this.error = err.message;
+          this.performing = false;
+        }
+      );
+  }
+
+  clearProvenance() {
+    this.fishesProv = [];
+    this.packagesProv = [];
+    this.shipmentsProv = [];
+    this.transportationsProv = [];
+    this.salesProv = [];
+    this.entriesProv = [];
   }
 
   removeIdFromPackage(id: string) {

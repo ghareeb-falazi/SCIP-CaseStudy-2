@@ -686,4 +686,203 @@
       </mat-card>
     </div>
   </mat-tab>
+
+  <!-- PROVENANCE -->
+  <mat-tab label="Provenance">
+    <h2>
+      You can retrieve the whole provenance of a specific package by providing its identifier and clicking on
+      the <em>Retrieve Provenance</em> button.
+    </h2>
+    <div class="prov-wrapper">
+      <div class="prov-form-box mat-elevation-z3">
+        <form
+          [formGroup]="provenanceForm"
+          (ngSubmit)="retrieveProvenance(provenanceForm.value)"
+        >
+          <mat-form-field>
+            <input
+              matInput
+              formControlName="packageId"
+              placeholder="Package Id.."
+            />
+          </mat-form-field>
+          <button mat-button class="submit-btn button" type="submit">Retrieve Provenance</button>
+          <button mat-button class="clear-btn button" type="button" (click)="clearProvenance()">Clear</button>
+        </form>
+      </div>
+      <div class="prov-result-box">
+        <div class="spinner">
+          <div *ngIf="performing" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+        <div *ngIf="!performing" class="prov-tables-box">
+          <h3> Selling Occurence </h3>
+          <table
+            mat-table
+            [dataSource]="salesProv"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="isoTimestamp">
+              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>
+              <td mat-cell *matCellDef="let element">{{ element.isoTimestamp }}</td>
+            </ng-container>
+            <ng-container matColumnDef="packageId">
+              <th mat-header-cell *matHeaderCellDef>Package Id</th>
+              <td mat-cell *matCellDef="let element">{{ element.occurrence.packageId }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="saleProvColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: saleProvColumns"></tr>
+          </table>
+          <h3> Inventory Occurence </h3>
+          <table
+            mat-table
+            [dataSource]="entriesProv"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="isoTimestamp">
+              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>
+              <td mat-cell *matCellDef="let element">{{ element.isoTimestamp }}</td>
+            </ng-container>
+            <ng-container matColumnDef="packageId">
+              <th mat-header-cell *matHeaderCellDef>Package Id</th>
+              <td mat-cell *matCellDef="let element">{{ element.occurrence.packageId }}</td>
+            </ng-container>
+            <ng-container matColumnDef="retailerName">
+              <th mat-header-cell *matHeaderCellDef>Retailer Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.occurrence.retailerName }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="entryProvColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: entryProvColumns"></tr>
+          </table>
+          <h3> Transportation Occurence </h3>
+          <table
+            mat-table
+            [dataSource]="transportationsProv"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="isoTimestamp">
+              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>
+              <td mat-cell *matCellDef="let element">{{ element.isoTimestamp }}</td>
+            </ng-container>
+            <ng-container matColumnDef="packageId">
+              <th mat-header-cell *matHeaderCellDef>Package Id</th>
+              <td mat-cell *matCellDef="let element">{{ element.occurrence.packageId }}</td>
+            </ng-container>
+            <ng-container matColumnDef="toLocation">
+              <th mat-header-cell *matHeaderCellDef>To Location</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.occurrence.toLocation }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="distributorName">
+              <th mat-header-cell *matHeaderCellDef>
+                Distributor Name
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.occurrence.distributorName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="transportationProvColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: transportationProvColumns"></tr>
+          </table>
+          <h3> Packaging Occurence </h3>
+          <table
+            mat-table
+            [dataSource]="packagesProv"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="isoTimestamp">
+              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>
+              <td mat-cell *matCellDef="let element">{{ element.isoTimestamp }}</td>
+            </ng-container>
+            <ng-container matColumnDef="fishIds">
+              <th mat-header-cell *matHeaderCellDef>Fish Ids</th>
+              <td mat-cell *matCellDef="let element">{{ element.occurrence.fishIds }}</td>
+            </ng-container>
+            <ng-container matColumnDef="packageId">
+              <th mat-header-cell *matHeaderCellDef>Package Id</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.occurrence.packageId }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="processingFacilityName">
+              <th mat-header-cell *matHeaderCellDef>
+                Processing Facility Name
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.occurrence.processingFacilityName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="packageProvColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: packageProvColumns"></tr>
+          </table>
+          <h3> Fish Shipment Occurence </h3>
+          <table
+            mat-table
+            [dataSource]="shipmentsProv"
+            class="mat-elevation-z8"
+          >
+            <ng-container matColumnDef="isoTimestamp">
+              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>
+              <td mat-cell *matCellDef="let element">{{ element.isoTimestamp }}</td>
+            </ng-container>
+            <ng-container matColumnDef="fishIds">
+              <th mat-header-cell *matHeaderCellDef>Fish Ids</th>
+              <td mat-cell *matCellDef="let element">{{ element.occurrence.fishIds }}</td>
+            </ng-container>
+            <ng-container matColumnDef="toLocation">
+              <th mat-header-cell *matHeaderCellDef>To Location</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.occurrence.toLocation }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="shipmentCompanyName">
+              <th mat-header-cell *matHeaderCellDef>
+                Shipment Company Name
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.occurrence.shipmentCompanyName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="shipmentProvColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: shipmentProvColumns"></tr>
+          </table>
+          <h3> Fish Catching Occurences </h3>
+          <table
+            mat-table
+            [dataSource]="fishesProv"
+            class="mat-elevation-z8">
+            <ng-container matColumnDef="isoTimestamp">
+              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>
+              <td mat-cell *matCellDef="let element">{{ element.isoTimestamp }}</td>
+            </ng-container>
+            <ng-container matColumnDef="fishId">
+              <th mat-header-cell *matHeaderCellDef>Fish Id</th>
+              <td mat-cell *matCellDef="let element">{{ element.occurrence.fishId }}</td>
+            </ng-container>
+            <ng-container matColumnDef="location">
+              <th mat-header-cell *matHeaderCellDef>Location</th>
+              <td mat-cell *matCellDef="let element">{{ element.occurrence.location }}</td>
+            </ng-container>
+            <ng-container matColumnDef="fishermanName">
+              <th mat-header-cell *matHeaderCellDef>Fisherman Name</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.occurrence.fishermanName }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="fishProvColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: fishProvColumns"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
 </mat-tab-group>

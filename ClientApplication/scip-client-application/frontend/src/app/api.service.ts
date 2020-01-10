@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, from } from 'rxjs';
+import { Observable, from, of } from 'rxjs';
 import { environment } from '../environments/environment';
 import Fish from './models/Fish';
 import FishShipment from './models/FishShipment';
@@ -8,6 +8,7 @@ import FishPackage from './models/FishPackage';
 import PackageTransportation from './models/PackageTransportation';
 import InventoryEntry from './models/InventoryEntry';
 import PackageSelling from './models/PackageSelling';
+import SeafoodProvenance from './models/SeafoodProvenance';
 
 @Injectable({
   providedIn: 'root'
@@ -64,7 +65,7 @@ export class ApiService {
     // const packages: PackageTransportation[] = [
     //   {
     //     packageId: 'abcd',
-    //     toLocation: 'Milan',
+    //     toLocation: 'Milano',
     //     distributorName: 'UPS'
     //   },
     //   {
@@ -105,5 +106,79 @@ export class ApiService {
   public getAllSoldPackages(): Observable<PackageSelling[]> {
     const url = `${environment.apiUrl}/seafood/selling`;
     return this.http.get<PackageSelling[]>(url);
+  }
+
+  /******************************* PROVENANCE *******************************/
+
+  // TODO: how should I pass the packageId? as query param?
+  public retrieveProvenance(packageId: string): Observable<SeafoodProvenance> {
+    const url = `${environment.apiUrl}/seafood/provenance`;
+    // const prov = {
+    //   sellingOccurrence: {
+    //     isoTimestamp: '123423435',
+    //     occurrence: {
+    //       packageId: 'abcdefg'
+    //     }
+    //   },
+    //   inventoryOccurrence: {
+    //     isoTimestamp: '459843759324',
+    //     occurrence: {
+    //       packageId: 'abcdefg',
+    //       retailerName: 'Pippo Franco'
+    //     }
+    //   },
+    //   transportationOccurrence: {
+    //     isoTimestamp: '43574385743294',
+    //     occurrence: {
+    //       packageId: 'abcdefg',
+    //       toLocation: 'Milan',
+    //       distributorName: 'UPS'
+    //     }
+    //   },
+    //   packagingOccurrence: {
+    //     isoTimestamp: '58748439842932',
+    //     occurrence: {
+    //       fishIds: ['1', '2', '3'],
+    //       packageId: 'abcdefg',
+    //       processingFacilityName: 'SeaMar'
+    //     }
+    //   },
+    //   fishShipmentOccurrence: {
+    //     isoTimestamp: '4562389478324',
+    //     occurrence: {
+    //       fishIds: ['1', '2', '3'],
+    //       toLocation: 'Genova',
+    //       shipmentCompanyName: 'SeaMarTransport',
+    //     }
+    //   },
+    //   fishCatchingOccurrences: [
+    //     {
+    //       isoTimestamp: '29875239489384',
+    //       occurrence: {
+    //         fishId: '1',
+    //         location: 'Genova',
+    //         fishermanName: 'Giorgio',
+    //       }
+    //     },
+    //     {
+    //       isoTimestamp: '29875239489384',
+    //       occurrence: {
+    //         fishId: '2',
+    //         location: 'Genova',
+    //         fishermanName: 'Giorgio',
+    //       }
+    //     },
+    //     {
+    //       isoTimestamp: '29875239489384',
+    //       occurrence: {
+    //         fishId: '3',
+    //         location: 'Genova',
+    //         fishermanName: 'Giorgio',
+    //       }
+    //     }
+    //   ],
+    // };
+    // return of(prov);
+    return this.http.get<SeafoodProvenance>(url);
   }
 }
