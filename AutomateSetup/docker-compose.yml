@@ -34,7 +34,7 @@ services:
     build:
       context: ./ganache-cli
       target: ganache
-    command: ["ganache-cli", "-m", "smart contract composition", "--defaultBalanceEther", "100000000", "-l", "471238800", "-g", "1", "-v", "--keepAliveTimeout", "15000", "-b", "12"]
+    command: ["ganache-cli", "-m", "smart contract composition", "--defaultBalanceEther", "100000000", "-l", "471238800", "-g", "1", "-v", "--keepAliveTimeout", "15000", "-b", "2"]
     ports:
       - "8545:8545"
     networks: 
@@ -179,8 +179,10 @@ services:
       - "8080:8080"
     environment:
       - CLIENT_CALLBACK_URL=http://case-study-backend:8080
-      - EMS_BAL_URL=http://172.16.238.11:8080/blockchain-access-layer
-      - DIGEST_BAL_URL=http://172.16.238.10:8080/blockchain-access-layer
+      - DAIRY_BAL_URL=http://172.16.238.11:8080/blockchain-access-layer
+      - DAIRY_SC_ADDRESS=mychannel/dairy
+      - SEAFOOD_BAL_URL=http://172.16.238.10:8080/blockchain-access-layer
+      - SEAFOOD_SC_ADDRESS=0x75f17644EAEb3cC6511764a6F1138F14B3e33D0f
     networks:
       case-study:
         ipv4_address: 172.16.238.17
