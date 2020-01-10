@@ -36,7 +36,7 @@ Furthermore, it allows the end-customer to query the provenance of a given fish 
   > ./Stop.sh
   ```
 
-  You can also remove BAL and ganache-cli images by cmobining the previous command with the `rmi` option as follows:
+  You can also remove BAL and ganache-cli images by combining the previous command with the `rmi` option as follows:
   
   ```
   > ./Stop.sh rmi
@@ -44,6 +44,7 @@ Furthermore, it allows the end-customer to query the provenance of a given fish 
  
 ## Demo
 
+Coming soon!
 - __A Video of this demo is [available on Youtube]()__
 
 ## Notes
