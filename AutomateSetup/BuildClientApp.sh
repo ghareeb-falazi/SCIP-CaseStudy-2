@@ -15,8 +15,8 @@ mvn package -DskipTests=true
 
 printf "\n---Copying executables...---\n"
 
-cd ..
-cp -r frontend/dist ../../AutomateSetup/client-app/frontend/dist
+#cd ..
+cp -r frontend/dist ../../AutomateSetup/client-app/frontend
 cp -r backend/target ../../AutomateSetup/client-app/backend/target
 
 printf "\n---DONE!---\n"
