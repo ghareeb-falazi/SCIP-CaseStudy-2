@@ -132,6 +132,7 @@ export class SeafoodComponent implements OnInit {
         res => {
           this.result = res;
           this.performing = false;
+          this.getFishes();
         },
         err => {
           this.result = err.message;
@@ -147,6 +148,7 @@ export class SeafoodComponent implements OnInit {
         res => {
           this.result = res;
           this.performing = false;
+          this.getPackages();
         },
         err => {
           this.result = err.message;
@@ -162,6 +164,7 @@ export class SeafoodComponent implements OnInit {
         res => {
           this.result = res;
           this.performing = false;
+          this.getShipments();
         },
         err => {
           this.result = err.message;
@@ -177,6 +180,7 @@ export class SeafoodComponent implements OnInit {
         res => {
           this.result = res;
           this.performing = false;
+          this.getTransportations();
         },
         err => {
           this.result = err.message;
@@ -192,6 +196,7 @@ export class SeafoodComponent implements OnInit {
         res => {
           this.result = res;
           this.performing = false;
+          this.getEntries();
         },
         err => {
           this.result = err.message;
@@ -207,6 +212,7 @@ export class SeafoodComponent implements OnInit {
         res => {
           this.result = res;
           this.performing = false;
+          this.getSales();
         },
         err => {
           this.result = err.message;
