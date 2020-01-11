@@ -342,12 +342,18 @@ export class SeafoodComponent implements OnInit {
     this.apiService.retrieveProvenance(provenanceForm.packageId)
       .subscribe(
         res => {
-          this.fishesProv = res.fishCatchingOccurrences;
-          this.shipmentsProv = res.fishShipmentOccurrences;
-          this.packagesProv = [res.packagingOccurrence];
-          this.transportationsProv = [res.transportationOccurrence];
-          this.salesProv = [res.sellingOccurrence];
-          this.entriesProv = [res.inventoryOccurrence];
+          console.log('=== PROVENANCE RECEIVED ===');
+          console.log(res);
+          if (res.packagingOccurrence == null) {
+            this.error = 'Package not found';
+          } else {
+            this.fishesProv = res.fishCatchingOccurrences ? res.fishCatchingOccurrences : [];
+            this.shipmentsProv = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
+            this.packagesProv = res.packagingOccurrence ? [res.packagingOccurrence] : [];
+            this.transportationsProv = res.transportationOccurrence ? [res.transportationOccurrence] : [];
+            this.salesProv = res.sellingOccurrence ? [res.sellingOccurrence] : [];
+            this.entriesProv = res.inventoryOccurrence ? [res.inventoryOccurrence] : [];
+          }
           this.performing = false;
         },
         err => {
