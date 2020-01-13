@@ -752,56 +752,56 @@
         <div *ngIf="!performing && error !== ''" class="error-box">
           <h3>{{ error }}</h3>
         </div>
-        <ngx-graph  
-          *ngIf="(!performing && error === '') || nodes.length === 0" 
-          class="chart-container"
-          [links]="links"
-          [nodes]="nodes"
-          [legend]="true"
-          [curve]="curve"
-          [layout]="layout"
-          [nodeWidth]=150
-          [nodeHeight]=100
-          [layoutSettings]="layoutSettings"
-          [panningEnabled]="true"
-          [draggingEnabled]="false"
-          [enableZoom]="false"
-          [center$]="center$"
-          [zoomToFit$]="zoomToFit$">
-          <ng-template #defsTemplate>
-            <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
-              <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-            </svg:marker>
-          </ng-template>
-          
-          <ng-template #nodeTemplate let-node>
-            <svg:g class="node" xmlns="http://www.w3.org/2000/xhtml" width="150" height="100">
-              <svg:foreignObject width="150" height="100">
-                <!-- <xhtml:div class="cardContainer" xmlns="http://www.w3.org/1999/xhtml" [ngStyle]=getStyles(node)> -->
-                <xhtml:div class="cardContainer" xmlns="http://www.w3.org/1999/xhtml">
-                  <label class="name">{{node.label}}</label>
-                  <label>{{node.data.isoTimestamp}}</label>
-                  <!-- <label>{{node.data.office}}</label> -->
-                </xhtml:div>
-              </svg:foreignObject>
-            </svg:g>
-          </ng-template>
-          
-          <ng-template #linkTemplate let-link>
-            <svg:g class="edge">
-              <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
-              </svg:path>
-              <svg:text class="edge-label" text-anchor="middle">
-                <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">{{link.label}}</textPath>
-              </svg:text>
-            </svg:g>
-            <svg:g class="linkMidpoint" *ngIf="link.midPoint"
-                   [attr.transform]="'translate(' + (link.midPoint.x) + ',' + (link.midPoint.y) + ')'">
-              <ellipse rx="30" ry="10" />
-              <!-- <svg:text alignment-baseline="central">{{ link.data.linkText }}</svg:text> -->
-          </svg:g>
-          </ng-template>
-        </ngx-graph>
+        <div *ngIf="!performing && error === ''" class="page">
+          <ngx-graph
+            [links]="links"
+            [nodes]="nodes"
+            [clusters]="clusters"
+            [layout]="dagre"
+            [curve]="curve"
+            [draggingEnabled]="false"
+            [panningEnabled]="true"
+            [enableZoom]="false"
+            [panOnZoom]="false"
+            [autoZoom]="true"
+            [autoCenter]="true"
+            [update$]="update$"
+            [center$]="center$"
+            [zoomToFit$]="zoomToFit$"
+          >
+    
+            <ng-template #defsTemplate>
+              <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+              </svg:marker>
+            </ng-template>
+
+            <ng-template #clusterTemplate let-cluster>
+              <svg:g class="node cluster">
+                <svg:rect rx="5" ry="5" [attr.width]="cluster.dimension.width" [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data.color" />
+              </svg:g>
+            </ng-template>
+    
+            <ng-template #nodeTemplate let-node>
+              <svg:g class="node" (click)="onNodeClicked($event)">
+                <svg:rect id="{{node.id}}" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
+                <svg:text id="{{node.id}}" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}</svg:text>
+              </svg:g>
+            </ng-template>
+    
+            <ng-template #linkTemplate let-link>
+              <svg:g class="edge" (click)="onEdgeClicked($event)">
+                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
+                </svg:path>
+                <svg:text class="edge-label" text-anchor="middle">
+                  <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
+                    {{link.label}}
+                  </textPath>
+                </svg:text>
+              </svg:g>
+            </ng-template>
+          </ngx-graph>
+        </div>
       </div>
     </div>
   </mat-tab>

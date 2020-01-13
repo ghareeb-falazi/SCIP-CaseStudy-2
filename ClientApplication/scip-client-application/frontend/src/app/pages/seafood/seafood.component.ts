@@ -11,7 +11,7 @@ import PackageSelling from 'src/app/models/PackageSelling';
 import InventoryEntry from 'src/app/models/InventoryEntry';
 import SeafoodOccurrence from 'src/app/models/SeafoodOccurrence';
 import * as shape from 'd3-shape';
-import { Node, Edge, Layout } from '@swimlane/ngx-graph';
+import { Node, Edge, Layout, ClusterNode } from '@swimlane/ngx-graph';
 import { DagreNodesOnlyLayout } from './customDagreLayout';
 import { Subject } from 'rxjs';
 
@@ -90,22 +90,17 @@ export class SeafoodComponent implements OnInit {
 
   error = '';
 
-  // // provenance graph data
-  // LEVEL_FISH = 10;
-  // LEVEL_SHIPMENT = 100;
-  // LEVEL_PACKAGE = 200;
-  // LEVEL_TRANSPORT = 300;
-  // LEVEL_INVENTORY = 400;
-  // LEVEL_SELLING = 500;
-
   layoutSettings = {
-    orientation: 'TB'
+    orientation: 'LR'
   };
   layout: Layout = new DagreNodesOnlyLayout();
-  curve = shape.curveBundle.beta(1);
+  // curve = shape.curveBundle.beta(1);
+  curve = shape.curveCardinal;
   size = [1000, 750];
   links: Edge[] = [];
   nodes: Node[] = [];
+  clusters: ClusterNode[] = [];
+  update$: Subject<boolean> = new Subject();
   center$: Subject<boolean> = new Subject();
   zoomToFit$: Subject<boolean> = new Subject();
 
@@ -370,44 +365,71 @@ export class SeafoodComponent implements OnInit {
     this.apiService.retrieveProvenance(id)
       .subscribe(
         res => {
+
+          // this.clusters = [
+          //   {
+          //     id: 'one',
+          //     label: 'fishes',
+          //     childNodeIds: [],
+          //     data: {
+          //       color: '#d9f4f6',
+          //     }
+          //   },
+          //   {
+          //     id: 'two',
+          //     label: 'shipments',
+          //     childNodeIds: [],
+          //     data: {
+          //       color: '#dbf6d9',
+          //     }
+          //   }
+          // ];
+
           console.log('=== PROVENANCE RECEIVED ===');
           if (res.packagingOccurrence == null) {
             this.error = 'Package not found';
           } else {
             this.provenanceFishes = res.fishCatchingOccurrences ? res.fishCatchingOccurrences : [];
-            let baseFish = 10;
             for (const fish of this.provenanceFishes) {
               this.nodes = [
                 ...this.nodes,
                 {
                   id: fish.occurrence.fishId,
-                  label: 'Fish Catching',
+                  label: 'Fish Captured',
                   data: {
                     isoTimestamp: fish.isoTimestamp,
                     location: fish.occurrence.location,
-                    fishermanName: fish.occurrence.fishermanName
+                    fishermanName: fish.occurrence.fishermanName,
+                    color: '#3533ff',
                   }
                 }
               ];
-              baseFish += 80;
+              // this.clusters[0].childNodeIds = [
+              //   ...this.clusters[0].childNodeIds,
+              //   fish.occurrence.fishId
+              // ];
             }
 
             this.provenanceShipments = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
-            let baseShipment = 10;
             for (const shipment of this.provenanceShipments) {
+              const shipmentNodeId = shipment.occurrence.fishIds.toString();
               this.nodes = [
                 ...this.nodes,
                 {
-                  id: shipment.occurrence.fishIds.toString(),
-                  label: 'Shipment Occurrence',
+                  id: shipmentNodeId,
+                  label: 'Fishes Shipped',
                   data: {
                     isoTimestamp: shipment.isoTimestamp,
                     toLocation: shipment.occurrence.toLocation,
-                    shipmentCompanyName: shipment.occurrence.shipmentCompanyName
+                    shipmentCompanyName: shipment.occurrence.shipmentCompanyName,
+                    color: '#33fbff',
                   }
                 }
               ];
-              baseShipment += 30;
+              // this.clusters[1].childNodeIds = [
+              //   ...this.clusters[1].childNodeIds,
+              //   shipmentNodeId
+              // ];
 
               for (const fishId of shipment.occurrence.fishIds) {
                 const check = this.nodes.filter(value => value.id === fishId);
@@ -415,8 +437,12 @@ export class SeafoodComponent implements OnInit {
                   this.links = [
                     ...this.links,
                     {
+                      label: 'fish shipped',
                       source: fishId,
-                      target: shipment.occurrence.fishIds.toString(),
+                      target: shipmentNodeId,
+                      data: {
+                        linkText: 'fish shipped',
+                      }
                     }
                   ];
                 }
@@ -430,11 +456,12 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: packageNodeId,
-                  label: 'Package Occurrence',
+                  label: 'Package ' + this.provenancePackage.occurrence.packageId,
                   data: {
                     isoTimestamp: this.provenancePackage.isoTimestamp,
                     fishIds: this.provenancePackage.occurrence.fishIds,
-                    processingFacilityName: this.provenancePackage.occurrence.processingFacilityName
+                    processingFacilityName: this.provenancePackage.occurrence.processingFacilityName,
+                    color: '#ff5733',
                   }
                 }
               ];
@@ -445,8 +472,12 @@ export class SeafoodComponent implements OnInit {
                   this.links = [
                     ...this.links,
                     {
+                      label: 'package registration',
                       source: fishId,
                       target: packageNodeId,
+                      data: {
+                        linkText: 'package registration',
+                      }
                     }
                   ];
                 }
@@ -460,11 +491,12 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: transportationNodeId,
-                  label: 'Transport Occurrence',
+                  label: 'Package Transported',
                   data: {
                     isoTimestamp: this.provenanceTransportation.isoTimestamp,
                     toLocation: this.provenanceTransportation.occurrence.toLocation,
                     distributorName: this.provenanceTransportation.occurrence.distributorName,
+                    color: '#35ff33',
                   }
                 }
               ];
@@ -472,8 +504,12 @@ export class SeafoodComponent implements OnInit {
               this.links = [
                 ...this.links,
                 {
+                  label: 'package transporting',
                   source: 'package-' + this.provenanceTransportation.occurrence.packageId,
                   target: transportationNodeId,
+                  data: {
+                    linkText: 'package transporting',
+                  }
                 }
               ];
             }
@@ -485,9 +521,10 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: sellingNodeId,
-                  label: 'Selling Occurrence',
+                  label: 'Package Sold',
                   data: {
                     isoTimestamp: this.provenanceSelling.isoTimestamp,
+                    color: '#f1ff33',
                   }
                 }
               ];
@@ -495,8 +532,12 @@ export class SeafoodComponent implements OnInit {
               this.links = [
                 ...this.links,
                 {
+                  label: 'package selling',
                   source: 'package-' + this.provenanceSelling.occurrence.packageId,
                   target: sellingNodeId,
+                  data: {
+                    linkText: 'package selling',
+                  }
                 }
               ];
             }
@@ -508,10 +549,11 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: entryNodeId,
-                  label: 'Inventory Entry Occurrence',
+                  label: 'Package Registered In Inventory',
                   data: {
                     isoTimestamp: this.provenanceEntry.isoTimestamp,
                     retailerName: this.provenanceEntry.occurrence.retailerName,
+                    color: '#ff33de',
                   }
                 }
               ];
@@ -519,13 +561,16 @@ export class SeafoodComponent implements OnInit {
               this.links = [
                 ...this.links,
                 {
+                  label: `package's inventory registration`,
                   source: 'package-' + this.provenanceEntry.occurrence.packageId,
                   target: entryNodeId,
+                  data: {
+                    linkText: `package's inventory registration`
+                  }
                 }
               ];
             }
           }
-
           this.performing = false;
         },
         err => {
@@ -623,5 +668,21 @@ export class SeafoodComponent implements OnInit {
         }
       }
     }
+  }
+
+  onNodeClicked(event) {
+    console.log('Node clicked..');
+    console.log(event.target.id);
+  }
+
+  onEdgeClicked(event) {
+    console.log('Event clicked..');
+    console.log(event.target.id);
+  }
+
+  getStyles(node: Node): any {
+    return {
+         'background-color': node.data.backgroundColor,
+    };
   }
 }

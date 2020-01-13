@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
 // tslint:disable-next-line:max-line-length
-import { MatButtonModule, MatCardModule, MatDividerModule, MatChipsModule, MatIconModule, MatTableModule, MatSlideToggleModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatDividerModule, MatChipsModule, MatIconModule, MatTableModule, MatSlideToggleModule, MatDrawerContent, MatSidenavModule } from '@angular/material';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
