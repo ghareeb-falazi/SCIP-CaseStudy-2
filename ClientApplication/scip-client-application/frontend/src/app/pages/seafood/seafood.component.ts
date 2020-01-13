@@ -10,6 +10,10 @@ import PackageTransportation from 'src/app/models/PackageTransportation';
 import PackageSelling from 'src/app/models/PackageSelling';
 import InventoryEntry from 'src/app/models/InventoryEntry';
 import SeafoodOccurrence from 'src/app/models/SeafoodOccurrence';
+import * as shape from 'd3-shape';
+import { Node, Edge, Layout } from '@swimlane/ngx-graph';
+import { DagreNodesOnlyLayout } from './customDagreLayout';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-seafood',
@@ -38,6 +42,7 @@ export class SeafoodComponent implements OnInit {
   result: any = null;
   prevIndex = 0;
 
+  onReload = true;
 
   fishes: Fish[] = [];
   fishColumns = ['fishId', 'location', 'fishermanName'];
@@ -65,25 +70,44 @@ export class SeafoodComponent implements OnInit {
   entryError = '';
 
 
-  fishesProv: SeafoodOccurrence<Fish>[] = [];
+  provenanceFishes: SeafoodOccurrence<Fish>[] = [];
   fishProvColumns = ['isoTimestamp', 'fishId', 'location', 'fishermanName'];
 
-  packagesProv: SeafoodOccurrence<FishPackage>[] = [];
-  packageProvColumns = ['isoTimestamp', 'fishIds', 'packageId', 'processingFacilityName'];
-
-  shipmentsProv: SeafoodOccurrence<FishShipment>[] = [];
+  provenanceShipments: SeafoodOccurrence<FishShipment>[] = [];
   shipmentProvColumns = ['isoTimestamp', 'fishIds', 'toLocation', 'shipmentCompanyName'];
 
-  transportationsProv: SeafoodOccurrence<PackageTransportation>[] = [];
+  provenancePackage: SeafoodOccurrence<FishPackage> = null;
+  packageProvColumns = ['isoTimestamp', 'fishIds', 'packageId', 'processingFacilityName'];
+
+  provenanceTransportation: SeafoodOccurrence<PackageTransportation> = null;
   transportationProvColumns = ['isoTimestamp', 'packageId', 'toLocation', 'distributorName'];
 
-  salesProv: SeafoodOccurrence<PackageSelling>[] = [];
+  provenanceSelling: SeafoodOccurrence<PackageSelling> = null;
   saleProvColumns = ['isoTimestamp', 'packageId'];
 
-  entriesProv: SeafoodOccurrence<InventoryEntry>[] = [];
+  provenanceEntry: SeafoodOccurrence<InventoryEntry> = null;
   entryProvColumns = ['isoTimestamp', 'packageId', 'retailerName'];
 
   error = '';
+
+  // // provenance graph data
+  // LEVEL_FISH = 10;
+  // LEVEL_SHIPMENT = 100;
+  // LEVEL_PACKAGE = 200;
+  // LEVEL_TRANSPORT = 300;
+  // LEVEL_INVENTORY = 400;
+  // LEVEL_SELLING = 500;
+
+  layoutSettings = {
+    orientation: 'TB'
+  };
+  layout: Layout = new DagreNodesOnlyLayout();
+  curve = shape.curveBundle.beta(1);
+  size = [1000, 750];
+  links: Edge[] = [];
+  nodes: Node[] = [];
+  center$: Subject<boolean> = new Subject();
+  zoomToFit$: Subject<boolean> = new Subject();
 
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.fishForm = this.formBuilder.group({
@@ -123,6 +147,9 @@ export class SeafoodComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.onReload) {
+      this.getFishes();
+    }
   }
 
   onRegisterFish(fish: any) {
@@ -338,22 +365,167 @@ export class SeafoodComponent implements OnInit {
   }
 
   retrieveProvenance(provenanceForm) {
+    const id = provenanceForm.packageId;
     this.performing = true;
-    this.apiService.retrieveProvenance(provenanceForm.packageId)
+    this.apiService.retrieveProvenance(id)
       .subscribe(
         res => {
           console.log('=== PROVENANCE RECEIVED ===');
-          console.log(res);
           if (res.packagingOccurrence == null) {
             this.error = 'Package not found';
           } else {
-            this.fishesProv = res.fishCatchingOccurrences ? res.fishCatchingOccurrences : [];
-            this.shipmentsProv = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
-            this.packagesProv = res.packagingOccurrence ? [res.packagingOccurrence] : [];
-            this.transportationsProv = res.transportationOccurrence ? [res.transportationOccurrence] : [];
-            this.salesProv = res.sellingOccurrence ? [res.sellingOccurrence] : [];
-            this.entriesProv = res.inventoryOccurrence ? [res.inventoryOccurrence] : [];
+            this.provenanceFishes = res.fishCatchingOccurrences ? res.fishCatchingOccurrences : [];
+            let baseFish = 10;
+            for (const fish of this.provenanceFishes) {
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: fish.occurrence.fishId,
+                  label: 'Fish Catching',
+                  data: {
+                    isoTimestamp: fish.isoTimestamp,
+                    location: fish.occurrence.location,
+                    fishermanName: fish.occurrence.fishermanName
+                  }
+                }
+              ];
+              baseFish += 80;
+            }
+
+            this.provenanceShipments = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
+            let baseShipment = 10;
+            for (const shipment of this.provenanceShipments) {
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: shipment.occurrence.fishIds.toString(),
+                  label: 'Shipment Occurrence',
+                  data: {
+                    isoTimestamp: shipment.isoTimestamp,
+                    toLocation: shipment.occurrence.toLocation,
+                    shipmentCompanyName: shipment.occurrence.shipmentCompanyName
+                  }
+                }
+              ];
+              baseShipment += 30;
+
+              for (const fishId of shipment.occurrence.fishIds) {
+                const check = this.nodes.filter(value => value.id === fishId);
+                if (check.length !== 0) {
+                  this.links = [
+                    ...this.links,
+                    {
+                      source: fishId,
+                      target: shipment.occurrence.fishIds.toString(),
+                    }
+                  ];
+                }
+              }
+            }
+
+            this.provenancePackage = res.packagingOccurrence;
+            if (this.provenancePackage != null) {
+              const packageNodeId = 'package-' + this.provenancePackage.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: packageNodeId,
+                  label: 'Package Occurrence',
+                  data: {
+                    isoTimestamp: this.provenancePackage.isoTimestamp,
+                    fishIds: this.provenancePackage.occurrence.fishIds,
+                    processingFacilityName: this.provenancePackage.occurrence.processingFacilityName
+                  }
+                }
+              ];
+
+              for (const fishId of this.provenancePackage.occurrence.fishIds) {
+                const check = this.nodes.filter(value => value.id === fishId);
+                if (check.length !== 0) {
+                  this.links = [
+                    ...this.links,
+                    {
+                      source: fishId,
+                      target: packageNodeId,
+                    }
+                  ];
+                }
+              }
+            }
+
+            this.provenanceTransportation = res.transportationOccurrence;
+            if (this.provenanceTransportation != null) {
+              const transportationNodeId = 'transport-' + this.provenanceTransportation.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: transportationNodeId,
+                  label: 'Transport Occurrence',
+                  data: {
+                    isoTimestamp: this.provenanceTransportation.isoTimestamp,
+                    toLocation: this.provenanceTransportation.occurrence.toLocation,
+                    distributorName: this.provenanceTransportation.occurrence.distributorName,
+                  }
+                }
+              ];
+
+              this.links = [
+                ...this.links,
+                {
+                  source: 'package-' + this.provenanceTransportation.occurrence.packageId,
+                  target: transportationNodeId,
+                }
+              ];
+            }
+
+            this.provenanceSelling = res.sellingOccurrence;
+            if (this.provenanceSelling != null) {
+              const sellingNodeId = 'selling-' + this.provenanceSelling.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: sellingNodeId,
+                  label: 'Selling Occurrence',
+                  data: {
+                    isoTimestamp: this.provenanceSelling.isoTimestamp,
+                  }
+                }
+              ];
+
+              this.links = [
+                ...this.links,
+                {
+                  source: 'package-' + this.provenanceSelling.occurrence.packageId,
+                  target: sellingNodeId,
+                }
+              ];
+            }
+
+            this.provenanceEntry = res.inventoryOccurrence;
+            if (this.provenanceEntry != null) {
+              const entryNodeId = 'entry-' + this.provenanceEntry.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: entryNodeId,
+                  label: 'Inventory Entry Occurrence',
+                  data: {
+                    isoTimestamp: this.provenanceEntry.isoTimestamp,
+                    retailerName: this.provenanceEntry.occurrence.retailerName,
+                  }
+                }
+              ];
+
+              this.links = [
+                ...this.links,
+                {
+                  source: 'package-' + this.provenanceEntry.occurrence.packageId,
+                  target: entryNodeId,
+                }
+              ];
+            }
           }
+
           this.performing = false;
         },
         err => {
@@ -364,12 +536,12 @@ export class SeafoodComponent implements OnInit {
   }
 
   clearProvenance() {
-    this.fishesProv = [];
-    this.packagesProv = [];
-    this.shipmentsProv = [];
-    this.transportationsProv = [];
-    this.salesProv = [];
-    this.entriesProv = [];
+    this.provenanceFishes = [];
+    this.provenanceShipments = [];
+    this.provenancePackage = null;
+    this.provenanceTransportation = null;
+    this.provenanceSelling = null;
+    this.provenanceEntry = null;
   }
 
   removeIdFromPackage(id: string) {
@@ -425,6 +597,31 @@ export class SeafoodComponent implements OnInit {
       this.performing = false;
       this.prevIndex = event.index;
       this.fishError = this.packageError = this.shipmentError = this.transportationError = this.entryError = this.saleError = '';
+
+      if (this.onReload) {
+        switch (event.index) {
+          case 0:
+            this.getFishes();
+            break;
+          case 1:
+            this.getShipments();
+            break;
+          case 2:
+            this.getPackages();
+            break;
+          case 3:
+            this.getTransportations();
+            break;
+          case 4:
+            this.getEntries();
+            break;
+          case 5:
+            this.getSales();
+            break;
+          default:
+            break;
+        }
+      }
     }
   }
 }

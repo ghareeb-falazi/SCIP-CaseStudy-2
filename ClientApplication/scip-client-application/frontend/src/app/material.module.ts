@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 
-import { MatButtonModule, MatCardModule, MatDividerModule, MatChipsModule, MatIconModule, MatTableModule } from '@angular/material';
+// tslint:disable-next-line:max-line-length
+import { MatButtonModule, MatCardModule, MatDividerModule, MatChipsModule, MatIconModule, MatTableModule, MatSlideToggleModule } from '@angular/material';
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   imports: [
@@ -17,7 +20,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule,
     MatChipsModule,
     MatIconModule,
-    MatTableModule
+    MatTableModule,
+    MatSlideToggleModule,
+    NgxGraphModule,
+    NgxChartsModule
   ],
   exports: [
     MatButtonModule,
@@ -28,7 +34,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatTabsModule,
     MatChipsModule,
     MatIconModule,
-    MatTableModule
+    MatTableModule,
+    MatSlideToggleModule,
+    NgxGraphModule,
+    NgxChartsModule
   ]
 })
 export class MaterialModule {

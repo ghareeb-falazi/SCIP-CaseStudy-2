@@ -1,3 +1,9 @@
+.head-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .wrapper {
   display: flex;
   flex-direction: row;
@@ -111,6 +117,7 @@ mat-card mat-card-actions .query-btn {
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  align-content: center;
   width: 100%;
 }
 
@@ -141,6 +148,8 @@ mat-card mat-card-actions .query-btn {
   width: 100%;
   margin: 10px;
 }
+
+/* GRAPH */
 
 /* SPINNER */
 
