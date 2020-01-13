@@ -63,10 +63,6 @@
         <mat-card>
           <mat-card-header>
             <mat-card-title>Registered Fishes</mat-card-title>
-            <mat-card-subtitle>
-              you can retrieve all registered fishes by clicking on the
-              <em>Query</em> button
-            </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <div *ngIf="fishPerforming" class="lds-roller">
@@ -106,14 +102,6 @@
               {{ fishError }}
             </div>
           </mat-card-content>
-          <mat-card-actions>
-            <button type="button" mat-button class="button clear-btn" (click)="clearFishes()">
-              Clear
-            </button>
-            <button type="button" mat-button class="button query-btn" (click)="getFishes()">
-              Query
-            </button>
-          </mat-card-actions>
         </mat-card>
       </div>
     </div>
@@ -243,15 +231,7 @@
             <div *ngIf="shipmentError !== ''" class="error-box">
               {{ shipmentError }}
             </div>
-          </mat-card-content>
-          <mat-card-actions>
-            <button type="button" mat-button class="button clear-btn" (click)="clearShipments()">
-              Clear
-            </button>
-            <button type="button" mat-button class="button query-btn" (click)="getShipments()">
-              Query
-            </button>
-          </mat-card-actions>
+          </mat-card-content> 
         </mat-card>
       </div>
     </div>
@@ -381,14 +361,6 @@
               {{ packageError }}
             </div>
           </mat-card-content>
-          <mat-card-actions>
-            <button type="button" mat-button class="button clear-btn" (click)="clearPackages()">
-              Clear
-            </button>
-            <button type="button" mat-button class="button query-btn" (click)="getPackages()">
-              Query
-            </button>
-          </mat-card-actions>
         </mat-card>
       </div>  
     </div>
@@ -501,14 +473,6 @@
               {{ transportationError }}
             </div>
           </mat-card-content>
-          <mat-card-actions>
-            <button type="button" mat-button class="button clear-btn" (click)="clearTransportations()">
-              Clear
-            </button>
-            <button type="button" mat-button class="button query-btn" (click)="getTransportations()">
-              Query
-            </button>
-          </mat-card-actions>
         </mat-card>
       </div>
     </div>
@@ -606,14 +570,6 @@
               {{ entryError }}
             </div>
           </mat-card-content>
-          <mat-card-actions>
-            <button type="button" mat-button class="button clear-btn" (click)="clearEntries()">
-              Clear
-            </button>
-            <button type="button" mat-button class="button query-btn" (click)="getEntries()">
-              Query
-            </button>
-          </mat-card-actions>
         </mat-card>
       </div>
     </div>
@@ -699,21 +655,13 @@
               {{ saleError }}
             </div>
           </mat-card-content>
-          <mat-card-actions>
-            <button type="button" mat-button class="button clear-btn" (click)="clearSales()">
-              Clear
-            </button>
-            <button type="button" mat-button class="button query-btn" (click)="getSales()">
-              Query
-            </button>
-          </mat-card-actions>
         </mat-card>
       </div>
     </div>
   </mat-tab>
 
   <!-- PROVENANCE -->
-  <mat-tab label="Provenance">
+  <mat-tab label="Provenance" class="tab-provenance">
     <h2>
       You can query the provenance of a specific package providing its identifier
       and clicking on the
@@ -918,12 +866,14 @@
         <div *ngIf="!performing && error !== ''" class="error-box">
           <h3>{{ error }}</h3>
         </div>
-        <div *ngIf="!performing && error === ''" class="page">
+        <div *ngIf="!performing && nodes.length !== 0 && error === ''" class="page">
           <ngx-graph
             class="graph"
+            [update$]="update$"
+            [center$]="center$"
+            [zoomToFit$]="zoomToFit$"
             [links]="links"
             [nodes]="nodes"
-            [clusters]="clusters"
             [layout]="dagre"
             [curve]="curve"
             [draggingEnabled]="false"
@@ -932,9 +882,6 @@
             [panOnZoom]="false"
             [autoZoom]="true"
             [autoCenter]="true"
-            [update$]="update$"
-            [center$]="center$"
-            [zoomToFit$]="zoomToFit$"
           >
     
             <ng-template #defsTemplate>
@@ -951,9 +898,9 @@
     
             <ng-template #nodeTemplate let-node>
               <svg:g class="node node-box" (click)="onNodeClicked($event)">
-                <svg:ellipse id="{{node.id}}" [attr.cx]="node.dimension.width/(1.75)" [attr.cy]="node.dimension.height/(1.75)" [attr.rx]="node.dimension.width/(1.5)" [attr.ry]="node.dimension.height/(1.5)" [attr.fill]="node.data.color" />
+                <svg:ellipse id="{{node.id}}" [attr.cx]="node.dimension.width/(2)" [attr.cy]="node.dimension.height/(2)" [attr.rx]="node.dimension.width/(1.80)" [attr.ry]="node.dimension.height/(1.75)" [attr.fill]="node.data.color" />
                 <!-- <svg:rect id="{{node.id}}" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.fill]="node.data.color" /> -->
-                <svg:text id="{{node.id}}" alignment-baseline="central" [attr.x]="15" [attr.y]="node.dimension.height/(1.5)">{{node.label}}</svg:text>
+                <svg:text id="{{node.id}}" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height/(1.5)">{{node.label}}</svg:text>
               </svg:g>
             </ng-template>
     

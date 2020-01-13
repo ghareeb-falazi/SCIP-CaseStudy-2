@@ -94,7 +94,7 @@ export class SeafoodComponent implements OnInit {
   error = '';
 
   curve = shape.curveCardinal;
-  size = [1000, 750];
+  // size = [1000, 1000];
   links: Edge[] = [];
   nodes: Node[] = [];
   clusters: ClusterNode[] = [];
@@ -347,7 +347,6 @@ export class SeafoodComponent implements OnInit {
   }
 
   getSales() {
-    console.log('retrieving sales..');
     this.salePerforming = true;
     const obs = this.apiService.getAllSoldPackages();
 
@@ -417,7 +416,7 @@ export class SeafoodComponent implements OnInit {
 
             this.provenanceShipments = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
             for (const shipment of this.provenanceShipments) {
-              const shipmentNodeId = shipment.occurrence.fishIds.toString();
+              const shipmentNodeId = 'shipment-' + shipment.occurrence.fishIds.toString();
               this.nodes = [
                 ...this.nodes,
                 {
@@ -458,7 +457,7 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: packageNodeId,
-                  label: 'Package ' + this.provenancePackage.occurrence.packageId,
+                  label: 'Package ' + this.provenancePackage.occurrence.packageId + ' Registered',
                   data: {
                     isoTimestamp: this.provenancePackage.isoTimestamp,
                     fishIds: this.provenancePackage.occurrence.fishIds,
@@ -469,21 +468,18 @@ export class SeafoodComponent implements OnInit {
                 }
               ];
 
-              for (const fishId of this.provenancePackage.occurrence.fishIds) {
-                const check = this.nodes.filter(value => value.id === fishId);
-                if (check.length !== 0) {
-                  this.links = [
-                    ...this.links,
-                    {
-                      label: 'package registration',
-                      source: fishId,
-                      target: packageNodeId,
-                      data: {
-                        linkText: 'package registration',
-                      }
+              for (const ship of this.provenanceShipments) {
+                this.links = [
+                  ...this.links,
+                  {
+                    label: 'package registration',
+                    source: 'shipment-' + ship.occurrence.fishIds.toString(),
+                    target: packageNodeId,
+                    data: {
+                      linkText: 'package registration',
                     }
-                  ];
-                }
+                  }
+                ];
               }
             }
 
@@ -518,35 +514,6 @@ export class SeafoodComponent implements OnInit {
               ];
             }
 
-            this.provenanceSelling = res.sellingOccurrence;
-            if (this.provenanceSelling != null) {
-              const sellingNodeId = 'selling-' + this.provenanceSelling.occurrence.packageId;
-              this.nodes = [
-                ...this.nodes,
-                {
-                  id: sellingNodeId,
-                  label: 'Package Sold',
-                  data: {
-                    isoTimestamp: this.provenanceSelling.isoTimestamp,
-                    color: '#f1ff33',
-                    type: 'selling',
-                  }
-                }
-              ];
-
-              this.links = [
-                ...this.links,
-                {
-                  label: 'package selling',
-                  source: 'package-' + this.provenanceSelling.occurrence.packageId,
-                  target: sellingNodeId,
-                  data: {
-                    linkText: 'package selling',
-                  }
-                }
-              ];
-            }
-
             this.provenanceEntry = res.inventoryOccurrence;
             if (this.provenanceEntry != null) {
               const entryNodeId = 'entry-' + this.provenanceEntry.occurrence.packageId;
@@ -568,7 +535,7 @@ export class SeafoodComponent implements OnInit {
                 ...this.links,
                 {
                   label: `package's inventory registration`,
-                  source: 'package-' + this.provenanceEntry.occurrence.packageId,
+                  source: 'transport-' + this.provenanceTransportation.occurrence.packageId,
                   target: entryNodeId,
                   data: {
                     linkText: `package's inventory registration`
@@ -576,8 +543,38 @@ export class SeafoodComponent implements OnInit {
                 }
               ];
             }
+
+            this.provenanceSelling = res.sellingOccurrence;
+            if (this.provenanceSelling != null) {
+              const sellingNodeId = 'selling-' + this.provenanceSelling.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: sellingNodeId,
+                  label: 'Package Sold',
+                  data: {
+                    isoTimestamp: this.provenanceSelling.isoTimestamp,
+                    color: '#f1ff33',
+                    type: 'selling',
+                  }
+                }
+              ];
+
+              this.links = [
+                ...this.links,
+                {
+                  label: 'package selling',
+                  source: 'entry-' + this.provenanceEntry.occurrence.packageId,
+                  target: sellingNodeId,
+                  data: {
+                    linkText: 'package selling',
+                  }
+                }
+              ];
+            }
           }
           this.performing = false;
+          console.log(this.links);
         },
         err => {
           this.error = err.message;
@@ -694,17 +691,16 @@ export class SeafoodComponent implements OnInit {
   }
 
   onNodeClicked(event) {
-    console.log('Node clicked..');
-    const id = event.target.id;
+    const id: string = event.target.id;
     const node = this.nodes.find(v => v.id === id);
     this.showInfo = node.data.type;
 
     switch (this.showInfo) {
       case 'fish':
-        this.fishesProv = [this.provenanceFishes.find(v => v.occurrence.fishId = id)];
+        this.fishesProv = [this.provenanceFishes.find(v => v.occurrence.fishId === id)];
         break;
       case 'shipment':
-        this.shipmentsProv = [this.provenanceShipments.find(v => v.occurrence.fishIds = id)];
+        this.shipmentsProv = [this.provenanceShipments.find(v => v.occurrence.fishIds.toString() === id.replace('shipment-', ''))];
         break;
       case 'package':
         this.packagesProv = [this.provenancePackage];
