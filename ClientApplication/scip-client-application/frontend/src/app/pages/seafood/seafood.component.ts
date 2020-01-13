@@ -10,6 +10,9 @@ import PackageTransportation from 'src/app/models/PackageTransportation';
 import PackageSelling from 'src/app/models/PackageSelling';
 import InventoryEntry from 'src/app/models/InventoryEntry';
 import SeafoodOccurrence from 'src/app/models/SeafoodOccurrence';
+import * as shape from 'd3-shape';
+import { Node, Edge, Layout, ClusterNode } from '@swimlane/ngx-graph';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-seafood',
@@ -38,7 +41,6 @@ export class SeafoodComponent implements OnInit {
   result: any = null;
   prevIndex = 0;
 
-
   fishes: Fish[] = [];
   fishColumns = ['fishId', 'location', 'fishermanName'];
   fishPerforming = false;
@@ -65,25 +67,41 @@ export class SeafoodComponent implements OnInit {
   entryError = '';
 
 
-  fishesProv: SeafoodOccurrence<Fish>[] = [];
+  provenanceFishes: SeafoodOccurrence<Fish>[] = [];
   fishProvColumns = ['isoTimestamp', 'fishId', 'location', 'fishermanName'];
+  fishesProv = [];
 
-  packagesProv: SeafoodOccurrence<FishPackage>[] = [];
-  packageProvColumns = ['isoTimestamp', 'fishIds', 'packageId', 'processingFacilityName'];
-
-  shipmentsProv: SeafoodOccurrence<FishShipment>[] = [];
+  provenanceShipments: SeafoodOccurrence<FishShipment>[] = [];
   shipmentProvColumns = ['isoTimestamp', 'fishIds', 'toLocation', 'shipmentCompanyName'];
+  shipmentsProv = [];
 
-  transportationsProv: SeafoodOccurrence<PackageTransportation>[] = [];
+  provenancePackage: SeafoodOccurrence<FishPackage> = null;
+  packageProvColumns = ['isoTimestamp', 'fishIds', 'packageId', 'processingFacilityName'];
+  packagesProv = [];
+
+  provenanceTransportation: SeafoodOccurrence<PackageTransportation> = null;
   transportationProvColumns = ['isoTimestamp', 'packageId', 'toLocation', 'distributorName'];
+  transportationsProv = [];
 
-  salesProv: SeafoodOccurrence<PackageSelling>[] = [];
+  provenanceSelling: SeafoodOccurrence<PackageSelling> = null;
   saleProvColumns = ['isoTimestamp', 'packageId'];
+  salesProv = [];
 
-  entriesProv: SeafoodOccurrence<InventoryEntry>[] = [];
+  provenanceEntry: SeafoodOccurrence<InventoryEntry> = null;
   entryProvColumns = ['isoTimestamp', 'packageId', 'retailerName'];
+  entriesProv = [];
 
   error = '';
+
+  curve = shape.curveCardinal;
+  size = [1000, 750];
+  links: Edge[] = [];
+  nodes: Node[] = [];
+  clusters: ClusterNode[] = [];
+  update$: Subject<boolean> = new Subject();
+  center$: Subject<boolean> = new Subject();
+  zoomToFit$: Subject<boolean> = new Subject();
+  showInfo = '';
 
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.fishForm = this.formBuilder.group({
@@ -123,6 +141,7 @@ export class SeafoodComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getFishes();
   }
 
   onRegisterFish(fish: any) {
@@ -338,21 +357,223 @@ export class SeafoodComponent implements OnInit {
   }
 
   retrieveProvenance(provenanceForm) {
+    this.clearGraph();
+    const id = provenanceForm.packageId;
     this.performing = true;
-    this.apiService.retrieveProvenance(provenanceForm.packageId)
+    this.apiService.retrieveProvenance(id)
       .subscribe(
         res => {
+
+          // this.clusters = [
+          //   {
+          //     id: 'one',
+          //     label: 'fishes',
+          //     childNodeIds: [],
+          //     data: {
+          //       color: '#d9f4f6',
+          //     }
+          //   },
+          //   {
+          //     id: 'two',
+          //     label: 'shipments',
+          //     childNodeIds: [],
+          //     data: {
+          //       color: '#dbf6d9',
+          //     }
+          //   }
+          // ];
+
           console.log('=== PROVENANCE RECEIVED ===');
-          console.log(res);
           if (res.packagingOccurrence == null) {
             this.error = 'Package not found';
           } else {
-            this.fishesProv = res.fishCatchingOccurrences ? res.fishCatchingOccurrences : [];
-            this.shipmentsProv = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
-            this.packagesProv = res.packagingOccurrence ? [res.packagingOccurrence] : [];
-            this.transportationsProv = res.transportationOccurrence ? [res.transportationOccurrence] : [];
-            this.salesProv = res.sellingOccurrence ? [res.sellingOccurrence] : [];
-            this.entriesProv = res.inventoryOccurrence ? [res.inventoryOccurrence] : [];
+            this.provenanceFishes = res.fishCatchingOccurrences ? res.fishCatchingOccurrences : [];
+            for (const fish of this.provenanceFishes) {
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: fish.occurrence.fishId,
+                  label: 'Fish Captured',
+                  data: {
+                    isoTimestamp: fish.isoTimestamp,
+                    location: fish.occurrence.location,
+                    fishermanName: fish.occurrence.fishermanName,
+                    color: '#3533ff',
+                    type: 'fish',
+                  }
+                }
+              ];
+              // this.clusters[0].childNodeIds = [
+              //   ...this.clusters[0].childNodeIds,
+              //   fish.occurrence.fishId
+              // ];
+            }
+
+            this.provenanceShipments = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
+            for (const shipment of this.provenanceShipments) {
+              const shipmentNodeId = shipment.occurrence.fishIds.toString();
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: shipmentNodeId,
+                  label: 'Fishes Shipped',
+                  data: {
+                    isoTimestamp: shipment.isoTimestamp,
+                    toLocation: shipment.occurrence.toLocation,
+                    shipmentCompanyName: shipment.occurrence.shipmentCompanyName,
+                    color: '#33fbff',
+                    type: 'shipment',
+                  }
+                }
+              ];
+              // this.clusters[1].childNodeIds = [
+              //   ...this.clusters[1].childNodeIds,
+              //   shipmentNodeId
+              // ];
+
+              for (const fishId of shipment.occurrence.fishIds) {
+                const check = this.nodes.filter(value => value.id === fishId);
+                if (check.length !== 0) {
+                  this.links = [
+                    ...this.links,
+                    {
+                      label: 'fish shipped',
+                      source: fishId,
+                      target: shipmentNodeId,
+                      data: {
+                        linkText: 'fish shipped',
+                      }
+                    }
+                  ];
+                }
+              }
+            }
+
+            this.provenancePackage = res.packagingOccurrence;
+            if (this.provenancePackage != null) {
+              const packageNodeId = 'package-' + this.provenancePackage.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: packageNodeId,
+                  label: 'Package ' + this.provenancePackage.occurrence.packageId,
+                  data: {
+                    isoTimestamp: this.provenancePackage.isoTimestamp,
+                    fishIds: this.provenancePackage.occurrence.fishIds,
+                    processingFacilityName: this.provenancePackage.occurrence.processingFacilityName,
+                    color: '#ff5733',
+                    type: 'package',
+                  }
+                }
+              ];
+
+              for (const fishId of this.provenancePackage.occurrence.fishIds) {
+                const check = this.nodes.filter(value => value.id === fishId);
+                if (check.length !== 0) {
+                  this.links = [
+                    ...this.links,
+                    {
+                      label: 'package registration',
+                      source: fishId,
+                      target: packageNodeId,
+                      data: {
+                        linkText: 'package registration',
+                      }
+                    }
+                  ];
+                }
+              }
+            }
+
+            this.provenanceTransportation = res.transportationOccurrence;
+            if (this.provenanceTransportation != null) {
+              const transportationNodeId = 'transport-' + this.provenanceTransportation.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: transportationNodeId,
+                  label: 'Package Transported',
+                  data: {
+                    isoTimestamp: this.provenanceTransportation.isoTimestamp,
+                    toLocation: this.provenanceTransportation.occurrence.toLocation,
+                    distributorName: this.provenanceTransportation.occurrence.distributorName,
+                    color: '#35ff33',
+                    type: 'transportation',
+                  }
+                }
+              ];
+
+              this.links = [
+                ...this.links,
+                {
+                  label: 'package transporting',
+                  source: 'package-' + this.provenanceTransportation.occurrence.packageId,
+                  target: transportationNodeId,
+                  data: {
+                    linkText: 'package transporting',
+                  }
+                }
+              ];
+            }
+
+            this.provenanceSelling = res.sellingOccurrence;
+            if (this.provenanceSelling != null) {
+              const sellingNodeId = 'selling-' + this.provenanceSelling.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: sellingNodeId,
+                  label: 'Package Sold',
+                  data: {
+                    isoTimestamp: this.provenanceSelling.isoTimestamp,
+                    color: '#f1ff33',
+                    type: 'selling',
+                  }
+                }
+              ];
+
+              this.links = [
+                ...this.links,
+                {
+                  label: 'package selling',
+                  source: 'package-' + this.provenanceSelling.occurrence.packageId,
+                  target: sellingNodeId,
+                  data: {
+                    linkText: 'package selling',
+                  }
+                }
+              ];
+            }
+
+            this.provenanceEntry = res.inventoryOccurrence;
+            if (this.provenanceEntry != null) {
+              const entryNodeId = 'entry-' + this.provenanceEntry.occurrence.packageId;
+              this.nodes = [
+                ...this.nodes,
+                {
+                  id: entryNodeId,
+                  label: 'Package Registered In Inventory',
+                  data: {
+                    isoTimestamp: this.provenanceEntry.isoTimestamp,
+                    retailerName: this.provenanceEntry.occurrence.retailerName,
+                    color: '#ff33de',
+                    type: 'inventory',
+                  }
+                }
+              ];
+
+              this.links = [
+                ...this.links,
+                {
+                  label: `package's inventory registration`,
+                  source: 'package-' + this.provenanceEntry.occurrence.packageId,
+                  target: entryNodeId,
+                  data: {
+                    linkText: `package's inventory registration`
+                  }
+                }
+              ];
+            }
           }
           this.performing = false;
         },
@@ -363,13 +584,27 @@ export class SeafoodComponent implements OnInit {
       );
   }
 
+  clearGraph() {
+    this.nodes = [];
+    this.links = [];
+    this.clusters = [];
+    this.showInfo = '';
+  }
+
   clearProvenance() {
+    this.provenanceFishes = [];
     this.fishesProv = [];
-    this.packagesProv = [];
+    this.provenanceShipments = [];
     this.shipmentsProv = [];
+    this.provenancePackage = null;
+    this.packagesProv = [];
+    this.provenanceTransportation = null;
     this.transportationsProv = [];
+    this.provenanceSelling = null;
     this.salesProv = [];
+    this.provenanceEntry = null;
     this.entriesProv = [];
+    this.clearGraph();
   }
 
   removeIdFromPackage(id: string) {
@@ -425,6 +660,60 @@ export class SeafoodComponent implements OnInit {
       this.performing = false;
       this.prevIndex = event.index;
       this.fishError = this.packageError = this.shipmentError = this.transportationError = this.entryError = this.saleError = '';
+
+      switch (event.index) {
+        case 0:
+          this.getFishes();
+          break;
+        case 1:
+          this.getShipments();
+          break;
+        case 2:
+          this.getPackages();
+          break;
+        case 3:
+          this.getTransportations();
+          break;
+        case 4:
+          this.getEntries();
+          break;
+        case 5:
+          this.getSales();
+          break;
+        default:
+          break;
+      }
+
     }
   }
+
+  onNodeClicked(event) {
+    console.log('Node clicked..');
+    const id = event.target.id;
+    const node = this.nodes.find(v => v.id === id);
+    this.showInfo = node.data.type;
+
+    switch (this.showInfo) {
+      case 'fish':
+        this.fishesProv = [this.provenanceFishes.find(v => v.occurrence.fishId = id)];
+        break;
+      case 'shipment':
+        this.shipmentsProv = [this.provenanceShipments.find(v => v.occurrence.fishIds = id)];
+        break;
+      case 'package':
+        this.packagesProv = [this.provenancePackage];
+        break;
+      case 'transportation':
+        this.transportationsProv = [this.provenanceTransportation];
+        break;
+      case 'inventory':
+        this.entriesProv = [this.provenanceEntry];
+        break;
+      case 'selling':
+        this.salesProv = [this.provenanceSelling];
+        break;
+    }
+  }
+
+  onEdgeClicked(event) {}
 }
