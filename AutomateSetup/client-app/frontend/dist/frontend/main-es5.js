@@ -1,3 +1,11 @@
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -111,7 +119,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     /* harmony default export */
 
 
-    __webpack_exports__["default"] = "<h1>{{ title }}</h1>\n<h2>\n  Using this user interface, you can interact with the Seafood supply chain.\n  Check the <a href=\"https://github.com/ghareeb-falazi/SCIP-CaseStudy-2\">sample case study</a> for more detailes about what is involved.\n</h2>\n\n<mat-tab-group mat-stretch-tabs (selectedTabChange)=\"onTabClick($event)\">\n  <!-- FISH -->\n  <mat-tab label=\"Fisherman\">\n    <h2>\n      You can register a new captured fish by filling the form and clicking on\n      the <em>Register Fish</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the captured fish</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"fishForm\"\n          (ngSubmit)=\"onRegisterFish(fishForm.value)\"\n        >\n          <mat-form-field>\n            <input matInput formControlName=\"fishId\" placeholder=\"Fish id..\" />\n          </mat-form-field>\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"location\"\n              placeholder=\"Location..\"\n            />\n          </mat-form-field>\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"fishermanName\"\n              placeholder=\"Fisherman name..\"\n            />\n          </mat-form-field>\n          <button class=\"button\" type=\"submit\">Register Fish</button>\n        </form>\n        <div class=\"result-box\">\n          <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n          </div>\n          <div *ngIf=\"!performing\" class=\"mt-4\">\n            {{ result }}\n          </div>\n        </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Registered Fishes</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all registered fishes by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"fishPerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!fishPerforming\"\n              mat-table\n              [dataSource]=\"fishes\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"fishId\">\n                <th mat-header-cell *matHeaderCellDef>Fish Id</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.fishId }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"location\">\n                <th mat-header-cell *matHeaderCellDef>Location</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.location }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"fishermanName\">\n                <th mat-header-cell *matHeaderCellDef>Fisherman Name</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.fishermanName }}\n                </td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"fishColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: fishColumns\"></tr>\n            </table>\n            <div *ngIf=\"fishError !== ''\" class=\"error-box\">\n              {{ fishError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearFishes()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getFishes()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- SHIPMENT -->\n  <mat-tab label=\"Shipment Company\">\n    <h2>\n      You can register a new shipment of fishes by filling the form and clicking\n      on the <em>Register Shipment</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"shipmentForm\"\n          (ngSubmit)=\"onRegisterShipment(shipmentForm.value)\"\n        >\n          <mat-form-field>\n            <mat-chip-list\n              #shipmentFishIds\n              formControlName=\"fishIds\"\n              aria-label=\"Ids selection\"\n            >\n              <mat-chip\n                *ngFor=\"let id of idsForShipment\"\n                [selectable]=\"selectable\"\n                [removable]=\"removable\"\n                (removed)=\"removeIdFromShipment(id)\"\n              >\n                {{ id }}\n                <mat-icon matChipRemove *ngIf=\"removable\">cancel</mat-icon>\n              </mat-chip>\n              <input\n                placeholder=\"Fish ids..\"\n                [matChipInputFor]=\"shipmentFishIds\"\n                [matChipInputSeparatorKeyCodes]=\"separatorKeysCodes\"\n                [matChipInputAddOnBlur]=\"addOnBlur\"\n                (matChipInputTokenEnd)=\"addIdInShipment($event)\"\n              />\n            </mat-chip-list>\n          </mat-form-field>\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"toLocation\"\n              placeholder=\"To location..\"\n            />\n          </mat-form-field>\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"shipmentCompanyName\"\n              placeholder=\"Company name..\"\n            />\n          </mat-form-field>\n          <button class=\"button\" type=\"submit\">Register Shipment</button>\n        </form>\n        <div class=\"result-box\">\n          <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n          </div>\n          <div *ngIf=\"!performing\" class=\"mt-4\">\n            {{ result }}\n          </div>\n        </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <!-- SHIPMENTS -->\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Registered Fish Shipments</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all registered fish shipments by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"shipmentPerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!shipmentPerforming\"\n              mat-table\n              [dataSource]=\"shipments\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"fishIds\">\n                <th mat-header-cell *matHeaderCellDef>Fish Ids</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.fishIds }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"toLocation\">\n                <th mat-header-cell *matHeaderCellDef>To Location</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.toLocation }}\n                </td>\n              </ng-container>\n              <ng-container matColumnDef=\"shipmentCompanyName\">\n                <th mat-header-cell *matHeaderCellDef>\n                  Shipment Company Name\n                </th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.shipmentCompanyName }}\n                </td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"shipmentColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: shipmentColumns\"></tr>\n            </table>\n            <div *ngIf=\"shipmentError !== ''\" class=\"error-box\">\n              {{ shipmentError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearShipments()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getShipments()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- PACKAGE -->\n  <mat-tab label=\"Processing Facility\">\n    <h2>\n      You can register a new fishes' package by filling the form and clicking on\n      the <em>Register Package</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"packageForm\"\n          (ngSubmit)=\"onRegisterPackage(packageForm.value)\">\n            <mat-form-field>\n              <mat-chip-list\n                #packageFishIds\n                formControlName=\"fishIds\"\n                aria-label=\"Ids selection\"\n              >\n                <mat-chip\n                  *ngFor=\"let id of idsForPackage\"\n                  [selectable]=\"selectable\"\n                  [removable]=\"removable\"\n                  (removed)=\"removeIdFromPackage(id)\"\n                >\n                  {{ id }}\n                  <mat-icon matChipRemove *ngIf=\"removable\">cancel</mat-icon>\n                </mat-chip>\n                <input\n                  placeholder=\"Fish ids..\"\n                  [matChipInputFor]=\"packageFishIds\"\n                  [matChipInputSeparatorKeyCodes]=\"separatorKeysCodes\"\n                  [matChipInputAddOnBlur]=\"addOnBlur\"\n                  (matChipInputTokenEnd)=\"addIdInPackage($event)\"\n                />\n              </mat-chip-list>\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"packageId\"\n                placeholder=\"Package id..\"\n              />\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"processingFacilityName\"\n                placeholder=\"Facility name..\"\n              />\n            </mat-form-field>\n            <button class=\"button\" type=\"submit\">Register Package</button>\n          </form>\n          <div class=\"result-box\">\n            <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <div *ngIf=\"!performing\" class=\"mt-4\">\n              {{ result }}\n            </div>\n          </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <!-- PACKAGE -->\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Registered Packages</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all registered packages by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"packagePerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!packagePerforming\"\n              mat-table\n              [dataSource]=\"packages\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"fishIds\">\n                <th mat-header-cell *matHeaderCellDef>Fish Ids</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.fishIds }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"packageId\">\n                <th mat-header-cell *matHeaderCellDef>Package Id</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.packageId }}\n                </td>\n              </ng-container>\n              <ng-container matColumnDef=\"processingFacilityName\">\n                <th mat-header-cell *matHeaderCellDef>\n                  Processing Facility Name\n                </th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.processingFacilityName }}\n                </td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"packageColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: packageColumns\"></tr>\n            </table>\n            <div *ngIf=\"packageError !== ''\" class=\"error-box\">\n              {{ packageError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearPackages()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getPackages()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>  \n    </div>\n  </mat-tab>\n\n  <!-- TRANSPORTATION -->\n  <mat-tab label=\"Distributor\">\n    <h2>\n      You can register a transportation by filling the form and clicking on the\n      <em>Register Transportation</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"transportationForm\"\n          (ngSubmit)=\"onRegisterTransportation(transportationForm.value)\">\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"packageId\"\n                placeholder=\"Package id..\"\n              />\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"toLocation\"\n                placeholder=\"To location..\"\n              />\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"distributorName\"\n                placeholder=\"Distributor name..\"\n              />\n            </mat-form-field>\n            <button class=\"button\" type=\"submit\">Register Transportation</button>\n          </form>\n          <div class=\"result-box\">\n            <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <div *ngIf=\"!performing\" class=\"mt-4\">\n              {{ result }}\n            </div>\n          </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <!-- TRANSPORTATION -->\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Registered Package Transportations</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all registered package transportation by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"transportationPerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!transportationPerforming\"\n              mat-table\n              [dataSource]=\"transportations\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"packageId\">\n                <th mat-header-cell *matHeaderCellDef>Package Id</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.packageId }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"toLocation\">\n                <th mat-header-cell *matHeaderCellDef>To Location</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.toLocation }}\n                </td>\n              </ng-container>\n              <ng-container matColumnDef=\"distributorName\">\n                <th mat-header-cell *matHeaderCellDef>\n                  Distributor Name\n                </th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.distributorName }}\n                </td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"transportationColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: transportationColumns\"></tr>\n            </table>\n            <div *ngIf=\"transportationError !== ''\" class=\"error-box\">\n              {{ transportationError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearTransportations()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getTransportations()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- INVENTORY -->\n  <mat-tab label=\"Inventory\">\n    <h2>\n      You can register a new inventory entry by filling the form and clicking on\n      the\n      <em>Register Entry</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"inventoryEntryForm\"\n          (ngSubmit)=\"onRegisterInInventory(inventoryEntryForm.value)\"\n        >\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"packageId\"\n                placeholder=\"Package id..\"\n              />\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"retailerName\"\n                placeholder=\"Retailer name..\"\n              />\n            </mat-form-field>\n            <button class=\"button\" type=\"submit\">Register Entry</button>\n          </form>\n          <div class=\"result-box\">\n            <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <div *ngIf=\"!performing\" class=\"mt-4\">\n              {{ result }}\n            </div>\n          </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <!-- INVENTORY -->\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Packages In Inventory </mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all packages registered in inventory by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"entryPerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!entryPerforming\"\n              mat-table\n              [dataSource]=\"entries\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"packageId\">\n                <th mat-header-cell *matHeaderCellDef>Package Id</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.packageId }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"retailerName\">\n                <th mat-header-cell *matHeaderCellDef>Retailer Name</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.retailerName }}</td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"entryColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: entryColumns\"></tr>\n            </table>\n            <div *ngIf=\"entryError !== ''\" class=\"error-box\">\n              {{ entryError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearEntries()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getEntries()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- SALES -->\n  <mat-tab label=\"Retailer\">\n    <h2>\n      You can register a new fishes' package sale by filling the form and\n      clicking on the\n      <em>Register Sale</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"sellingForm\"\n          (ngSubmit)=\"onRegisterSelling(sellingForm.value)\"\n        >\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"packageId\"\n                placeholder=\"Package id..\"\n              />\n            </mat-form-field>\n            <button class=\"button\" type=\"submit\">Register Sale</button>\n          </form>\n          <div class=\"result-box\">\n            <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <div *ngIf=\"!performing\" class=\"mt-4\">\n              {{ result }}\n            </div>\n          </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Sold Packages</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all sold packages by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"salePerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!salePerforming\"\n              mat-table\n              [dataSource]=\"sales\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"packageId\">\n                <th mat-header-cell *matHeaderCellDef>Package Id</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.packageId }}</td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"saleColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: saleColumns\"></tr>\n            </table>\n            <div *ngIf=\"saleError !== ''\" class=\"error-box\">\n              {{ saleError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearSales()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getSales()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- PROVENANCE -->\n  <mat-tab label=\"Provenance\">\n    <h2>\n      You can retrieve the whole provenance of a package by providing its id and clicking on\n      the <em>Retrieve Provenance</em> button.\n    </h2>\n    <div class=\"prov-wrapper\">\n      <div class=\"prov-form-box mat-elevation-z3\">\n        <form\n          [formGroup]=\"provenanceForm\"\n          (ngSubmit)=\"retrieveProvenance(provenanceForm.value)\"\n        >\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"packageId\"\n              placeholder=\"Package Id..\"\n            />\n          </mat-form-field>\n          <button mat-button class=\"submit-btn button\" type=\"submit\">Retrieve Provenance</button>\n          <button mat-button class=\"clear-btn button\" type=\"button\" (click)=\"clearProvenance()\">Clear</button>\n        </form>\n      </div>\n      <div class=\"prov-result-box\">\n        <div class=\"spinner\">\n          <div *ngIf=\"performing\" class=\"lds-roller\">\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n          </div>\n        </div>\n        <div *ngIf=\"!performing && error !== ''\" class=\"error-box\">\n          <h3>{{ error }}</h3>\n        </div>\n        <div *ngIf=\"!performing && error === ''\" class=\"prov-tables-box\">\n          <h3> Selling Occurence </h3>\n          <table\n            mat-table\n            [dataSource]=\"salesProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"packageId\">\n              <th mat-header-cell *matHeaderCellDef>Package Id</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.packageId }}</td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"saleProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: saleProvColumns\"></tr>\n          </table>\n          <h3> Inventory Occurence </h3>\n          <table\n            mat-table\n            [dataSource]=\"entriesProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"packageId\">\n              <th mat-header-cell *matHeaderCellDef>Package Id</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.packageId }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"retailerName\">\n              <th mat-header-cell *matHeaderCellDef>Retailer Name</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.retailerName }}</td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"entryProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: entryProvColumns\"></tr>\n          </table>\n          <h3> Transportation Occurence </h3>\n          <table\n            mat-table\n            [dataSource]=\"transportationsProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"packageId\">\n              <th mat-header-cell *matHeaderCellDef>Package Id</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.packageId }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"toLocation\">\n              <th mat-header-cell *matHeaderCellDef>To Location</th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.toLocation }}\n              </td>\n            </ng-container>\n            <ng-container matColumnDef=\"distributorName\">\n              <th mat-header-cell *matHeaderCellDef>\n                Distributor Name\n              </th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.distributorName }}\n              </td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"transportationProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: transportationProvColumns\"></tr>\n          </table>\n          <h3> Packaging Occurence </h3>\n          <table\n            mat-table\n            [dataSource]=\"packagesProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"fishIds\">\n              <th mat-header-cell *matHeaderCellDef>Fish Ids</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.fishIds }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"packageId\">\n              <th mat-header-cell *matHeaderCellDef>Package Id</th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.packageId }}\n              </td>\n            </ng-container>\n            <ng-container matColumnDef=\"processingFacilityName\">\n              <th mat-header-cell *matHeaderCellDef>\n                Processing Facility Name\n              </th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.processingFacilityName }}\n              </td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"packageProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: packageProvColumns\"></tr>\n          </table>\n          <h3> Fish Shipment Occurence </h3>\n          <table\n            mat-table\n            [dataSource]=\"shipmentsProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"fishIds\">\n              <th mat-header-cell *matHeaderCellDef>Fish Ids</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.fishIds }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"toLocation\">\n              <th mat-header-cell *matHeaderCellDef>To Location</th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.toLocation }}\n              </td>\n            </ng-container>\n            <ng-container matColumnDef=\"shipmentCompanyName\">\n              <th mat-header-cell *matHeaderCellDef>\n                Shipment Company Name\n              </th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.shipmentCompanyName }}\n              </td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"shipmentProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: shipmentProvColumns\"></tr>\n          </table>\n          <h3> Fish Catching Occurences </h3>\n          <table\n            mat-table\n            [dataSource]=\"fishesProv\"\n            class=\"mat-elevation-z8\">\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"fishId\">\n              <th mat-header-cell *matHeaderCellDef>Fish Id</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.fishId }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"location\">\n              <th mat-header-cell *matHeaderCellDef>Location</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.location }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"fishermanName\">\n              <th mat-header-cell *matHeaderCellDef>Fisherman Name</th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.fishermanName }}\n              </td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"fishProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: fishProvColumns\"></tr>\n          </table>\n        </div>\n      </div>\n    </div>\n  </mat-tab>\n</mat-tab-group>\n";
+    __webpack_exports__["default"] = "<div class=\"head-box\">\n  <h1>{{ title }}</h1>\n  <h2>\n    Using this user interface, you can interact with the Seafood supply chain.\n    Check the <a href=\"https://github.com/ghareeb-falazi/SCIP-CaseStudy-2\">sample case study</a> for more detailes about what is involved.\n  </h2>\n</div>\n\n<mat-tab-group mat-stretch-tabs (selectedTabChange)=\"onTabClick($event)\">\n  <!-- FISH -->\n  <mat-tab label=\"Fisherman\">\n    <h2>\n      You can register a new captured fish by filling the form and clicking on\n      the <em>Register Fish</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the captured fish</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"fishForm\"\n          (ngSubmit)=\"onRegisterFish(fishForm.value)\"\n        >\n          <mat-form-field>\n            <input matInput formControlName=\"fishId\" placeholder=\"Fish id..\" />\n          </mat-form-field>\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"location\"\n              placeholder=\"Location..\"\n            />\n          </mat-form-field>\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"fishermanName\"\n              placeholder=\"Fisherman name..\"\n            />\n          </mat-form-field>\n          <button class=\"button\" type=\"submit\">Register Fish</button>\n        </form>\n        <div class=\"result-box\">\n          <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n          </div>\n          <div *ngIf=\"!performing\" class=\"mt-4\">\n            {{ result }}\n          </div>\n        </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Registered Fishes</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all registered fishes by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"fishPerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!fishPerforming\"\n              mat-table\n              [dataSource]=\"fishes\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"fishId\">\n                <th mat-header-cell *matHeaderCellDef>Fish Id</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.fishId }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"location\">\n                <th mat-header-cell *matHeaderCellDef>Location</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.location }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"fishermanName\">\n                <th mat-header-cell *matHeaderCellDef>Fisherman Name</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.fishermanName }}\n                </td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"fishColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: fishColumns\"></tr>\n            </table>\n            <div *ngIf=\"fishError !== ''\" class=\"error-box\">\n              {{ fishError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearFishes()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getFishes()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- SHIPMENT -->\n  <mat-tab label=\"Shipment Company\">\n    <h2>\n      You can register a new shipment of fishes by filling the form and clicking\n      on the <em>Register Shipment</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"shipmentForm\"\n          (ngSubmit)=\"onRegisterShipment(shipmentForm.value)\"\n        >\n          <mat-form-field>\n            <mat-chip-list\n              #shipmentFishIds\n              formControlName=\"fishIds\"\n              aria-label=\"Ids selection\"\n            >\n              <mat-chip\n                *ngFor=\"let id of idsForShipment\"\n                [selectable]=\"selectable\"\n                [removable]=\"removable\"\n                (removed)=\"removeIdFromShipment(id)\"\n              >\n                {{ id }}\n                <mat-icon matChipRemove *ngIf=\"removable\">cancel</mat-icon>\n              </mat-chip>\n              <input\n                placeholder=\"Fish ids..\"\n                [matChipInputFor]=\"shipmentFishIds\"\n                [matChipInputSeparatorKeyCodes]=\"separatorKeysCodes\"\n                [matChipInputAddOnBlur]=\"addOnBlur\"\n                (matChipInputTokenEnd)=\"addIdInShipment($event)\"\n              />\n            </mat-chip-list>\n          </mat-form-field>\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"toLocation\"\n              placeholder=\"To location..\"\n            />\n          </mat-form-field>\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"shipmentCompanyName\"\n              placeholder=\"Company name..\"\n            />\n          </mat-form-field>\n          <button class=\"button\" type=\"submit\">Register Shipment</button>\n        </form>\n        <div class=\"result-box\">\n          <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n          </div>\n          <div *ngIf=\"!performing\" class=\"mt-4\">\n            {{ result }}\n          </div>\n        </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <!-- SHIPMENTS -->\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Registered Fish Shipments</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all registered fish shipments by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"shipmentPerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!shipmentPerforming\"\n              mat-table\n              [dataSource]=\"shipments\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"fishIds\">\n                <th mat-header-cell *matHeaderCellDef>Fish Ids</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.fishIds }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"toLocation\">\n                <th mat-header-cell *matHeaderCellDef>To Location</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.toLocation }}\n                </td>\n              </ng-container>\n              <ng-container matColumnDef=\"shipmentCompanyName\">\n                <th mat-header-cell *matHeaderCellDef>\n                  Shipment Company Name\n                </th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.shipmentCompanyName }}\n                </td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"shipmentColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: shipmentColumns\"></tr>\n            </table>\n            <div *ngIf=\"shipmentError !== ''\" class=\"error-box\">\n              {{ shipmentError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearShipments()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getShipments()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- PACKAGE -->\n  <mat-tab label=\"Processing Facility\">\n    <h2>\n      You can register a new fishes' package by filling the form and clicking on\n      the <em>Register Package</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"packageForm\"\n          (ngSubmit)=\"onRegisterPackage(packageForm.value)\">\n            <mat-form-field>\n              <mat-chip-list\n                #packageFishIds\n                formControlName=\"fishIds\"\n                aria-label=\"Ids selection\"\n              >\n                <mat-chip\n                  *ngFor=\"let id of idsForPackage\"\n                  [selectable]=\"selectable\"\n                  [removable]=\"removable\"\n                  (removed)=\"removeIdFromPackage(id)\"\n                >\n                  {{ id }}\n                  <mat-icon matChipRemove *ngIf=\"removable\">cancel</mat-icon>\n                </mat-chip>\n                <input\n                  placeholder=\"Fish ids..\"\n                  [matChipInputFor]=\"packageFishIds\"\n                  [matChipInputSeparatorKeyCodes]=\"separatorKeysCodes\"\n                  [matChipInputAddOnBlur]=\"addOnBlur\"\n                  (matChipInputTokenEnd)=\"addIdInPackage($event)\"\n                />\n              </mat-chip-list>\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"packageId\"\n                placeholder=\"Package id..\"\n              />\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"processingFacilityName\"\n                placeholder=\"Facility name..\"\n              />\n            </mat-form-field>\n            <button class=\"button\" type=\"submit\">Register Package</button>\n          </form>\n          <div class=\"result-box\">\n            <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <div *ngIf=\"!performing\" class=\"mt-4\">\n              {{ result }}\n            </div>\n          </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <!-- PACKAGE -->\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Registered Packages</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all registered packages by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"packagePerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!packagePerforming\"\n              mat-table\n              [dataSource]=\"packages\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"fishIds\">\n                <th mat-header-cell *matHeaderCellDef>Fish Ids</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.fishIds }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"packageId\">\n                <th mat-header-cell *matHeaderCellDef>Package Id</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.packageId }}\n                </td>\n              </ng-container>\n              <ng-container matColumnDef=\"processingFacilityName\">\n                <th mat-header-cell *matHeaderCellDef>\n                  Processing Facility Name\n                </th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.processingFacilityName }}\n                </td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"packageColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: packageColumns\"></tr>\n            </table>\n            <div *ngIf=\"packageError !== ''\" class=\"error-box\">\n              {{ packageError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearPackages()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getPackages()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>  \n    </div>\n  </mat-tab>\n\n  <!-- TRANSPORTATION -->\n  <mat-tab label=\"Distributor\">\n    <h2>\n      You can register a transportation by filling the form and clicking on the\n      <em>Register Transportation</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"transportationForm\"\n          (ngSubmit)=\"onRegisterTransportation(transportationForm.value)\">\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"packageId\"\n                placeholder=\"Package id..\"\n              />\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"toLocation\"\n                placeholder=\"To location..\"\n              />\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"distributorName\"\n                placeholder=\"Distributor name..\"\n              />\n            </mat-form-field>\n            <button class=\"button\" type=\"submit\">Register Transportation</button>\n          </form>\n          <div class=\"result-box\">\n            <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <div *ngIf=\"!performing\" class=\"mt-4\">\n              {{ result }}\n            </div>\n          </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <!-- TRANSPORTATION -->\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Registered Package Transportations</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all registered package transportation by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"transportationPerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!transportationPerforming\"\n              mat-table\n              [dataSource]=\"transportations\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"packageId\">\n                <th mat-header-cell *matHeaderCellDef>Package Id</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.packageId }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"toLocation\">\n                <th mat-header-cell *matHeaderCellDef>To Location</th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.toLocation }}\n                </td>\n              </ng-container>\n              <ng-container matColumnDef=\"distributorName\">\n                <th mat-header-cell *matHeaderCellDef>\n                  Distributor Name\n                </th>\n                <td mat-cell *matCellDef=\"let element\">\n                  {{ element.distributorName }}\n                </td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"transportationColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: transportationColumns\"></tr>\n            </table>\n            <div *ngIf=\"transportationError !== ''\" class=\"error-box\">\n              {{ transportationError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearTransportations()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getTransportations()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- INVENTORY -->\n  <mat-tab label=\"Inventory\">\n    <h2>\n      You can register a new inventory entry by filling the form and clicking on\n      the\n      <em>Register Entry</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"inventoryEntryForm\"\n          (ngSubmit)=\"onRegisterInInventory(inventoryEntryForm.value)\"\n        >\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"packageId\"\n                placeholder=\"Package id..\"\n              />\n            </mat-form-field>\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"retailerName\"\n                placeholder=\"Retailer name..\"\n              />\n            </mat-form-field>\n            <button class=\"button\" type=\"submit\">Register Entry</button>\n          </form>\n          <div class=\"result-box\">\n            <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <div *ngIf=\"!performing\" class=\"mt-4\">\n              {{ result }}\n            </div>\n          </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <!-- INVENTORY -->\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Packages In Inventory </mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all packages registered in inventory by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"entryPerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!entryPerforming\"\n              mat-table\n              [dataSource]=\"entries\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"packageId\">\n                <th mat-header-cell *matHeaderCellDef>Package Id</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.packageId }}</td>\n              </ng-container>\n              <ng-container matColumnDef=\"retailerName\">\n                <th mat-header-cell *matHeaderCellDef>Retailer Name</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.retailerName }}</td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"entryColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: entryColumns\"></tr>\n            </table>\n            <div *ngIf=\"entryError !== ''\" class=\"error-box\">\n              {{ entryError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearEntries()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getEntries()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- SALES -->\n  <mat-tab label=\"Retailer\">\n    <h2>\n      You can register a new fishes' package sale by filling the form and\n      clicking on the\n      <em>Register Sale</em> button.\n    </h2>\n    <div class=\"wrapper\">\n      <mat-card class=\"form-card\">\n        <mat-card-header>\n          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>\n        </mat-card-header>\n        <mat-card-content class=\"form-box\">\n          <form\n          [formGroup]=\"sellingForm\"\n          (ngSubmit)=\"onRegisterSelling(sellingForm.value)\"\n        >\n            <mat-form-field>\n              <input\n                matInput\n                formControlName=\"packageId\"\n                placeholder=\"Package id..\"\n              />\n            </mat-form-field>\n            <button class=\"button\" type=\"submit\">Register Sale</button>\n          </form>\n          <div class=\"result-box\">\n            <div *ngIf=\"performing\" class=\"lds-roller mt-4\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <div *ngIf=\"!performing\" class=\"mt-4\">\n              {{ result }}\n            </div>\n          </div>\n        </mat-card-content>\n      </mat-card>\n      <div class=\"query-box\">\n        <mat-card>\n          <mat-card-header>\n            <mat-card-title>Sold Packages</mat-card-title>\n            <mat-card-subtitle>\n              you can retrieve all sold packages by clicking on the\n              <em>Query</em> button\n            </mat-card-subtitle>\n          </mat-card-header>\n          <mat-card-content>\n            <div *ngIf=\"salePerforming\" class=\"lds-roller\">\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n              <div></div>\n            </div>\n            <table\n              *ngIf=\"!salePerforming\"\n              mat-table\n              [dataSource]=\"sales\"\n              class=\"mat-elevation-z8\"\n            >\n              <ng-container matColumnDef=\"packageId\">\n                <th mat-header-cell *matHeaderCellDef>Package Id</th>\n                <td mat-cell *matCellDef=\"let element\">{{ element.packageId }}</td>\n              </ng-container>\n              <tr mat-header-row *matHeaderRowDef=\"saleColumns\"></tr>\n              <tr mat-row *matRowDef=\"let row; columns: saleColumns\"></tr>\n            </table>\n            <div *ngIf=\"saleError !== ''\" class=\"error-box\">\n              {{ saleError }}\n            </div>\n          </mat-card-content>\n          <mat-card-actions>\n            <button type=\"button\" mat-button class=\"button clear-btn\" (click)=\"clearSales()\">\n              Clear\n            </button>\n            <button type=\"button\" mat-button class=\"button query-btn\" (click)=\"getSales()\">\n              Query\n            </button>\n          </mat-card-actions>\n        </mat-card>\n      </div>\n    </div>\n  </mat-tab>\n\n  <!-- PROVENANCE -->\n  <mat-tab label=\"Provenance\">\n    <h2>\n      You can query the provenance of a specific package providing its identifier\n      and clicking on the\n      <em>Get Provenance</em> button.\n      Click on a specific node to get more information about it.\n    </h2>\n    <div class=\"prov-wrapper\">\n      <div class=\"prov-form-box mat-elevation-z3\">\n        <form\n          [formGroup]=\"provenanceForm\"\n          (ngSubmit)=\"retrieveProvenance(provenanceForm.value)\"\n        >\n          <mat-form-field>\n            <input\n              matInput\n              formControlName=\"packageId\"\n              placeholder=\"Package Id..\"\n            />\n          </mat-form-field>\n          <button mat-button class=\"submit-btn button\" type=\"submit\">Get Provenance</button>\n          <button mat-button class=\"clear-btn button\" type=\"button\" (click)=\"clearProvenance()\">Clear</button>\n        </form>\n        <div class=\"node-info\">\n          <h3 *ngIf=\"showInfo === 'selling'\"> Selling Occurence </h3>\n          <table\n            mat-table\n            *ngIf=\"showInfo === 'selling'\"\n            [dataSource]=\"salesProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"packageId\">\n              <th mat-header-cell *matHeaderCellDef>Package Id</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.packageId }}</td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"saleProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: saleProvColumns\"></tr>\n          </table>\n          <h3 *ngIf=\"showInfo === 'inventory'\"> Inventory Occurence </h3>\n          <table\n            mat-table\n            *ngIf=\"showInfo === 'inventory'\"\n            [dataSource]=\"entriesProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"packageId\">\n              <th mat-header-cell *matHeaderCellDef>Package Id</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.packageId }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"retailerName\">\n              <th mat-header-cell *matHeaderCellDef>Retailer Name</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.retailerName }}</td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"entryProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: entryProvColumns\"></tr>\n          </table>\n          <h3 *ngIf=\"showInfo === 'transportation'\"> Transportation Occurence </h3>\n          <table\n            mat-table\n            *ngIf=\"showInfo === 'transportation'\"\n            [dataSource]=\"transportationsProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"packageId\">\n              <th mat-header-cell *matHeaderCellDef>Package Id</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.packageId }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"toLocation\">\n              <th mat-header-cell *matHeaderCellDef>To Location</th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.toLocation }}\n              </td>\n            </ng-container>\n            <ng-container matColumnDef=\"distributorName\">\n              <th mat-header-cell *matHeaderCellDef>\n                Distributor Name\n              </th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.distributorName }}\n              </td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"transportationProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: transportationProvColumns\"></tr>\n          </table>\n          <h3 *ngIf=\"showInfo === 'package'\"> Packaging Occurence </h3>\n          <table\n            mat-table\n            *ngIf=\"showInfo === 'package'\"\n            [dataSource]=\"packagesProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"fishIds\">\n              <th mat-header-cell *matHeaderCellDef>Fish Ids</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.fishIds }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"packageId\">\n              <th mat-header-cell *matHeaderCellDef>Package Id</th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.packageId }}\n              </td>\n            </ng-container>\n            <ng-container matColumnDef=\"processingFacilityName\">\n              <th mat-header-cell *matHeaderCellDef>\n                Processing Facility Name\n              </th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.processingFacilityName }}\n              </td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"packageProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: packageProvColumns\"></tr>\n          </table>\n          <h3 *ngIf=\"showInfo === 'shipment'\"> Fish Shipment Occurence </h3>\n          <table\n            mat-table\n            *ngIf=\"showInfo === 'shipment'\"\n            [dataSource]=\"shipmentsProv\"\n            class=\"mat-elevation-z8\"\n          >\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"fishIds\">\n              <th mat-header-cell *matHeaderCellDef>Fish Ids</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.fishIds }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"toLocation\">\n              <th mat-header-cell *matHeaderCellDef>To Location</th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.toLocation }}\n              </td>\n            </ng-container>\n            <ng-container matColumnDef=\"shipmentCompanyName\">\n              <th mat-header-cell *matHeaderCellDef>\n                Shipment Company Name\n              </th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.shipmentCompanyName }}\n              </td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"shipmentProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: shipmentProvColumns\"></tr>\n          </table>\n          <h3 *ngIf=\"showInfo === 'fish'\"> Fish Catching Occurences </h3>\n          <table\n            mat-table\n            *ngIf=\"showInfo === 'fish'\"\n            [dataSource]=\"fishesProv\"\n            class=\"mat-elevation-z8\">\n            <ng-container matColumnDef=\"isoTimestamp\">\n              <th mat-header-cell *matHeaderCellDef>ISO Timestamp</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.isoTimestamp }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"fishId\">\n              <th mat-header-cell *matHeaderCellDef>Fish Id</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.fishId }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"location\">\n              <th mat-header-cell *matHeaderCellDef>Location</th>\n              <td mat-cell *matCellDef=\"let element\">{{ element.occurrence.location }}</td>\n            </ng-container>\n            <ng-container matColumnDef=\"fishermanName\">\n              <th mat-header-cell *matHeaderCellDef>Fisherman Name</th>\n              <td mat-cell *matCellDef=\"let element\">\n                {{ element.occurrence.fishermanName }}\n              </td>\n            </ng-container>\n            <tr mat-header-row *matHeaderRowDef=\"fishProvColumns\"></tr>\n            <tr mat-row *matRowDef=\"let row; columns: fishProvColumns\"></tr>\n          </table>\n        </div>\n      </div>\n      <div class=\"prov-result-box\">\n        <div class=\"spinner\">\n          <div *ngIf=\"performing\" class=\"lds-roller\">\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n            <div></div>\n          </div>\n        </div>\n        <div *ngIf=\"!performing && error !== ''\" class=\"error-box\">\n          <h3>{{ error }}</h3>\n        </div>\n        <div *ngIf=\"!performing && error === ''\" class=\"page\">\n          <ngx-graph\n            class=\"graph\"\n            [links]=\"links\"\n            [nodes]=\"nodes\"\n            [clusters]=\"clusters\"\n            [layout]=\"dagre\"\n            [curve]=\"curve\"\n            [draggingEnabled]=\"false\"\n            [panningEnabled]=\"true\"\n            [enableZoom]=\"false\"\n            [panOnZoom]=\"false\"\n            [autoZoom]=\"true\"\n            [autoCenter]=\"true\"\n            [update$]=\"update$\"\n            [center$]=\"center$\"\n            [zoomToFit$]=\"zoomToFit$\"\n          >\n    \n            <ng-template #defsTemplate>\n              <svg:marker id=\"arrow\" viewBox=\"0 -5 10 10\" refX=\"8\" refY=\"0\" markerWidth=\"4\" markerHeight=\"4\" orient=\"auto\">\n                <svg:path d=\"M0,-5L10,0L0,5\" class=\"arrow-head\" />\n              </svg:marker>\n            </ng-template>\n\n            <ng-template #clusterTemplate let-cluster>\n              <svg:g class=\"node cluster\">\n                <svg:rect rx=\"5\" ry=\"5\" [attr.width]=\"cluster.dimension.width\" [attr.height]=\"cluster.dimension.height\" [attr.fill]=\"cluster.data.color\" />\n              </svg:g>\n            </ng-template>\n    \n            <ng-template #nodeTemplate let-node>\n              <svg:g class=\"node node-box\" (click)=\"onNodeClicked($event)\">\n                <svg:ellipse id=\"{{node.id}}\" [attr.cx]=\"node.dimension.width/(1.75)\" [attr.cy]=\"node.dimension.height/(1.75)\" [attr.rx]=\"node.dimension.width/(1.5)\" [attr.ry]=\"node.dimension.height/(1.5)\" [attr.fill]=\"node.data.color\" />\n                <!-- <svg:rect id=\"{{node.id}}\" [attr.width]=\"node.dimension.width\" [attr.height]=\"node.dimension.height\" [attr.fill]=\"node.data.color\" /> -->\n                <svg:text id=\"{{node.id}}\" alignment-baseline=\"central\" [attr.x]=\"15\" [attr.y]=\"node.dimension.height/(1.5)\">{{node.label}}</svg:text>\n              </svg:g>\n            </ng-template>\n    \n            <ng-template #linkTemplate let-link>\n              <svg:g class=\"edge\" (click)=\"onEdgeClicked($event)\">\n                <svg:path class=\"line\" stroke-width=\"2\" marker-end=\"url(#arrow)\">\n                </svg:path>\n                <svg:text class=\"edge-label\" text-anchor=\"middle\">\n                  <textPath class=\"text-path\" [attr.href]=\"'#' + link.id\" [style.dominant-baseline]=\"link.dominantBaseline\" startOffset=\"50%\">\n                    {{link.label}}\n                  </textPath>\n                </svg:text>\n              </svg:g>\n            </ng-template>\n          </ngx-graph>\n        </div>\n      </div>\n    </div>\n  </mat-tab>\n</mat-tab-group>\n";
     /***/
   },
 
@@ -1178,14 +1186,27 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var _angular_material_snack_bar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
     /*! @angular/material/snack-bar */
     "./node_modules/@angular/material/esm2015/snack-bar.js");
+    /* harmony import */
+
+
+    var _swimlane_ngx_graph__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(
+    /*! @swimlane/ngx-graph */
+    "./node_modules/@swimlane/ngx-graph/fesm2015/swimlane-ngx-graph.js");
+    /* harmony import */
+
+
+    var _swimlane_ngx_charts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(
+    /*! @swimlane/ngx-charts */
+    "./node_modules/@swimlane/ngx-charts/fesm2015/swimlane-ngx-charts.js"); // tslint:disable-next-line:max-line-length
+
 
     var MaterialModule = function MaterialModule() {
       _classCallCheck(this, MaterialModule);
     };
 
     MaterialModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["NgModule"])({
-      imports: [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDividerModule"], _angular_material_list__WEBPACK_IMPORTED_MODULE_3__["MatListModule"], _angular_material_input__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"], _angular_material_tabs__WEBPACK_IMPORTED_MODULE_5__["MatTabsModule"], _angular_material_snack_bar__WEBPACK_IMPORTED_MODULE_6__["MatSnackBarModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatChipsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatIconModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTableModule"]],
-      exports: [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDividerModule"], _angular_material_list__WEBPACK_IMPORTED_MODULE_3__["MatListModule"], _angular_material_input__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"], _angular_material_tabs__WEBPACK_IMPORTED_MODULE_5__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatChipsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatIconModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTableModule"]]
+      imports: [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDividerModule"], _angular_material_list__WEBPACK_IMPORTED_MODULE_3__["MatListModule"], _angular_material_input__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"], _angular_material_tabs__WEBPACK_IMPORTED_MODULE_5__["MatTabsModule"], _angular_material_snack_bar__WEBPACK_IMPORTED_MODULE_6__["MatSnackBarModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatChipsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatIconModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTableModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSlideToggleModule"], _swimlane_ngx_graph__WEBPACK_IMPORTED_MODULE_7__["NgxGraphModule"], _swimlane_ngx_charts__WEBPACK_IMPORTED_MODULE_8__["NgxChartsModule"]],
+      exports: [_angular_material__WEBPACK_IMPORTED_MODULE_2__["MatButtonModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatCardModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatDividerModule"], _angular_material_list__WEBPACK_IMPORTED_MODULE_3__["MatListModule"], _angular_material_input__WEBPACK_IMPORTED_MODULE_4__["MatInputModule"], _angular_material_tabs__WEBPACK_IMPORTED_MODULE_5__["MatTabsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatChipsModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatIconModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatTableModule"], _angular_material__WEBPACK_IMPORTED_MODULE_2__["MatSlideToggleModule"], _swimlane_ngx_graph__WEBPACK_IMPORTED_MODULE_7__["NgxGraphModule"], _swimlane_ngx_charts__WEBPACK_IMPORTED_MODULE_8__["NgxChartsModule"]]
     })], MaterialModule);
     /***/
   },
@@ -1388,7 +1409,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     /* harmony default export */
 
 
-    __webpack_exports__["default"] = ".wrapper {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n          flex-direction: row;\n  margin-top: 30px;\n}\n\nform {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n}\n\n.form-card {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  width: 45%;\n  padding: 10px;\n  background-color: rgb(206, 204, 204);\n}\n\n.form-card .form-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n}\n\n.result-box {\n  margin-top: 15px;\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n          justify-content: center;\n}\n\n.query-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  width: 55%;\n}\n\nmat-card-content {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n}\n\nmat-card-content table {\n  width: 100%;\n}\n\nmat-card-content .error-box {\n  text-align: center;\n  margin-top: 15px;\n  color: rgb(192, 4, 4);\n}\n\nmat-card {\n  background-color: rgb(206, 204, 204);\n  margin: 10px;\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n}\n\nmat-card mat-card-actions {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n          flex-direction: row;\n  -webkit-box-align: center;\n          align-items: center;\n}\n\nmat-card mat-card-actions button {\n  width: 50%;\n}\n\nmat-card mat-card-actions .clear-btn {\n  background-color: rgb(235, 139, 139);\n}\n\nmat-card mat-card-actions .query-btn {\n  background-color: rgb(174, 219, 144);\n  width: 50%;\n}\n\n.prov-wrapper {\n  margin-top: 30px;\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n  width: 100%;\n}\n\n.prov-form-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n  width: 70%;\n  padding: 10px;\n  margin: 15px;\n  background-color: rgb(206, 204, 204);\n}\n\n.prov-form-box form > .submit-btn {\n  background-color: rgb(231, 225, 225);\n  margin: 10px 10px 4px 10px;\n}\n\n.prov-form-box form > .clear-btn {\n  background-color: rgb(235, 139, 139);\n  margin: 4px 10px 10px 10px;\n}\n\n.prov-result-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n  width: 100%;\n}\n\n.prov-result-box .spinner {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n  margin: 40px;\n}\n\n.prov-result-box .error-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n}\n\n.prov-result-box .error-box h3 {\n  color: rgb(192, 4, 4);\n}\n\n.prov-result-box .prov-tables-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n}\n\n.prov-result-box .prov-tables-box table {\n  width: 100%;\n  margin: 10px;\n}\n\n/* SPINNER */\n\n.lds-roller {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n\n.lds-roller div {\n  -webkit-animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n          animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n  -webkit-transform-origin: 40px 40px;\n          transform-origin: 40px 40px;\n}\n\n.lds-roller div:after {\n  content: \" \";\n  display: block;\n  position: absolute;\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  background: black;\n  margin: -4px 0 0 -4px;\n}\n\n.lds-roller div:nth-child(1) {\n  -webkit-animation-delay: -0.036s;\n          animation-delay: -0.036s;\n}\n\n.lds-roller div:nth-child(1):after {\n  top: 63px;\n  left: 63px;\n}\n\n.lds-roller div:nth-child(2) {\n  -webkit-animation-delay: -0.072s;\n          animation-delay: -0.072s;\n}\n\n.lds-roller div:nth-child(2):after {\n  top: 68px;\n  left: 56px;\n}\n\n.lds-roller div:nth-child(3) {\n  -webkit-animation-delay: -0.108s;\n          animation-delay: -0.108s;\n}\n\n.lds-roller div:nth-child(3):after {\n  top: 71px;\n  left: 48px;\n}\n\n.lds-roller div:nth-child(4) {\n  -webkit-animation-delay: -0.144s;\n          animation-delay: -0.144s;\n}\n\n.lds-roller div:nth-child(4):after {\n  top: 72px;\n  left: 40px;\n}\n\n.lds-roller div:nth-child(5) {\n  -webkit-animation-delay: -0.18s;\n          animation-delay: -0.18s;\n}\n\n.lds-roller div:nth-child(5):after {\n  top: 71px;\n  left: 32px;\n}\n\n.lds-roller div:nth-child(6) {\n  -webkit-animation-delay: -0.216s;\n          animation-delay: -0.216s;\n}\n\n.lds-roller div:nth-child(6):after {\n  top: 68px;\n  left: 24px;\n}\n\n.lds-roller div:nth-child(7) {\n  -webkit-animation-delay: -0.252s;\n          animation-delay: -0.252s;\n}\n\n.lds-roller div:nth-child(7):after {\n  top: 63px;\n  left: 17px;\n}\n\n.lds-roller div:nth-child(8) {\n  -webkit-animation-delay: -0.288s;\n          animation-delay: -0.288s;\n}\n\n.lds-roller div:nth-child(8):after {\n  top: 56px;\n  left: 12px;\n}\n\n@-webkit-keyframes lds-roller {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n\n@keyframes lds-roller {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGFnZXMvc2VhZm9vZC9zZWFmb29kLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw4QkFBbUI7RUFBbkIsNkJBQW1CO1VBQW5CLG1CQUFtQjtFQUNuQixnQkFBZ0I7QUFDbEI7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtBQUN4Qjs7QUFFQTtFQUNFLG9CQUFhO0VBQWIsYUFBYTtFQUNiLDRCQUFzQjtFQUF0Qiw2QkFBc0I7VUFBdEIsc0JBQXNCO0VBQ3RCLFVBQVU7RUFDVixhQUFhO0VBQ2Isb0NBQW9DO0FBQ3RDOztBQUVBO0VBQ0Usb0JBQWE7RUFBYixhQUFhO0VBQ2IsNEJBQXNCO0VBQXRCLDZCQUFzQjtVQUF0QixzQkFBc0I7RUFDdEIsMEJBQW9CO1VBQXBCLG9CQUFvQjtBQUN0Qjs7QUFFQTtFQUNFLGdCQUFnQjtFQUNoQixvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0Qix5QkFBbUI7VUFBbkIsbUJBQW1CO0VBQ25CLHdCQUF1QjtVQUF2Qix1QkFBdUI7QUFDekI7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0QixVQUFVO0FBQ1o7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0Qix5QkFBbUI7VUFBbkIsbUJBQW1CO0FBQ3JCOztBQUVBO0VBQ0UsV0FBVztBQUNiOztBQUVBO0VBQ0Usa0JBQWtCO0VBQ2xCLGdCQUFnQjtFQUNoQixxQkFBcUI7QUFDdkI7O0FBRUE7RUFDRSxvQ0FBb0M7RUFDcEMsWUFBWTtFQUNaLG9CQUFhO0VBQWIsYUFBYTtFQUNiLDRCQUFzQjtFQUF0Qiw2QkFBc0I7VUFBdEIsc0JBQXNCO0FBQ3hCOztBQUVBO0VBQ0Usb0JBQWE7RUFBYixhQUFhO0VBQ2IsOEJBQW1CO0VBQW5CLDZCQUFtQjtVQUFuQixtQkFBbUI7RUFDbkIseUJBQW1CO1VBQW5CLG1CQUFtQjtBQUNyQjs7QUFFQTtFQUNFLFVBQVU7QUFDWjs7QUFFQTtFQUNFLG9DQUFvQztBQUN0Qzs7QUFFQTtFQUNFLG9DQUFvQztFQUNwQyxVQUFVO0FBQ1o7O0FBRUE7RUFDRSxnQkFBZ0I7RUFDaEIsb0JBQWE7RUFBYixhQUFhO0VBQ2IsNEJBQXNCO0VBQXRCLDZCQUFzQjtVQUF0QixzQkFBc0I7RUFDdEIseUJBQW1CO1VBQW5CLG1CQUFtQjtFQUNuQixXQUFXO0FBQ2I7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0QiwwQkFBb0I7VUFBcEIsb0JBQW9CO0VBQ3BCLFVBQVU7RUFDVixhQUFhO0VBQ2IsWUFBWTtFQUNaLG9DQUFvQztBQUN0Qzs7QUFFQTtFQUNFLG9DQUFvQztFQUNwQywwQkFBMEI7QUFDNUI7O0FBRUE7RUFDRSxvQ0FBb0M7RUFDcEMsMEJBQTBCO0FBQzVCOztBQUVBO0VBQ0Usb0JBQWE7RUFBYixhQUFhO0VBQ2IsNEJBQXNCO0VBQXRCLDZCQUFzQjtVQUF0QixzQkFBc0I7RUFDdEIsMEJBQW9CO1VBQXBCLG9CQUFvQjtFQUNwQixXQUFXO0FBQ2I7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0Qix5QkFBbUI7VUFBbkIsbUJBQW1CO0VBQ25CLFlBQVk7QUFDZDs7QUFFQTtFQUNFLG9CQUFhO0VBQWIsYUFBYTtFQUNiLDRCQUFzQjtFQUF0Qiw2QkFBc0I7VUFBdEIsc0JBQXNCO0VBQ3RCLHlCQUFtQjtVQUFuQixtQkFBbUI7QUFDckI7O0FBRUE7RUFDRSxxQkFBcUI7QUFDdkI7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0QiwwQkFBb0I7VUFBcEIsb0JBQW9CO0FBQ3RCOztBQUVBO0VBQ0UsV0FBVztFQUNYLFlBQVk7QUFDZDs7QUFFQSxZQUFZOztBQUVaO0VBQ0UscUJBQXFCO0VBQ3JCLGtCQUFrQjtFQUNsQixXQUFXO0VBQ1gsWUFBWTtBQUNkOztBQUNBO0VBQ0Usd0VBQWdFO1VBQWhFLGdFQUFnRTtFQUNoRSxtQ0FBMkI7VUFBM0IsMkJBQTJCO0FBQzdCOztBQUNBO0VBQ0UsWUFBWTtFQUNaLGNBQWM7RUFDZCxrQkFBa0I7RUFDbEIsVUFBVTtFQUNWLFdBQVc7RUFDWCxrQkFBa0I7RUFDbEIsaUJBQWlCO0VBQ2pCLHFCQUFxQjtBQUN2Qjs7QUFDQTtFQUNFLGdDQUF3QjtVQUF4Qix3QkFBd0I7QUFDMUI7O0FBQ0E7RUFDRSxTQUFTO0VBQ1QsVUFBVTtBQUNaOztBQUNBO0VBQ0UsZ0NBQXdCO1VBQXhCLHdCQUF3QjtBQUMxQjs7QUFDQTtFQUNFLFNBQVM7RUFDVCxVQUFVO0FBQ1o7O0FBQ0E7RUFDRSxnQ0FBd0I7VUFBeEIsd0JBQXdCO0FBQzFCOztBQUNBO0VBQ0UsU0FBUztFQUNULFVBQVU7QUFDWjs7QUFDQTtFQUNFLGdDQUF3QjtVQUF4Qix3QkFBd0I7QUFDMUI7O0FBQ0E7RUFDRSxTQUFTO0VBQ1QsVUFBVTtBQUNaOztBQUNBO0VBQ0UsK0JBQXVCO1VBQXZCLHVCQUF1QjtBQUN6Qjs7QUFDQTtFQUNFLFNBQVM7RUFDVCxVQUFVO0FBQ1o7O0FBQ0E7RUFDRSxnQ0FBd0I7VUFBeEIsd0JBQXdCO0FBQzFCOztBQUNBO0VBQ0UsU0FBUztFQUNULFVBQVU7QUFDWjs7QUFDQTtFQUNFLGdDQUF3QjtVQUF4Qix3QkFBd0I7QUFDMUI7O0FBQ0E7RUFDRSxTQUFTO0VBQ1QsVUFBVTtBQUNaOztBQUNBO0VBQ0UsZ0NBQXdCO1VBQXhCLHdCQUF3QjtBQUMxQjs7QUFDQTtFQUNFLFNBQVM7RUFDVCxVQUFVO0FBQ1o7O0FBQ0E7RUFDRTtJQUNFLCtCQUF1QjtZQUF2Qix1QkFBdUI7RUFDekI7RUFDQTtJQUNFLGlDQUF5QjtZQUF6Qix5QkFBeUI7RUFDM0I7QUFDRjs7QUFQQTtFQUNFO0lBQ0UsK0JBQXVCO1lBQXZCLHVCQUF1QjtFQUN6QjtFQUNBO0lBQ0UsaUNBQXlCO1lBQXpCLHlCQUF5QjtFQUMzQjtBQUNGIiwiZmlsZSI6InNyYy9hcHAvcGFnZXMvc2VhZm9vZC9zZWFmb29kLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIud3JhcHBlciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIG1hcmdpbi10b3A6IDMwcHg7XG59XG5cbmZvcm0ge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xufVxuXG4uZm9ybS1jYXJkIHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgd2lkdGg6IDQ1JTtcbiAgcGFkZGluZzogMTBweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDIwNiwgMjA0LCAyMDQpO1xufVxuXG4uZm9ybS1jYXJkIC5mb3JtLWJveCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBzdHJldGNoO1xufVxuXG4ucmVzdWx0LWJveCB7XG4gIG1hcmdpbi10b3A6IDE1cHg7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIGp1c3RpZnktY29udGVudDogY2VudGVyO1xufVxuXG4ucXVlcnktYm94IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgd2lkdGg6IDU1JTtcbn1cblxubWF0LWNhcmQtY29udGVudCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG59XG5cbm1hdC1jYXJkLWNvbnRlbnQgdGFibGUge1xuICB3aWR0aDogMTAwJTtcbn1cblxubWF0LWNhcmQtY29udGVudCAuZXJyb3ItYm94IHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBtYXJnaW4tdG9wOiAxNXB4O1xuICBjb2xvcjogcmdiKDE5MiwgNCwgNCk7XG59XG5cbm1hdC1jYXJkIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDIwNiwgMjA0LCAyMDQpO1xuICBtYXJnaW46IDEwcHg7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG59XG5cbm1hdC1jYXJkIG1hdC1jYXJkLWFjdGlvbnMge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogcm93O1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xufVxuXG5tYXQtY2FyZCBtYXQtY2FyZC1hY3Rpb25zIGJ1dHRvbiB7XG4gIHdpZHRoOiA1MCU7XG59XG5cbm1hdC1jYXJkIG1hdC1jYXJkLWFjdGlvbnMgLmNsZWFyLWJ0biB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYigyMzUsIDEzOSwgMTM5KTtcbn1cblxubWF0LWNhcmQgbWF0LWNhcmQtYWN0aW9ucyAucXVlcnktYnRuIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDE3NCwgMjE5LCAxNDQpO1xuICB3aWR0aDogNTAlO1xufVxuXG4ucHJvdi13cmFwcGVyIHtcbiAgbWFyZ2luLXRvcDogMzBweDtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbi5wcm92LWZvcm0tYm94IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG4gIHdpZHRoOiA3MCU7XG4gIHBhZGRpbmc6IDEwcHg7XG4gIG1hcmdpbjogMTVweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDIwNiwgMjA0LCAyMDQpO1xufVxuXG4ucHJvdi1mb3JtLWJveCBmb3JtID4gLnN1Ym1pdC1idG4ge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjMxLCAyMjUsIDIyNSk7XG4gIG1hcmdpbjogMTBweCAxMHB4IDRweCAxMHB4O1xufVxuXG4ucHJvdi1mb3JtLWJveCBmb3JtID4gLmNsZWFyLWJ0biB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYigyMzUsIDEzOSwgMTM5KTtcbiAgbWFyZ2luOiA0cHggMTBweCAxMHB4IDEwcHg7XG59XG5cbi5wcm92LXJlc3VsdC1ib3gge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgd2lkdGg6IDEwMCU7XG59XG5cbi5wcm92LXJlc3VsdC1ib3ggLnNwaW5uZXIge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICBtYXJnaW46IDQwcHg7XG59XG5cbi5wcm92LXJlc3VsdC1ib3ggLmVycm9yLWJveCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG59XG5cbi5wcm92LXJlc3VsdC1ib3ggLmVycm9yLWJveCBoMyB7XG4gIGNvbG9yOiByZ2IoMTkyLCA0LCA0KTtcbn1cblxuLnByb3YtcmVzdWx0LWJveCAucHJvdi10YWJsZXMtYm94IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG59XG5cbi5wcm92LXJlc3VsdC1ib3ggLnByb3YtdGFibGVzLWJveCB0YWJsZSB7XG4gIHdpZHRoOiAxMDAlO1xuICBtYXJnaW46IDEwcHg7XG59XG5cbi8qIFNQSU5ORVIgKi9cblxuLmxkcy1yb2xsZXIge1xuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgd2lkdGg6IDgwcHg7XG4gIGhlaWdodDogODBweDtcbn1cbi5sZHMtcm9sbGVyIGRpdiB7XG4gIGFuaW1hdGlvbjogbGRzLXJvbGxlciAxLjJzIGN1YmljLWJlemllcigwLjUsIDAsIDAuNSwgMSkgaW5maW5pdGU7XG4gIHRyYW5zZm9ybS1vcmlnaW46IDQwcHggNDBweDtcbn1cbi5sZHMtcm9sbGVyIGRpdjphZnRlciB7XG4gIGNvbnRlbnQ6IFwiIFwiO1xuICBkaXNwbGF5OiBibG9jaztcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICB3aWR0aDogN3B4O1xuICBoZWlnaHQ6IDdweDtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xuICBiYWNrZ3JvdW5kOiBibGFjaztcbiAgbWFyZ2luOiAtNHB4IDAgMCAtNHB4O1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCgxKSB7XG4gIGFuaW1hdGlvbi1kZWxheTogLTAuMDM2cztcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoMSk6YWZ0ZXIge1xuICB0b3A6IDYzcHg7XG4gIGxlZnQ6IDYzcHg7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDIpIHtcbiAgYW5pbWF0aW9uLWRlbGF5OiAtMC4wNzJzO1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCgyKTphZnRlciB7XG4gIHRvcDogNjhweDtcbiAgbGVmdDogNTZweDtcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoMykge1xuICBhbmltYXRpb24tZGVsYXk6IC0wLjEwOHM7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDMpOmFmdGVyIHtcbiAgdG9wOiA3MXB4O1xuICBsZWZ0OiA0OHB4O1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCg0KSB7XG4gIGFuaW1hdGlvbi1kZWxheTogLTAuMTQ0cztcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoNCk6YWZ0ZXIge1xuICB0b3A6IDcycHg7XG4gIGxlZnQ6IDQwcHg7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDUpIHtcbiAgYW5pbWF0aW9uLWRlbGF5OiAtMC4xOHM7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDUpOmFmdGVyIHtcbiAgdG9wOiA3MXB4O1xuICBsZWZ0OiAzMnB4O1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCg2KSB7XG4gIGFuaW1hdGlvbi1kZWxheTogLTAuMjE2cztcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoNik6YWZ0ZXIge1xuICB0b3A6IDY4cHg7XG4gIGxlZnQ6IDI0cHg7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDcpIHtcbiAgYW5pbWF0aW9uLWRlbGF5OiAtMC4yNTJzO1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCg3KTphZnRlciB7XG4gIHRvcDogNjNweDtcbiAgbGVmdDogMTdweDtcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoOCkge1xuICBhbmltYXRpb24tZGVsYXk6IC0wLjI4OHM7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDgpOmFmdGVyIHtcbiAgdG9wOiA1NnB4O1xuICBsZWZ0OiAxMnB4O1xufVxuQGtleWZyYW1lcyBsZHMtcm9sbGVyIHtcbiAgMCUge1xuICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpO1xuICB9XG4gIDEwMCUge1xuICAgIHRyYW5zZm9ybTogcm90YXRlKDM2MGRlZyk7XG4gIH1cbn1cbiJdfQ== */";
+    __webpack_exports__["default"] = ".head-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n}\n\n.wrapper {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n          flex-direction: row;\n  margin-top: 30px;\n}\n\nform {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n}\n\n.form-card {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  width: 45%;\n  padding: 10px;\n  background-color: rgb(206, 204, 204);\n}\n\n.form-card .form-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n}\n\n.result-box {\n  margin-top: 15px;\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n  -webkit-box-pack: center;\n          justify-content: center;\n}\n\n.query-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  width: 55%;\n}\n\nmat-card-content {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n}\n\nmat-card-content table {\n  width: 100%;\n}\n\nmat-card-content .error-box {\n  text-align: center;\n  margin-top: 15px;\n  color: rgb(192, 4, 4);\n}\n\nmat-card {\n  background-color: rgb(206, 204, 204);\n  margin: 10px;\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n}\n\nmat-card mat-card-actions {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: horizontal;\n  -webkit-box-direction: normal;\n          flex-direction: row;\n  -webkit-box-align: center;\n          align-items: center;\n}\n\nmat-card mat-card-actions button {\n  width: 50%;\n}\n\nmat-card mat-card-actions .clear-btn {\n  background-color: rgb(235, 139, 139);\n}\n\nmat-card mat-card-actions .query-btn {\n  background-color: rgb(174, 219, 144);\n  width: 50%;\n}\n\n.prov-wrapper {\n  margin-top: 30px;\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n  width: 100%;\n  margin: 50px;\n}\n\n.prov-form-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n  width: 70%;\n  padding: 10px;\n  margin: 15px 15px 5px 15px;\n  background-color: rgb(206, 204, 204);\n}\n\n.prov-form-box form > .submit-btn {\n  background-color: rgb(231, 225, 225);\n  margin: 10px 10px 4px 10px;\n}\n\n.prov-form-box form > .clear-btn {\n  background-color: rgb(235, 139, 139);\n  margin: 4px 10px 10px 10px;\n}\n\n.prov-result-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n  align-content: center;\n  width: 100%;\n}\n\n.prov-result-box .spinner {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n  margin: 40px;\n}\n\n.prov-result-box .error-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: center;\n          align-items: center;\n}\n\n.prov-result-box .error-box h3 {\n  color: rgb(192, 4, 4);\n}\n\n.prov-result-box .prov-tables-box {\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n}\n\n.prov-result-box .prov-tables-box table {\n  width: 100%;\n  margin: 10px;\n}\n\n/* GRAPH */\n\n.page {\n  width: 100%;\n  height: 100vh;\n  overflow: hidden;\n}\n\n.page .graph {\n  pointer-events: none;\n}\n\n.page .graph .node-box {\n  pointer-events: all;\n  cursor: pointer;\n}\n\n.page .graph .node-box:hover {\n  opacity: 0.5;\n}\n\n.node-info {\n  width: 100%;\n  display: -webkit-box;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n          flex-direction: column;\n  -webkit-box-align: stretch;\n          align-items: stretch;\n}\n\n.node-info table {\n  width: 100%;\n}\n\n:host ::ng-deep {\n  display: block;\n  height: inherit;\n  width: inherit;\n}\n\n:host ::ng-deep .cardContainer {\n  height: 100;\n  width: 150;\n  display: block;\n}\n\n:host ::ng-deep .cardContainer .name {\n  font-size: 24px;\n}\n\n:host ::ng-deep .cardContainer label {\n  display: block;\n  text-align: center;\n  font-size: 20px;\n  margin-top: 4px;\n  margin-bottom: 8px;\n}\n\n:host ::ng-deep .linkMidpoint ellipse {\n  fill: white;\n  stroke: black;\n  stroke-width: 1;\n}\n\n:host ::ng-deep .linkMidpoint text {\n  stroke: transparent;\n  fill: black;\n  text-anchor: middle;\n  font-size: 10px;\n}\n\n/* SPINNER */\n\n.lds-roller {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n\n.lds-roller div {\n  -webkit-animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n          animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n  -webkit-transform-origin: 40px 40px;\n          transform-origin: 40px 40px;\n}\n\n.lds-roller div:after {\n  content: \" \";\n  display: block;\n  position: absolute;\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  background: black;\n  margin: -4px 0 0 -4px;\n}\n\n.lds-roller div:nth-child(1) {\n  -webkit-animation-delay: -0.036s;\n          animation-delay: -0.036s;\n}\n\n.lds-roller div:nth-child(1):after {\n  top: 63px;\n  left: 63px;\n}\n\n.lds-roller div:nth-child(2) {\n  -webkit-animation-delay: -0.072s;\n          animation-delay: -0.072s;\n}\n\n.lds-roller div:nth-child(2):after {\n  top: 68px;\n  left: 56px;\n}\n\n.lds-roller div:nth-child(3) {\n  -webkit-animation-delay: -0.108s;\n          animation-delay: -0.108s;\n}\n\n.lds-roller div:nth-child(3):after {\n  top: 71px;\n  left: 48px;\n}\n\n.lds-roller div:nth-child(4) {\n  -webkit-animation-delay: -0.144s;\n          animation-delay: -0.144s;\n}\n\n.lds-roller div:nth-child(4):after {\n  top: 72px;\n  left: 40px;\n}\n\n.lds-roller div:nth-child(5) {\n  -webkit-animation-delay: -0.18s;\n          animation-delay: -0.18s;\n}\n\n.lds-roller div:nth-child(5):after {\n  top: 71px;\n  left: 32px;\n}\n\n.lds-roller div:nth-child(6) {\n  -webkit-animation-delay: -0.216s;\n          animation-delay: -0.216s;\n}\n\n.lds-roller div:nth-child(6):after {\n  top: 68px;\n  left: 24px;\n}\n\n.lds-roller div:nth-child(7) {\n  -webkit-animation-delay: -0.252s;\n          animation-delay: -0.252s;\n}\n\n.lds-roller div:nth-child(7):after {\n  top: 63px;\n  left: 17px;\n}\n\n.lds-roller div:nth-child(8) {\n  -webkit-animation-delay: -0.288s;\n          animation-delay: -0.288s;\n}\n\n.lds-roller div:nth-child(8):after {\n  top: 56px;\n  left: 12px;\n}\n\n@-webkit-keyframes lds-roller {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n\n@keyframes lds-roller {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvcGFnZXMvc2VhZm9vZC9zZWFmb29kLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0Qix5QkFBbUI7VUFBbkIsbUJBQW1CO0FBQ3JCOztBQUVBO0VBQ0Usb0JBQWE7RUFBYixhQUFhO0VBQ2IsOEJBQW1CO0VBQW5CLDZCQUFtQjtVQUFuQixtQkFBbUI7RUFDbkIsZ0JBQWdCO0FBQ2xCOztBQUVBO0VBQ0Usb0JBQWE7RUFBYixhQUFhO0VBQ2IsNEJBQXNCO0VBQXRCLDZCQUFzQjtVQUF0QixzQkFBc0I7QUFDeEI7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0QixVQUFVO0VBQ1YsYUFBYTtFQUNiLG9DQUFvQztBQUN0Qzs7QUFFQTtFQUNFLG9CQUFhO0VBQWIsYUFBYTtFQUNiLDRCQUFzQjtFQUF0Qiw2QkFBc0I7VUFBdEIsc0JBQXNCO0VBQ3RCLDBCQUFvQjtVQUFwQixvQkFBb0I7QUFDdEI7O0FBRUE7RUFDRSxnQkFBZ0I7RUFDaEIsb0JBQWE7RUFBYixhQUFhO0VBQ2IsNEJBQXNCO0VBQXRCLDZCQUFzQjtVQUF0QixzQkFBc0I7RUFDdEIseUJBQW1CO1VBQW5CLG1CQUFtQjtFQUNuQix3QkFBdUI7VUFBdkIsdUJBQXVCO0FBQ3pCOztBQUVBO0VBQ0Usb0JBQWE7RUFBYixhQUFhO0VBQ2IsNEJBQXNCO0VBQXRCLDZCQUFzQjtVQUF0QixzQkFBc0I7RUFDdEIsVUFBVTtBQUNaOztBQUVBO0VBQ0Usb0JBQWE7RUFBYixhQUFhO0VBQ2IsNEJBQXNCO0VBQXRCLDZCQUFzQjtVQUF0QixzQkFBc0I7RUFDdEIseUJBQW1CO1VBQW5CLG1CQUFtQjtBQUNyQjs7QUFFQTtFQUNFLFdBQVc7QUFDYjs7QUFFQTtFQUNFLGtCQUFrQjtFQUNsQixnQkFBZ0I7RUFDaEIscUJBQXFCO0FBQ3ZCOztBQUVBO0VBQ0Usb0NBQW9DO0VBQ3BDLFlBQVk7RUFDWixvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtBQUN4Qjs7QUFFQTtFQUNFLG9CQUFhO0VBQWIsYUFBYTtFQUNiLDhCQUFtQjtFQUFuQiw2QkFBbUI7VUFBbkIsbUJBQW1CO0VBQ25CLHlCQUFtQjtVQUFuQixtQkFBbUI7QUFDckI7O0FBRUE7RUFDRSxVQUFVO0FBQ1o7O0FBRUE7RUFDRSxvQ0FBb0M7QUFDdEM7O0FBRUE7RUFDRSxvQ0FBb0M7RUFDcEMsVUFBVTtBQUNaOztBQUVBO0VBQ0UsZ0JBQWdCO0VBQ2hCLG9CQUFhO0VBQWIsYUFBYTtFQUNiLDRCQUFzQjtFQUF0Qiw2QkFBc0I7VUFBdEIsc0JBQXNCO0VBQ3RCLHlCQUFtQjtVQUFuQixtQkFBbUI7RUFDbkIsV0FBVztFQUNYLFlBQVk7QUFDZDs7QUFFQTtFQUNFLG9CQUFhO0VBQWIsYUFBYTtFQUNiLDRCQUFzQjtFQUF0Qiw2QkFBc0I7VUFBdEIsc0JBQXNCO0VBQ3RCLDBCQUFvQjtVQUFwQixvQkFBb0I7RUFDcEIsVUFBVTtFQUNWLGFBQWE7RUFDYiwwQkFBMEI7RUFDMUIsb0NBQW9DO0FBQ3RDOztBQUVBO0VBQ0Usb0NBQW9DO0VBQ3BDLDBCQUEwQjtBQUM1Qjs7QUFFQTtFQUNFLG9DQUFvQztFQUNwQywwQkFBMEI7QUFDNUI7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0QiwwQkFBb0I7VUFBcEIsb0JBQW9CO0VBQ3BCLHFCQUFxQjtFQUNyQixXQUFXO0FBQ2I7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0Qix5QkFBbUI7VUFBbkIsbUJBQW1CO0VBQ25CLFlBQVk7QUFDZDs7QUFFQTtFQUNFLG9CQUFhO0VBQWIsYUFBYTtFQUNiLDRCQUFzQjtFQUF0Qiw2QkFBc0I7VUFBdEIsc0JBQXNCO0VBQ3RCLHlCQUFtQjtVQUFuQixtQkFBbUI7QUFDckI7O0FBRUE7RUFDRSxxQkFBcUI7QUFDdkI7O0FBRUE7RUFDRSxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0QiwwQkFBb0I7VUFBcEIsb0JBQW9CO0FBQ3RCOztBQUVBO0VBQ0UsV0FBVztFQUNYLFlBQVk7QUFDZDs7QUFFQSxVQUFVOztBQUVWO0VBQ0UsV0FBVztFQUNYLGFBQWE7RUFDYixnQkFBZ0I7QUFDbEI7O0FBRUE7RUFDRSxvQkFBb0I7QUFDdEI7O0FBRUE7RUFDRSxtQkFBbUI7RUFDbkIsZUFBZTtBQUNqQjs7QUFFQTtFQUNFLFlBQVk7QUFDZDs7QUFFQTtFQUNFLFdBQVc7RUFDWCxvQkFBYTtFQUFiLGFBQWE7RUFDYiw0QkFBc0I7RUFBdEIsNkJBQXNCO1VBQXRCLHNCQUFzQjtFQUN0QiwwQkFBb0I7VUFBcEIsb0JBQW9CO0FBQ3RCOztBQUVBO0VBQ0UsV0FBVztBQUNiOztBQUVBO0VBQ0UsY0FBYztFQUNkLGVBQWU7RUFDZixjQUFjO0FBQ2hCOztBQUVBO0VBQ0UsV0FBVztFQUNYLFVBQVU7RUFDVixjQUFjO0FBQ2hCOztBQUVBO0VBQ0UsZUFBZTtBQUNqQjs7QUFFQTtFQUNFLGNBQWM7RUFDZCxrQkFBa0I7RUFDbEIsZUFBZTtFQUNmLGVBQWU7RUFDZixrQkFBa0I7QUFDcEI7O0FBRUE7RUFDRSxXQUFXO0VBQ1gsYUFBYTtFQUNiLGVBQWU7QUFDakI7O0FBRUE7RUFDRSxtQkFBbUI7RUFDbkIsV0FBVztFQUNYLG1CQUFtQjtFQUNuQixlQUFlO0FBQ2pCOztBQUVBLFlBQVk7O0FBRVo7RUFDRSxxQkFBcUI7RUFDckIsa0JBQWtCO0VBQ2xCLFdBQVc7RUFDWCxZQUFZO0FBQ2Q7O0FBQ0E7RUFDRSx3RUFBZ0U7VUFBaEUsZ0VBQWdFO0VBQ2hFLG1DQUEyQjtVQUEzQiwyQkFBMkI7QUFDN0I7O0FBQ0E7RUFDRSxZQUFZO0VBQ1osY0FBYztFQUNkLGtCQUFrQjtFQUNsQixVQUFVO0VBQ1YsV0FBVztFQUNYLGtCQUFrQjtFQUNsQixpQkFBaUI7RUFDakIscUJBQXFCO0FBQ3ZCOztBQUNBO0VBQ0UsZ0NBQXdCO1VBQXhCLHdCQUF3QjtBQUMxQjs7QUFDQTtFQUNFLFNBQVM7RUFDVCxVQUFVO0FBQ1o7O0FBQ0E7RUFDRSxnQ0FBd0I7VUFBeEIsd0JBQXdCO0FBQzFCOztBQUNBO0VBQ0UsU0FBUztFQUNULFVBQVU7QUFDWjs7QUFDQTtFQUNFLGdDQUF3QjtVQUF4Qix3QkFBd0I7QUFDMUI7O0FBQ0E7RUFDRSxTQUFTO0VBQ1QsVUFBVTtBQUNaOztBQUNBO0VBQ0UsZ0NBQXdCO1VBQXhCLHdCQUF3QjtBQUMxQjs7QUFDQTtFQUNFLFNBQVM7RUFDVCxVQUFVO0FBQ1o7O0FBQ0E7RUFDRSwrQkFBdUI7VUFBdkIsdUJBQXVCO0FBQ3pCOztBQUNBO0VBQ0UsU0FBUztFQUNULFVBQVU7QUFDWjs7QUFDQTtFQUNFLGdDQUF3QjtVQUF4Qix3QkFBd0I7QUFDMUI7O0FBQ0E7RUFDRSxTQUFTO0VBQ1QsVUFBVTtBQUNaOztBQUNBO0VBQ0UsZ0NBQXdCO1VBQXhCLHdCQUF3QjtBQUMxQjs7QUFDQTtFQUNFLFNBQVM7RUFDVCxVQUFVO0FBQ1o7O0FBQ0E7RUFDRSxnQ0FBd0I7VUFBeEIsd0JBQXdCO0FBQzFCOztBQUNBO0VBQ0UsU0FBUztFQUNULFVBQVU7QUFDWjs7QUFDQTtFQUNFO0lBQ0UsK0JBQXVCO1lBQXZCLHVCQUF1QjtFQUN6QjtFQUNBO0lBQ0UsaUNBQXlCO1lBQXpCLHlCQUF5QjtFQUMzQjtBQUNGOztBQVBBO0VBQ0U7SUFDRSwrQkFBdUI7WUFBdkIsdUJBQXVCO0VBQ3pCO0VBQ0E7SUFDRSxpQ0FBeUI7WUFBekIseUJBQXlCO0VBQzNCO0FBQ0YiLCJmaWxlIjoic3JjL2FwcC9wYWdlcy9zZWFmb29kL3NlYWZvb2QuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIi5oZWFkLWJveCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG59XG5cbi53cmFwcGVyIHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgbWFyZ2luLXRvcDogMzBweDtcbn1cblxuZm9ybSB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG59XG5cbi5mb3JtLWNhcmQge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICB3aWR0aDogNDUlO1xuICBwYWRkaW5nOiAxMHB4O1xuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjA2LCAyMDQsIDIwNCk7XG59XG5cbi5mb3JtLWNhcmQgLmZvcm0tYm94IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG59XG5cbi5yZXN1bHQtYm94IHtcbiAgbWFyZ2luLXRvcDogMTVweDtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG59XG5cbi5xdWVyeS1ib3gge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICB3aWR0aDogNTUlO1xufVxuXG5tYXQtY2FyZC1jb250ZW50IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbn1cblxubWF0LWNhcmQtY29udGVudCB0YWJsZSB7XG4gIHdpZHRoOiAxMDAlO1xufVxuXG5tYXQtY2FyZC1jb250ZW50IC5lcnJvci1ib3gge1xuICB0ZXh0LWFsaWduOiBjZW50ZXI7XG4gIG1hcmdpbi10b3A6IDE1cHg7XG4gIGNvbG9yOiByZ2IoMTkyLCA0LCA0KTtcbn1cblxubWF0LWNhcmQge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjA2LCAyMDQsIDIwNCk7XG4gIG1hcmdpbjogMTBweDtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbn1cblxubWF0LWNhcmQgbWF0LWNhcmQtYWN0aW9ucyB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG59XG5cbm1hdC1jYXJkIG1hdC1jYXJkLWFjdGlvbnMgYnV0dG9uIHtcbiAgd2lkdGg6IDUwJTtcbn1cblxubWF0LWNhcmQgbWF0LWNhcmQtYWN0aW9ucyAuY2xlYXItYnRuIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDIzNSwgMTM5LCAxMzkpO1xufVxuXG5tYXQtY2FyZCBtYXQtY2FyZC1hY3Rpb25zIC5xdWVyeS1idG4ge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMTc0LCAyMTksIDE0NCk7XG4gIHdpZHRoOiA1MCU7XG59XG5cbi5wcm92LXdyYXBwZXIge1xuICBtYXJnaW4tdG9wOiAzMHB4O1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBhbGlnbi1pdGVtczogY2VudGVyO1xuICB3aWR0aDogMTAwJTtcbiAgbWFyZ2luOiA1MHB4O1xufVxuXG4ucHJvdi1mb3JtLWJveCB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBzdHJldGNoO1xuICB3aWR0aDogNzAlO1xuICBwYWRkaW5nOiAxMHB4O1xuICBtYXJnaW46IDE1cHggMTVweCA1cHggMTVweDtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDIwNiwgMjA0LCAyMDQpO1xufVxuXG4ucHJvdi1mb3JtLWJveCBmb3JtID4gLnN1Ym1pdC1idG4ge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMjMxLCAyMjUsIDIyNSk7XG4gIG1hcmdpbjogMTBweCAxMHB4IDRweCAxMHB4O1xufVxuXG4ucHJvdi1mb3JtLWJveCBmb3JtID4gLmNsZWFyLWJ0biB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYigyMzUsIDEzOSwgMTM5KTtcbiAgbWFyZ2luOiA0cHggMTBweCAxMHB4IDEwcHg7XG59XG5cbi5wcm92LXJlc3VsdC1ib3gge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbiAgYWxpZ24tY29udGVudDogY2VudGVyO1xuICB3aWR0aDogMTAwJTtcbn1cblxuLnByb3YtcmVzdWx0LWJveCAuc3Bpbm5lciB7XG4gIGRpc3BsYXk6IGZsZXg7XG4gIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gIG1hcmdpbjogNDBweDtcbn1cblxuLnByb3YtcmVzdWx0LWJveCAuZXJyb3ItYm94IHtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbn1cblxuLnByb3YtcmVzdWx0LWJveCAuZXJyb3ItYm94IGgzIHtcbiAgY29sb3I6IHJnYigxOTIsIDQsIDQpO1xufVxuXG4ucHJvdi1yZXN1bHQtYm94IC5wcm92LXRhYmxlcy1ib3gge1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICBhbGlnbi1pdGVtczogc3RyZXRjaDtcbn1cblxuLnByb3YtcmVzdWx0LWJveCAucHJvdi10YWJsZXMtYm94IHRhYmxlIHtcbiAgd2lkdGg6IDEwMCU7XG4gIG1hcmdpbjogMTBweDtcbn1cblxuLyogR1JBUEggKi9cblxuLnBhZ2Uge1xuICB3aWR0aDogMTAwJTtcbiAgaGVpZ2h0OiAxMDB2aDtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbn1cblxuLnBhZ2UgLmdyYXBoIHtcbiAgcG9pbnRlci1ldmVudHM6IG5vbmU7XG59XG5cbi5wYWdlIC5ncmFwaCAubm9kZS1ib3gge1xuICBwb2ludGVyLWV2ZW50czogYWxsO1xuICBjdXJzb3I6IHBvaW50ZXI7XG59XG5cbi5wYWdlIC5ncmFwaCAubm9kZS1ib3g6aG92ZXIge1xuICBvcGFjaXR5OiAwLjU7XG59XG5cbi5ub2RlLWluZm8ge1xuICB3aWR0aDogMTAwJTtcbiAgZGlzcGxheTogZmxleDtcbiAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbiAgYWxpZ24taXRlbXM6IHN0cmV0Y2g7XG59XG5cbi5ub2RlLWluZm8gdGFibGUge1xuICB3aWR0aDogMTAwJTtcbn1cblxuOmhvc3QgOjpuZy1kZWVwIHtcbiAgZGlzcGxheTogYmxvY2s7XG4gIGhlaWdodDogaW5oZXJpdDtcbiAgd2lkdGg6IGluaGVyaXQ7XG59XG5cbjpob3N0IDo6bmctZGVlcCAuY2FyZENvbnRhaW5lciB7XG4gIGhlaWdodDogMTAwO1xuICB3aWR0aDogMTUwO1xuICBkaXNwbGF5OiBibG9jaztcbn1cblxuOmhvc3QgOjpuZy1kZWVwIC5jYXJkQ29udGFpbmVyIC5uYW1lIHtcbiAgZm9udC1zaXplOiAyNHB4O1xufVxuXG46aG9zdCA6Om5nLWRlZXAgLmNhcmRDb250YWluZXIgbGFiZWwge1xuICBkaXNwbGF5OiBibG9jaztcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xuICBmb250LXNpemU6IDIwcHg7XG4gIG1hcmdpbi10b3A6IDRweDtcbiAgbWFyZ2luLWJvdHRvbTogOHB4O1xufVxuXG46aG9zdCA6Om5nLWRlZXAgLmxpbmtNaWRwb2ludCBlbGxpcHNlIHtcbiAgZmlsbDogd2hpdGU7XG4gIHN0cm9rZTogYmxhY2s7XG4gIHN0cm9rZS13aWR0aDogMTtcbn1cblxuOmhvc3QgOjpuZy1kZWVwIC5saW5rTWlkcG9pbnQgdGV4dCB7XG4gIHN0cm9rZTogdHJhbnNwYXJlbnQ7XG4gIGZpbGw6IGJsYWNrO1xuICB0ZXh0LWFuY2hvcjogbWlkZGxlO1xuICBmb250LXNpemU6IDEwcHg7XG59XG5cbi8qIFNQSU5ORVIgKi9cblxuLmxkcy1yb2xsZXIge1xuICBkaXNwbGF5OiBpbmxpbmUtYmxvY2s7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgd2lkdGg6IDgwcHg7XG4gIGhlaWdodDogODBweDtcbn1cbi5sZHMtcm9sbGVyIGRpdiB7XG4gIGFuaW1hdGlvbjogbGRzLXJvbGxlciAxLjJzIGN1YmljLWJlemllcigwLjUsIDAsIDAuNSwgMSkgaW5maW5pdGU7XG4gIHRyYW5zZm9ybS1vcmlnaW46IDQwcHggNDBweDtcbn1cbi5sZHMtcm9sbGVyIGRpdjphZnRlciB7XG4gIGNvbnRlbnQ6IFwiIFwiO1xuICBkaXNwbGF5OiBibG9jaztcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICB3aWR0aDogN3B4O1xuICBoZWlnaHQ6IDdweDtcbiAgYm9yZGVyLXJhZGl1czogNTAlO1xuICBiYWNrZ3JvdW5kOiBibGFjaztcbiAgbWFyZ2luOiAtNHB4IDAgMCAtNHB4O1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCgxKSB7XG4gIGFuaW1hdGlvbi1kZWxheTogLTAuMDM2cztcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoMSk6YWZ0ZXIge1xuICB0b3A6IDYzcHg7XG4gIGxlZnQ6IDYzcHg7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDIpIHtcbiAgYW5pbWF0aW9uLWRlbGF5OiAtMC4wNzJzO1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCgyKTphZnRlciB7XG4gIHRvcDogNjhweDtcbiAgbGVmdDogNTZweDtcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoMykge1xuICBhbmltYXRpb24tZGVsYXk6IC0wLjEwOHM7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDMpOmFmdGVyIHtcbiAgdG9wOiA3MXB4O1xuICBsZWZ0OiA0OHB4O1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCg0KSB7XG4gIGFuaW1hdGlvbi1kZWxheTogLTAuMTQ0cztcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoNCk6YWZ0ZXIge1xuICB0b3A6IDcycHg7XG4gIGxlZnQ6IDQwcHg7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDUpIHtcbiAgYW5pbWF0aW9uLWRlbGF5OiAtMC4xOHM7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDUpOmFmdGVyIHtcbiAgdG9wOiA3MXB4O1xuICBsZWZ0OiAzMnB4O1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCg2KSB7XG4gIGFuaW1hdGlvbi1kZWxheTogLTAuMjE2cztcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoNik6YWZ0ZXIge1xuICB0b3A6IDY4cHg7XG4gIGxlZnQ6IDI0cHg7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDcpIHtcbiAgYW5pbWF0aW9uLWRlbGF5OiAtMC4yNTJzO1xufVxuLmxkcy1yb2xsZXIgZGl2Om50aC1jaGlsZCg3KTphZnRlciB7XG4gIHRvcDogNjNweDtcbiAgbGVmdDogMTdweDtcbn1cbi5sZHMtcm9sbGVyIGRpdjpudGgtY2hpbGQoOCkge1xuICBhbmltYXRpb24tZGVsYXk6IC0wLjI4OHM7XG59XG4ubGRzLXJvbGxlciBkaXY6bnRoLWNoaWxkKDgpOmFmdGVyIHtcbiAgdG9wOiA1NnB4O1xuICBsZWZ0OiAxMnB4O1xufVxuQGtleWZyYW1lcyBsZHMtcm9sbGVyIHtcbiAgMCUge1xuICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpO1xuICB9XG4gIDEwMCUge1xuICAgIHRyYW5zZm9ybTogcm90YXRlKDM2MGRlZyk7XG4gIH1cbn1cbiJdfQ== */";
     /***/
   },
 
@@ -1441,6 +1462,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var src_app_api_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(
     /*! src/app/api.service */
     "./src/app/api.service.ts");
+    /* harmony import */
+
+
+    var d3_shape__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(
+    /*! d3-shape */
+    "./node_modules/d3-shape/src/index.js");
+    /* harmony import */
+
+
+    var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(
+    /*! rxjs */
+    "./node_modules/rxjs/_esm2015/index.js");
 
     var SeafoodComponent =
     /*#__PURE__*/
@@ -1484,72 +1517,96 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         this.entryColumns = ['packageId', 'retailerName'];
         this.entryPerforming = false;
         this.entryError = '';
-        this.fishesProv = [];
+        this.provenanceFishes = [];
         this.fishProvColumns = ['isoTimestamp', 'fishId', 'location', 'fishermanName'];
-        this.packagesProv = [];
-        this.packageProvColumns = ['isoTimestamp', 'fishIds', 'packageId', 'processingFacilityName'];
-        this.shipmentsProv = [];
+        this.fishesProv = [];
+        this.provenanceShipments = [];
         this.shipmentProvColumns = ['isoTimestamp', 'fishIds', 'toLocation', 'shipmentCompanyName'];
-        this.transportationsProv = [];
+        this.shipmentsProv = [];
+        this.provenancePackage = null;
+        this.packageProvColumns = ['isoTimestamp', 'fishIds', 'packageId', 'processingFacilityName'];
+        this.packagesProv = [];
+        this.provenanceTransportation = null;
         this.transportationProvColumns = ['isoTimestamp', 'packageId', 'toLocation', 'distributorName'];
-        this.salesProv = [];
+        this.transportationsProv = [];
+        this.provenanceSelling = null;
         this.saleProvColumns = ['isoTimestamp', 'packageId'];
-        this.entriesProv = [];
+        this.salesProv = [];
+        this.provenanceEntry = null;
         this.entryProvColumns = ['isoTimestamp', 'packageId', 'retailerName'];
+        this.entriesProv = [];
         this.error = '';
+        this.curve = d3_shape__WEBPACK_IMPORTED_MODULE_5__["curveCardinal"];
+        this.size = [1000, 750];
+        this.links = [];
+        this.nodes = [];
+        this.clusters = [];
+        this.update$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["Subject"]();
+        this.center$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["Subject"]();
+        this.zoomToFit$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__["Subject"]();
+        this.showInfo = '';
         this.fishForm = this.formBuilder.group({
-          fishId: '',
-          location: '',
-          fishermanName: ''
+          fishId: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+          location: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+          fishermanName: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required)
         });
         this.packageForm = this.formBuilder.group({
           fishIds: [this.idsForPackage],
-          packageId: '',
-          processingFacilityName: ''
+          packageId: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+          processingFacilityName: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required)
         });
         this.packageForm.controls.fishIds.setValue(this.idsForPackage);
         this.shipmentForm = this.formBuilder.group({
-          fishIds: '',
-          toLocation: '',
-          shipmentCompanyName: ''
+          fishIds: [this.idsForShipment],
+          toLocation: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+          shipmentCompanyName: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required)
         });
         this.shipmentForm.controls.fishIds.setValue(this.idsForShipment);
         this.transportationForm = this.formBuilder.group({
-          packageId: '',
-          toLocation: '',
-          distributorName: ''
+          packageId: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+          toLocation: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+          distributorName: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required)
         });
         this.inventoryEntryForm = this.formBuilder.group({
-          packageId: '',
-          retailerName: ''
+          packageId: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+          retailerName: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required)
         });
         this.sellingForm = this.formBuilder.group({
-          packageId: ''
+          packageId: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required)
         });
         this.provenanceForm = this.formBuilder.group({
-          packageId: ''
+          packageId: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required)
         });
       }
 
       _createClass(SeafoodComponent, [{
         key: "ngOnInit",
-        value: function ngOnInit() {}
+        value: function ngOnInit() {
+          this.getFishes();
+        }
       }, {
         key: "onRegisterFish",
         value: function onRegisterFish(fish) {
           var _this = this;
 
           this.performing = true;
-          this.apiService.registerCapturedFish(fish).subscribe(function (res) {
-            _this.result = res;
-            _this.performing = false;
 
-            _this.getFishes();
-          }, function (err) {
-            _this.result = err.message;
-            _this.performing = false;
-          });
-          this.fishForm.reset();
+          if (this.fishForm.valid) {
+            this.apiService.registerCapturedFish(fish).subscribe(function (res) {
+              _this.result = res;
+              _this.performing = false;
+
+              _this.fishForm.reset();
+
+              _this.getFishes();
+            }, function (err) {
+              _this.result = err.message;
+              _this.performing = false;
+            });
+          } else {
+            this.result = 'Invalid form!';
+            this.performing = false;
+          }
         }
       }, {
         key: "onRegisterPackage",
@@ -1557,16 +1614,23 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var _this2 = this;
 
           this.performing = true;
-          this.apiService.registerPackage(packageFish).subscribe(function (res) {
-            _this2.result = res;
-            _this2.performing = false;
 
-            _this2.getPackages();
-          }, function (err) {
-            _this2.result = err.message;
-            _this2.performing = false;
-          });
-          this.packageForm.reset();
+          if (this.packageForm.valid && packageFish.fishIds.length > 0) {
+            this.apiService.registerPackage(packageFish).subscribe(function (res) {
+              _this2.result = res;
+              _this2.performing = false;
+
+              _this2.packageForm.reset();
+
+              _this2.getPackages();
+            }, function (err) {
+              _this2.result = err.message;
+              _this2.performing = false;
+            });
+          } else {
+            this.result = 'Invalid form!';
+            this.performing = false;
+          }
         }
       }, {
         key: "onRegisterShipment",
@@ -1574,16 +1638,23 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var _this3 = this;
 
           this.performing = true;
-          this.apiService.registerShipment(shipment).subscribe(function (res) {
-            _this3.result = res;
-            _this3.performing = false;
 
-            _this3.getShipments();
-          }, function (err) {
-            _this3.result = err.message;
-            _this3.performing = false;
-          });
-          this.shipmentForm.reset();
+          if (this.shipmentForm.valid && shipment.fishIds.length > 0) {
+            this.apiService.registerShipment(shipment).subscribe(function (res) {
+              _this3.result = res;
+              _this3.performing = false;
+
+              _this3.shipmentForm.reset();
+
+              _this3.getShipments();
+            }, function (err) {
+              _this3.result = err.message;
+              _this3.performing = false;
+            });
+          } else {
+            this.result = 'Invalid form!';
+            this.performing = false;
+          }
         }
       }, {
         key: "onRegisterTransportation",
@@ -1591,16 +1662,23 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var _this4 = this;
 
           this.performing = true;
-          this.apiService.registerTransportation(transportation).subscribe(function (res) {
-            _this4.result = res;
-            _this4.performing = false;
 
-            _this4.getTransportations();
-          }, function (err) {
-            _this4.result = err.message;
-            _this4.performing = false;
-          });
-          this.transportationForm.reset();
+          if (this.transportationForm.valid) {
+            this.apiService.registerTransportation(transportation).subscribe(function (res) {
+              _this4.result = res;
+              _this4.performing = false;
+
+              _this4.transportationForm.reset();
+
+              _this4.getTransportations();
+            }, function (err) {
+              _this4.result = err.message;
+              _this4.performing = false;
+            });
+          } else {
+            this.result = 'Invalid form!';
+            this.performing = false;
+          }
         }
       }, {
         key: "onRegisterInInventory",
@@ -1608,16 +1686,23 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var _this5 = this;
 
           this.performing = true;
-          this.apiService.registerInInventory(entry).subscribe(function (res) {
-            _this5.result = res;
-            _this5.performing = false;
 
-            _this5.getEntries();
-          }, function (err) {
-            _this5.result = err.message;
-            _this5.performing = false;
-          });
-          this.inventoryEntryForm.reset();
+          if (this.inventoryEntryForm.valid) {
+            this.apiService.registerInInventory(entry).subscribe(function (res) {
+              _this5.result = res;
+              _this5.performing = false;
+
+              _this5.inventoryEntryForm.reset();
+
+              _this5.getEntries();
+            }, function (err) {
+              _this5.result = err.message;
+              _this5.performing = false;
+            });
+          } else {
+            this.result = 'Invalid form!';
+            this.performing = false;
+          }
         }
       }, {
         key: "onRegisterSelling",
@@ -1625,16 +1710,23 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var _this6 = this;
 
           this.performing = true;
-          this.apiService.registerSelling(sale).subscribe(function (res) {
-            _this6.result = res;
-            _this6.performing = false;
 
-            _this6.getSales();
-          }, function (err) {
-            _this6.result = err.message;
-            _this6.performing = false;
-          });
-          this.sellingForm.reset();
+          if (this.sellingForm.valid) {
+            this.apiService.registerSelling(sale).subscribe(function (res) {
+              _this6.result = res;
+              _this6.performing = false;
+
+              _this6.sellingForm.reset();
+
+              _this6.getSales();
+            }, function (err) {
+              _this6.result = err.message;
+              _this6.performing = false;
+            });
+          } else {
+            this.result = 'Invalid form!';
+            this.performing = false;
+          }
         }
       }, {
         key: "getFishes",
@@ -1757,37 +1849,292 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         value: function retrieveProvenance(provenanceForm) {
           var _this13 = this;
 
+          this.clearGraph();
+          var id = provenanceForm.packageId;
           this.performing = true;
-          this.apiService.retrieveProvenance(provenanceForm.packageId).subscribe(function (res) {
-            console.log('=== PROVENANCE RECEIVED ===');
-            console.log(res);
 
-            if (res.packagingOccurrence == null) {
-              _this13.error = 'Package not found';
-            } else {
-              _this13.fishesProv = res.fishCatchingOccurrences ? res.fishCatchingOccurrences : [];
-              _this13.shipmentsProv = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
-              _this13.packagesProv = res.packagingOccurrence ? [res.packagingOccurrence] : [];
-              _this13.transportationsProv = res.transportationOccurrence ? [res.transportationOccurrence] : [];
-              _this13.salesProv = res.sellingOccurrence ? [res.sellingOccurrence] : [];
-              _this13.entriesProv = res.inventoryOccurrence ? [res.inventoryOccurrence] : [];
-            }
+          if (this.provenanceForm.valid) {
+            this.apiService.retrieveProvenance(id).subscribe(function (res) {
+              if (res.packagingOccurrence == null) {
+                _this13.error = 'Package not found';
+              } else {
+                _this13.provenanceFishes = res.fishCatchingOccurrences ? res.fishCatchingOccurrences : [];
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
 
-            _this13.performing = false;
-          }, function (err) {
-            _this13.error = err.message;
-            _this13.performing = false;
-          });
+                try {
+                  for (var _iterator = _this13.provenanceFishes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var fish = _step.value;
+                    _this13.nodes = [].concat(_toConsumableArray(_this13.nodes), [{
+                      id: fish.occurrence.fishId,
+                      label: 'Fish Captured',
+                      data: {
+                        isoTimestamp: fish.isoTimestamp,
+                        location: fish.occurrence.location,
+                        fishermanName: fish.occurrence.fishermanName,
+                        color: '#3533ff',
+                        type: 'fish'
+                      }
+                    }]);
+                  }
+                } catch (err) {
+                  _didIteratorError = true;
+                  _iteratorError = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion && _iterator.return != null) {
+                      _iterator.return();
+                    }
+                  } finally {
+                    if (_didIteratorError) {
+                      throw _iteratorError;
+                    }
+                  }
+                }
+
+                _this13.provenanceShipments = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                  for (var _iterator2 = _this13.provenanceShipments[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var shipment = _step2.value;
+                    var shipmentNodeId = shipment.occurrence.fishIds.toString();
+                    _this13.nodes = [].concat(_toConsumableArray(_this13.nodes), [{
+                      id: shipmentNodeId,
+                      label: 'Fishes Shipped',
+                      data: {
+                        isoTimestamp: shipment.isoTimestamp,
+                        toLocation: shipment.occurrence.toLocation,
+                        shipmentCompanyName: shipment.occurrence.shipmentCompanyName,
+                        color: '#33fbff',
+                        type: 'shipment'
+                      }
+                    }]);
+                    var _iteratorNormalCompletion4 = true;
+                    var _didIteratorError4 = false;
+                    var _iteratorError4 = undefined;
+
+                    try {
+                      var _loop2 = function _loop2() {
+                        var fishId = _step4.value;
+
+                        var check = _this13.nodes.filter(function (value) {
+                          return value.id === fishId;
+                        });
+
+                        if (check.length !== 0) {
+                          _this13.links = [].concat(_toConsumableArray(_this13.links), [{
+                            label: 'fish shipped',
+                            source: fishId,
+                            target: shipmentNodeId,
+                            data: {
+                              linkText: 'fish shipped'
+                            }
+                          }]);
+                        }
+                      };
+
+                      for (var _iterator4 = shipment.occurrence.fishIds[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        _loop2();
+                      }
+                    } catch (err) {
+                      _didIteratorError4 = true;
+                      _iteratorError4 = err;
+                    } finally {
+                      try {
+                        if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+                          _iterator4.return();
+                        }
+                      } finally {
+                        if (_didIteratorError4) {
+                          throw _iteratorError4;
+                        }
+                      }
+                    }
+                  }
+                } catch (err) {
+                  _didIteratorError2 = true;
+                  _iteratorError2 = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                      _iterator2.return();
+                    }
+                  } finally {
+                    if (_didIteratorError2) {
+                      throw _iteratorError2;
+                    }
+                  }
+                }
+
+                _this13.provenancePackage = res.packagingOccurrence;
+
+                if (_this13.provenancePackage != null) {
+                  var packageNodeId = 'package-' + _this13.provenancePackage.occurrence.packageId;
+                  _this13.nodes = [].concat(_toConsumableArray(_this13.nodes), [{
+                    id: packageNodeId,
+                    label: 'Package ' + _this13.provenancePackage.occurrence.packageId,
+                    data: {
+                      isoTimestamp: _this13.provenancePackage.isoTimestamp,
+                      fishIds: _this13.provenancePackage.occurrence.fishIds,
+                      processingFacilityName: _this13.provenancePackage.occurrence.processingFacilityName,
+                      color: '#ff5733',
+                      type: 'package'
+                    }
+                  }]);
+                  var _iteratorNormalCompletion3 = true;
+                  var _didIteratorError3 = false;
+                  var _iteratorError3 = undefined;
+
+                  try {
+                    var _loop = function _loop() {
+                      var fishId = _step3.value;
+
+                      var check = _this13.nodes.filter(function (value) {
+                        return value.id === fishId;
+                      });
+
+                      if (check.length !== 0) {
+                        _this13.links = [].concat(_toConsumableArray(_this13.links), [{
+                          label: 'package registration',
+                          source: fishId,
+                          target: packageNodeId,
+                          data: {
+                            linkText: 'package registration'
+                          }
+                        }]);
+                      }
+                    };
+
+                    for (var _iterator3 = _this13.provenancePackage.occurrence.fishIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                      _loop();
+                    }
+                  } catch (err) {
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
+                  } finally {
+                    try {
+                      if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+                        _iterator3.return();
+                      }
+                    } finally {
+                      if (_didIteratorError3) {
+                        throw _iteratorError3;
+                      }
+                    }
+                  }
+                }
+
+                _this13.provenanceTransportation = res.transportationOccurrence;
+
+                if (_this13.provenanceTransportation != null) {
+                  var transportationNodeId = 'transport-' + _this13.provenanceTransportation.occurrence.packageId;
+                  _this13.nodes = [].concat(_toConsumableArray(_this13.nodes), [{
+                    id: transportationNodeId,
+                    label: 'Package Transported',
+                    data: {
+                      isoTimestamp: _this13.provenanceTransportation.isoTimestamp,
+                      toLocation: _this13.provenanceTransportation.occurrence.toLocation,
+                      distributorName: _this13.provenanceTransportation.occurrence.distributorName,
+                      color: '#35ff33',
+                      type: 'transportation'
+                    }
+                  }]);
+                  _this13.links = [].concat(_toConsumableArray(_this13.links), [{
+                    label: 'package transporting',
+                    source: 'package-' + _this13.provenanceTransportation.occurrence.packageId,
+                    target: transportationNodeId,
+                    data: {
+                      linkText: 'package transporting'
+                    }
+                  }]);
+                }
+
+                _this13.provenanceSelling = res.sellingOccurrence;
+
+                if (_this13.provenanceSelling != null) {
+                  var sellingNodeId = 'selling-' + _this13.provenanceSelling.occurrence.packageId;
+                  _this13.nodes = [].concat(_toConsumableArray(_this13.nodes), [{
+                    id: sellingNodeId,
+                    label: 'Package Sold',
+                    data: {
+                      isoTimestamp: _this13.provenanceSelling.isoTimestamp,
+                      color: '#f1ff33',
+                      type: 'selling'
+                    }
+                  }]);
+                  _this13.links = [].concat(_toConsumableArray(_this13.links), [{
+                    label: 'package selling',
+                    source: 'package-' + _this13.provenanceSelling.occurrence.packageId,
+                    target: sellingNodeId,
+                    data: {
+                      linkText: 'package selling'
+                    }
+                  }]);
+                }
+
+                _this13.provenanceEntry = res.inventoryOccurrence;
+
+                if (_this13.provenanceEntry != null) {
+                  var entryNodeId = 'entry-' + _this13.provenanceEntry.occurrence.packageId;
+                  _this13.nodes = [].concat(_toConsumableArray(_this13.nodes), [{
+                    id: entryNodeId,
+                    label: 'Package Registered In Inventory',
+                    data: {
+                      isoTimestamp: _this13.provenanceEntry.isoTimestamp,
+                      retailerName: _this13.provenanceEntry.occurrence.retailerName,
+                      color: '#ff33de',
+                      type: 'inventory'
+                    }
+                  }]);
+                  _this13.links = [].concat(_toConsumableArray(_this13.links), [{
+                    label: "package's inventory registration",
+                    source: 'package-' + _this13.provenanceEntry.occurrence.packageId,
+                    target: entryNodeId,
+                    data: {
+                      linkText: "package's inventory registration"
+                    }
+                  }]);
+                }
+              }
+
+              _this13.performing = false;
+            }, function (err) {
+              _this13.error = err.message;
+              _this13.performing = false;
+            });
+          } else {
+            this.error = 'Missing package identifier!';
+            this.performing = false;
+          }
+        }
+      }, {
+        key: "clearGraph",
+        value: function clearGraph() {
+          this.nodes = [];
+          this.links = [];
+          this.clusters = [];
+          this.showInfo = '';
         }
       }, {
         key: "clearProvenance",
         value: function clearProvenance() {
+          this.provenanceFishes = [];
           this.fishesProv = [];
-          this.packagesProv = [];
+          this.provenanceShipments = [];
           this.shipmentsProv = [];
+          this.provenancePackage = null;
+          this.packagesProv = [];
+          this.provenanceTransportation = null;
           this.transportationsProv = [];
+          this.provenanceSelling = null;
           this.salesProv = [];
+          this.provenanceEntry = null;
           this.entriesProv = [];
+          this.clearGraph();
         }
       }, {
         key: "removeIdFromPackage",
@@ -1848,8 +2195,80 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             this.performing = false;
             this.prevIndex = event.index;
             this.fishError = this.packageError = this.shipmentError = this.transportationError = this.entryError = this.saleError = '';
+
+            switch (event.index) {
+              case 0:
+                this.getFishes();
+                break;
+
+              case 1:
+                this.getShipments();
+                break;
+
+              case 2:
+                this.getPackages();
+                break;
+
+              case 3:
+                this.getTransportations();
+                break;
+
+              case 4:
+                this.getEntries();
+                break;
+
+              case 5:
+                this.getSales();
+                break;
+
+              default:
+                break;
+            }
           }
         }
+      }, {
+        key: "onNodeClicked",
+        value: function onNodeClicked(event) {
+          console.log('Node clicked..');
+          var id = event.target.id;
+          var node = this.nodes.find(function (v) {
+            return v.id === id;
+          });
+          this.showInfo = node.data.type;
+
+          switch (this.showInfo) {
+            case 'fish':
+              this.fishesProv = [this.provenanceFishes.find(function (v) {
+                return v.occurrence.fishId = id;
+              })];
+              break;
+
+            case 'shipment':
+              this.shipmentsProv = [this.provenanceShipments.find(function (v) {
+                return v.occurrence.fishIds = id;
+              })];
+              break;
+
+            case 'package':
+              this.packagesProv = [this.provenancePackage];
+              break;
+
+            case 'transportation':
+              this.transportationsProv = [this.provenanceTransportation];
+              break;
+
+            case 'inventory':
+              this.entriesProv = [this.provenanceEntry];
+              break;
+
+            case 'selling':
+              this.salesProv = [this.provenanceSelling];
+              break;
+          }
+        }
+      }, {
+        key: "onEdgeClicked",
+        value: function onEdgeClicked(event) {}
       }]);
 
       return SeafoodComponent;
