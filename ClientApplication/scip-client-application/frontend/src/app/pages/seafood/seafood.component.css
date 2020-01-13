@@ -158,10 +158,15 @@ mat-card mat-card-actions .query-btn {
   overflow: hidden;
 }
 
-.generic-node {
+.node-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+}
+
+.node-info table {
+  width: 100%;
+  margin: 10px;
 }
 
 :host ::ng-deep {

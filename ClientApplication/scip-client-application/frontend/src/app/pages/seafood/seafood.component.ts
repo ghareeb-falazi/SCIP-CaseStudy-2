@@ -72,21 +72,27 @@ export class SeafoodComponent implements OnInit {
 
   provenanceFishes: SeafoodOccurrence<Fish>[] = [];
   fishProvColumns = ['isoTimestamp', 'fishId', 'location', 'fishermanName'];
+  fishesProv = [];
 
   provenanceShipments: SeafoodOccurrence<FishShipment>[] = [];
   shipmentProvColumns = ['isoTimestamp', 'fishIds', 'toLocation', 'shipmentCompanyName'];
+  shipmentsProv = [];
 
   provenancePackage: SeafoodOccurrence<FishPackage> = null;
   packageProvColumns = ['isoTimestamp', 'fishIds', 'packageId', 'processingFacilityName'];
+  packagesProv = [];
 
   provenanceTransportation: SeafoodOccurrence<PackageTransportation> = null;
   transportationProvColumns = ['isoTimestamp', 'packageId', 'toLocation', 'distributorName'];
+  transportationsProv = [];
 
   provenanceSelling: SeafoodOccurrence<PackageSelling> = null;
   saleProvColumns = ['isoTimestamp', 'packageId'];
+  salesProv = [];
 
   provenanceEntry: SeafoodOccurrence<InventoryEntry> = null;
   entryProvColumns = ['isoTimestamp', 'packageId', 'retailerName'];
+  entriesProv = [];
 
   error = '';
 
@@ -103,6 +109,7 @@ export class SeafoodComponent implements OnInit {
   update$: Subject<boolean> = new Subject();
   center$: Subject<boolean> = new Subject();
   zoomToFit$: Subject<boolean> = new Subject();
+  showInfo = '';
 
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.fishForm = this.formBuilder.group({
@@ -401,6 +408,7 @@ export class SeafoodComponent implements OnInit {
                     location: fish.occurrence.location,
                     fishermanName: fish.occurrence.fishermanName,
                     color: '#3533ff',
+                    type: 'fish',
                   }
                 }
               ];
@@ -423,6 +431,7 @@ export class SeafoodComponent implements OnInit {
                     toLocation: shipment.occurrence.toLocation,
                     shipmentCompanyName: shipment.occurrence.shipmentCompanyName,
                     color: '#33fbff',
+                    type: 'shipment',
                   }
                 }
               ];
@@ -462,6 +471,7 @@ export class SeafoodComponent implements OnInit {
                     fishIds: this.provenancePackage.occurrence.fishIds,
                     processingFacilityName: this.provenancePackage.occurrence.processingFacilityName,
                     color: '#ff5733',
+                    type: 'package',
                   }
                 }
               ];
@@ -497,6 +507,7 @@ export class SeafoodComponent implements OnInit {
                     toLocation: this.provenanceTransportation.occurrence.toLocation,
                     distributorName: this.provenanceTransportation.occurrence.distributorName,
                     color: '#35ff33',
+                    type: 'transportation',
                   }
                 }
               ];
@@ -525,6 +536,7 @@ export class SeafoodComponent implements OnInit {
                   data: {
                     isoTimestamp: this.provenanceSelling.isoTimestamp,
                     color: '#f1ff33',
+                    type: 'selling',
                   }
                 }
               ];
@@ -554,6 +566,7 @@ export class SeafoodComponent implements OnInit {
                     isoTimestamp: this.provenanceEntry.isoTimestamp,
                     retailerName: this.provenanceEntry.occurrence.retailerName,
                     color: '#ff33de',
+                    type: 'inventory',
                   }
                 }
               ];
@@ -672,7 +685,30 @@ export class SeafoodComponent implements OnInit {
 
   onNodeClicked(event) {
     console.log('Node clicked..');
-    console.log(event.target.id);
+    const id = event.target.id;
+    const node = this.nodes.find(v => v.id === id);
+    this.showInfo = node.data.type;
+
+    switch (this.showInfo) {
+      case 'fish':
+        this.fishesProv = [this.provenanceFishes.find(v => v.occurrence.fishId = id)];
+        break;
+      case 'shipment':
+        this.shipmentsProv = [this.provenanceShipments.find(v => v.occurrence.fishIds = id)];
+        break;
+      case 'package':
+        this.packagesProv = [this.provenancePackage];
+        break;
+      case 'transportation':
+        this.transportationsProv = [this.provenanceTransportation];
+        break;
+      case 'inventory':
+        this.entriesProv = [this.provenanceEntry];
+        break;
+      case 'selling':
+        this.salesProv = [this.provenanceSelling];
+        break;
+    }
   }
 
   onEdgeClicked(event) {
