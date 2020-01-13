@@ -1,6 +1,6 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validator, FormControl, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/api.service';
 import { MatChipInputEvent } from '@angular/material/chips';
 import Fish from 'src/app/models/Fish';
@@ -105,38 +105,38 @@ export class SeafoodComponent implements OnInit {
 
   constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
     this.fishForm = this.formBuilder.group({
-      fishId: '',
-      location: '',
-      fishermanName: '',
+      fishId: new FormControl('', Validators.required),
+      location: new FormControl('', Validators.required),
+      fishermanName: new FormControl('', Validators.required),
     });
     this.packageForm = this.formBuilder.group({
       fishIds: [this.idsForPackage],
-      packageId: '',
-      processingFacilityName: '',
+      packageId: new FormControl('', Validators.required),
+      processingFacilityName: new FormControl('', Validators.required),
     });
     this.packageForm.controls.fishIds.setValue(this.idsForPackage);
 
     this.shipmentForm = this.formBuilder.group({
-      fishIds: '',
-      toLocation: '',
-      shipmentCompanyName: '',
+      fishIds: [this.idsForShipment],
+      toLocation: new FormControl('', Validators.required),
+      shipmentCompanyName: new FormControl('', Validators.required),
     });
     this.shipmentForm.controls.fishIds.setValue(this.idsForShipment);
 
     this.transportationForm = this.formBuilder.group({
-      packageId: '',
-      toLocation: '',
-      distributorName: '',
+      packageId: new FormControl('', Validators.required),
+      toLocation: new FormControl('', Validators.required),
+      distributorName: new FormControl('', Validators.required),
     });
     this.inventoryEntryForm = this.formBuilder.group({
-      packageId: '',
-      retailerName: '',
+      packageId: new FormControl('', Validators.required),
+      retailerName: new FormControl('', Validators.required),
     });
     this.sellingForm = this.formBuilder.group({
-      packageId: '',
+      packageId: new FormControl('', Validators.required),
     });
     this.provenanceForm = this.formBuilder.group({
-      packageId: '',
+      packageId: new FormControl('', Validators.required),
     });
   }
 
@@ -146,98 +146,128 @@ export class SeafoodComponent implements OnInit {
 
   onRegisterFish(fish: any) {
     this.performing = true;
-    this.apiService.registerCapturedFish(fish)
+    if (this.fishForm.valid) {
+      this.apiService.registerCapturedFish(fish)
       .subscribe(
         res => {
           this.result = res;
           this.performing = false;
+          this.fishForm.reset();
           this.getFishes();
         },
         err => {
           this.result = err.message;
           this.performing = false;
       });
-    this.fishForm.reset();
+    } else {
+      this.result = 'Invalid form!';
+      this.performing = false;
+    }
   }
 
   onRegisterPackage(packageFish: any) {
     this.performing = true;
-    this.apiService.registerPackage(packageFish)
-      .subscribe(
-        res => {
-          this.result = res;
-          this.performing = false;
-          this.getPackages();
-        },
-        err => {
-          this.result = err.message;
-          this.performing = false;
-      });
-    this.packageForm.reset();
+    if (this.packageForm.valid && packageFish.fishIds.length > 0) {
+      this.apiService.registerPackage(packageFish)
+        .subscribe(
+          res => {
+            this.result = res;
+            this.performing = false;
+            this.packageForm.reset();
+            this.getPackages();
+          },
+          err => {
+            this.result = err.message;
+            this.performing = false;
+        });
+    } else {
+      this.result = 'Invalid form!';
+      this.performing = false;
+    }
   }
 
   onRegisterShipment(shipment: any) {
     this.performing = true;
-    this.apiService.registerShipment(shipment)
+    if (this.shipmentForm.valid && shipment.fishIds.length > 0) {
+      this.apiService.registerShipment(shipment)
       .subscribe(
         res => {
           this.result = res;
           this.performing = false;
+          this.shipmentForm.reset();
           this.getShipments();
         },
         err => {
           this.result = err.message;
           this.performing = false;
       });
-    this.shipmentForm.reset();
+    } else {
+      this.result = 'Invalid form!';
+      this.performing = false;
+    }
   }
 
   onRegisterTransportation(transportation: any) {
     this.performing = true;
-    this.apiService.registerTransportation(transportation)
+    if (this.transportationForm.valid) {
+      this.apiService.registerTransportation(transportation)
       .subscribe(
         res => {
           this.result = res;
           this.performing = false;
+          this.transportationForm.reset();
           this.getTransportations();
         },
         err => {
           this.result = err.message;
           this.performing = false;
       });
-    this.transportationForm.reset();
+    } else {
+      this.result = 'Invalid form!';
+      this.performing = false;
+    }
   }
 
   onRegisterInInventory(entry: any) {
     this.performing = true;
-    this.apiService.registerInInventory(entry)
+    if (this.inventoryEntryForm.valid) {
+      this.apiService.registerInInventory(entry)
       .subscribe(
         res => {
           this.result = res;
           this.performing = false;
+          this.inventoryEntryForm.reset();
           this.getEntries();
         },
         err => {
           this.result = err.message;
           this.performing = false;
       });
-    this.inventoryEntryForm.reset();
+    } else {
+      this.result = 'Invalid form!';
+      this.performing = false;
+    }
   }
 
   onRegisterSelling(sale: any) {
     this.performing = true;
-    this.apiService.registerSelling(sale)
+    if (this.sellingForm.valid) {
+      this.apiService.registerSelling(sale)
       .subscribe(
         res => {
           this.result = res;
           this.performing = false;
+          this.sellingForm.reset();
           this.getSales();
         },
         err => {
           this.result = err.message;
           this.performing = false;
       });
-    this.sellingForm.reset();
+    } else {
+      this.result = 'Invalid form!';
+      this.performing = false;
+    }
   }
 
   getFishes() {
@@ -360,30 +390,10 @@ export class SeafoodComponent implements OnInit {
     this.clearGraph();
     const id = provenanceForm.packageId;
     this.performing = true;
-    this.apiService.retrieveProvenance(id)
+    if (this.provenanceForm.valid) {
+      this.apiService.retrieveProvenance(id)
       .subscribe(
         res => {
-
-          // this.clusters = [
-          //   {
-          //     id: 'one',
-          //     label: 'fishes',
-          //     childNodeIds: [],
-          //     data: {
-          //       color: '#d9f4f6',
-          //     }
-          //   },
-          //   {
-          //     id: 'two',
-          //     label: 'shipments',
-          //     childNodeIds: [],
-          //     data: {
-          //       color: '#dbf6d9',
-          //     }
-          //   }
-          // ];
-
-          console.log('=== PROVENANCE RECEIVED ===');
           if (res.packagingOccurrence == null) {
             this.error = 'Package not found';
           } else {
@@ -403,10 +413,6 @@ export class SeafoodComponent implements OnInit {
                   }
                 }
               ];
-              // this.clusters[0].childNodeIds = [
-              //   ...this.clusters[0].childNodeIds,
-              //   fish.occurrence.fishId
-              // ];
             }
 
             this.provenanceShipments = res.fishShipmentOccurrences ? res.fishShipmentOccurrences : [];
@@ -426,10 +432,6 @@ export class SeafoodComponent implements OnInit {
                   }
                 }
               ];
-              // this.clusters[1].childNodeIds = [
-              //   ...this.clusters[1].childNodeIds,
-              //   shipmentNodeId
-              // ];
 
               for (const fishId of shipment.occurrence.fishIds) {
                 const check = this.nodes.filter(value => value.id === fishId);
@@ -582,6 +584,10 @@ export class SeafoodComponent implements OnInit {
           this.performing = false;
         }
       );
+    } else {
+      this.error = 'Missing package identifier!';
+      this.performing = false;
+    }
   }
 
   clearGraph() {
