@@ -4,11 +4,6 @@
     Using this user interface, you can interact with the Seafood supply chain.
     Check the <a href="https://github.com/ghareeb-falazi/SCIP-CaseStudy-2">sample case study</a> for more detailes about what is involved.
   </h2>
-  <mat-slide-toggle 
-    [color]="warn"
-    [checked]="onReload">
-    Query on tab change
-  </mat-slide-toggle>
 </div>
 
 <mat-tab-group mat-stretch-tabs (selectedTabChange)="onTabClick($event)">
@@ -719,6 +714,12 @@
 
   <!-- PROVENANCE -->
   <mat-tab label="Provenance">
+    <h2>
+      You can query the provenance of a specific package providing its identifier
+      and clicking on the
+      <em>Get Provenance</em> button.
+      Click on a specific node to get more information about it.
+    </h2>
     <div class="prov-wrapper">
       <div class="prov-form-box mat-elevation-z3">
         <form
@@ -732,76 +733,9 @@
               placeholder="Package Id.."
             />
           </mat-form-field>
-          <button mat-button class="submit-btn button" type="submit">Retrieve Provenance</button>
+          <button mat-button class="submit-btn button" type="submit">Get Provenance</button>
           <button mat-button class="clear-btn button" type="button" (click)="clearProvenance()">Clear</button>
         </form>
-      </div>
-      <div class="prov-result-box">
-        <div class="spinner">
-          <div *ngIf="performing" class="lds-roller">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-        </div>
-        <div *ngIf="!performing && error !== ''" class="error-box">
-          <h3>{{ error }}</h3>
-        </div>
-        <div *ngIf="!performing && error === ''" class="page">
-          <ngx-graph
-            [links]="links"
-            [nodes]="nodes"
-            [clusters]="clusters"
-            [layout]="dagre"
-            [curve]="curve"
-            [draggingEnabled]="false"
-            [panningEnabled]="true"
-            [enableZoom]="false"
-            [panOnZoom]="false"
-            [autoZoom]="true"
-            [autoCenter]="true"
-            [update$]="update$"
-            [center$]="center$"
-            [zoomToFit$]="zoomToFit$"
-          >
-    
-            <ng-template #defsTemplate>
-              <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
-                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
-              </svg:marker>
-            </ng-template>
-
-            <ng-template #clusterTemplate let-cluster>
-              <svg:g class="node cluster">
-                <svg:rect rx="5" ry="5" [attr.width]="cluster.dimension.width" [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data.color" />
-              </svg:g>
-            </ng-template>
-    
-            <ng-template #nodeTemplate let-node>
-              <svg:g class="node" (click)="onNodeClicked($event)">
-                <svg:rect id="{{node.id}}" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.fill]="node.data.color" />
-                <svg:text id="{{node.id}}" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height / 2">{{node.label}}</svg:text>
-              </svg:g>
-            </ng-template>
-    
-            <ng-template #linkTemplate let-link>
-              <svg:g class="edge" (click)="onEdgeClicked($event)">
-                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
-                </svg:path>
-                <svg:text class="edge-label" text-anchor="middle">
-                  <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
-                    {{link.label}}
-                  </textPath>
-                </svg:text>
-              </svg:g>
-            </ng-template>
-          </ngx-graph>
-        </div>
         <div class="node-info">
           <h3 *ngIf="showInfo === 'selling'"> Selling Occurence </h3>
           <table
@@ -966,6 +900,75 @@
             <tr mat-header-row *matHeaderRowDef="fishProvColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: fishProvColumns"></tr>
           </table>
+        </div>
+      </div>
+      <div class="prov-result-box">
+        <div class="spinner">
+          <div *ngIf="performing" class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+        <div *ngIf="!performing && error !== ''" class="error-box">
+          <h3>{{ error }}</h3>
+        </div>
+        <div *ngIf="!performing && error === ''" class="page">
+          <ngx-graph
+            class="graph"
+            [links]="links"
+            [nodes]="nodes"
+            [clusters]="clusters"
+            [layout]="dagre"
+            [curve]="curve"
+            [draggingEnabled]="false"
+            [panningEnabled]="true"
+            [enableZoom]="false"
+            [panOnZoom]="false"
+            [autoZoom]="true"
+            [autoCenter]="true"
+            [update$]="update$"
+            [center$]="center$"
+            [zoomToFit$]="zoomToFit$"
+          >
+    
+            <ng-template #defsTemplate>
+              <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
+                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+              </svg:marker>
+            </ng-template>
+
+            <ng-template #clusterTemplate let-cluster>
+              <svg:g class="node cluster">
+                <svg:rect rx="5" ry="5" [attr.width]="cluster.dimension.width" [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data.color" />
+              </svg:g>
+            </ng-template>
+    
+            <ng-template #nodeTemplate let-node>
+              <svg:g class="node node-box" (click)="onNodeClicked($event)">
+                <svg:ellipse id="{{node.id}}" [attr.cx]="node.dimension.width/(1.75)" [attr.cy]="node.dimension.height/(1.75)" [attr.rx]="node.dimension.width/(1.5)" [attr.ry]="node.dimension.height/(1.5)" [attr.fill]="node.data.color" />
+                <!-- <svg:rect id="{{node.id}}" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.fill]="node.data.color" /> -->
+                <svg:text id="{{node.id}}" alignment-baseline="central" [attr.x]="15" [attr.y]="node.dimension.height/(1.5)">{{node.label}}</svg:text>
+              </svg:g>
+            </ng-template>
+    
+            <ng-template #linkTemplate let-link>
+              <svg:g class="edge" (click)="onEdgeClicked($event)">
+                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
+                </svg:path>
+                <svg:text class="edge-label" text-anchor="middle">
+                  <textPath class="text-path" [attr.href]="'#' + link.id" [style.dominant-baseline]="link.dominantBaseline" startOffset="50%">
+                    {{link.label}}
+                  </textPath>
+                </svg:text>
+              </svg:g>
+            </ng-template>
+          </ngx-graph>
         </div>
       </div>
     </div>

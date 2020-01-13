@@ -100,7 +100,7 @@ mat-card mat-card-actions .query-btn {
   align-items: stretch;
   width: 70%;
   padding: 10px;
-  margin: 15px;
+  margin: 15px 15px 5px 15px;
   background-color: rgb(206, 204, 204);
 }
 
@@ -158,7 +158,21 @@ mat-card mat-card-actions .query-btn {
   overflow: hidden;
 }
 
+.page .graph {
+  pointer-events: none;
+}
+
+.page .graph .node-box {
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.page .graph .node-box:hover {
+  opacity: 0.5;
+}
+
 .node-info {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -166,7 +180,6 @@ mat-card mat-card-actions .query-btn {
 
 .node-info table {
   width: 100%;
-  margin: 10px;
 }
 
 :host ::ng-deep {

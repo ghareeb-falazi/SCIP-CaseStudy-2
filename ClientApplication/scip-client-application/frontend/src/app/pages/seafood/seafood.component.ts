@@ -12,7 +12,6 @@ import InventoryEntry from 'src/app/models/InventoryEntry';
 import SeafoodOccurrence from 'src/app/models/SeafoodOccurrence';
 import * as shape from 'd3-shape';
 import { Node, Edge, Layout, ClusterNode } from '@swimlane/ngx-graph';
-import { DagreNodesOnlyLayout } from './customDagreLayout';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -41,8 +40,6 @@ export class SeafoodComponent implements OnInit {
   performing = false;
   result: any = null;
   prevIndex = 0;
-
-  onReload = true;
 
   fishes: Fish[] = [];
   fishColumns = ['fishId', 'location', 'fishermanName'];
@@ -96,11 +93,6 @@ export class SeafoodComponent implements OnInit {
 
   error = '';
 
-  layoutSettings = {
-    orientation: 'LR'
-  };
-  layout: Layout = new DagreNodesOnlyLayout();
-  // curve = shape.curveBundle.beta(1);
   curve = shape.curveCardinal;
   size = [1000, 750];
   links: Edge[] = [];
@@ -149,9 +141,7 @@ export class SeafoodComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.onReload) {
-      this.getFishes();
-    }
+    this.getFishes();
   }
 
   onRegisterFish(fish: any) {
@@ -367,6 +357,7 @@ export class SeafoodComponent implements OnInit {
   }
 
   retrieveProvenance(provenanceForm) {
+    this.clearGraph();
     const id = provenanceForm.packageId;
     this.performing = true;
     this.apiService.retrieveProvenance(id)
@@ -593,13 +584,27 @@ export class SeafoodComponent implements OnInit {
       );
   }
 
+  clearGraph() {
+    this.nodes = [];
+    this.links = [];
+    this.clusters = [];
+    this.showInfo = '';
+  }
+
   clearProvenance() {
     this.provenanceFishes = [];
+    this.fishesProv = [];
     this.provenanceShipments = [];
+    this.shipmentsProv = [];
     this.provenancePackage = null;
+    this.packagesProv = [];
     this.provenanceTransportation = null;
+    this.transportationsProv = [];
     this.provenanceSelling = null;
+    this.salesProv = [];
     this.provenanceEntry = null;
+    this.entriesProv = [];
+    this.clearGraph();
   }
 
   removeIdFromPackage(id: string) {
@@ -656,30 +661,29 @@ export class SeafoodComponent implements OnInit {
       this.prevIndex = event.index;
       this.fishError = this.packageError = this.shipmentError = this.transportationError = this.entryError = this.saleError = '';
 
-      if (this.onReload) {
-        switch (event.index) {
-          case 0:
-            this.getFishes();
-            break;
-          case 1:
-            this.getShipments();
-            break;
-          case 2:
-            this.getPackages();
-            break;
-          case 3:
-            this.getTransportations();
-            break;
-          case 4:
-            this.getEntries();
-            break;
-          case 5:
-            this.getSales();
-            break;
-          default:
-            break;
-        }
+      switch (event.index) {
+        case 0:
+          this.getFishes();
+          break;
+        case 1:
+          this.getShipments();
+          break;
+        case 2:
+          this.getPackages();
+          break;
+        case 3:
+          this.getTransportations();
+          break;
+        case 4:
+          this.getEntries();
+          break;
+        case 5:
+          this.getSales();
+          break;
+        default:
+          break;
       }
+
     }
   }
 
@@ -711,14 +715,5 @@ export class SeafoodComponent implements OnInit {
     }
   }
 
-  onEdgeClicked(event) {
-    console.log('Event clicked..');
-    console.log(event.target.id);
-  }
-
-  getStyles(node: Node): any {
-    return {
-         'background-color': node.data.backgroundColor,
-    };
-  }
+  onEdgeClicked(event) {}
 }
