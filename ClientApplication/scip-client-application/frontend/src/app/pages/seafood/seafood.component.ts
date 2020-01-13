@@ -438,7 +438,7 @@ export class SeafoodComponent implements OnInit {
                   this.links = [
                     ...this.links,
                     {
-                      label: 'fish shipped',
+                      label: 'shipping',
                       source: fishId,
                       target: shipmentNodeId,
                       data: {
@@ -472,7 +472,7 @@ export class SeafoodComponent implements OnInit {
                 this.links = [
                   ...this.links,
                   {
-                    label: 'package registration',
+                    label: 'registering',
                     source: 'shipment-' + ship.occurrence.fishIds.toString(),
                     target: packageNodeId,
                     data: {
@@ -504,7 +504,7 @@ export class SeafoodComponent implements OnInit {
               this.links = [
                 ...this.links,
                 {
-                  label: 'package transporting',
+                  label: 'transporting',
                   source: 'package-' + this.provenanceTransportation.occurrence.packageId,
                   target: transportationNodeId,
                   data: {
@@ -534,7 +534,7 @@ export class SeafoodComponent implements OnInit {
               this.links = [
                 ...this.links,
                 {
-                  label: `package's inventory registration`,
+                  label: `registering`,
                   source: 'transport-' + this.provenanceTransportation.occurrence.packageId,
                   target: entryNodeId,
                   data: {
@@ -563,7 +563,7 @@ export class SeafoodComponent implements OnInit {
               this.links = [
                 ...this.links,
                 {
-                  label: 'package selling',
+                  label: 'selling',
                   source: 'entry-' + this.provenanceEntry.occurrence.packageId,
                   target: sellingNodeId,
                   data: {

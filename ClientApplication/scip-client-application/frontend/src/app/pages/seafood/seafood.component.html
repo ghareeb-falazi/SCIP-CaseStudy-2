@@ -185,10 +185,6 @@
         <mat-card>
           <mat-card-header>
             <mat-card-title>Registered Fish Shipments</mat-card-title>
-            <mat-card-subtitle>
-              you can retrieve all registered fish shipments by clicking on the
-              <em>Query</em> button
-            </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <div *ngIf="shipmentPerforming" class="lds-roller">
@@ -314,10 +310,6 @@
         <mat-card>
           <mat-card-header>
             <mat-card-title>Registered Packages</mat-card-title>
-            <mat-card-subtitle>
-              you can retrieve all registered packages by clicking on the
-              <em>Query</em> button
-            </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <div *ngIf="packagePerforming" class="lds-roller">
@@ -426,10 +418,6 @@
         <mat-card>
           <mat-card-header>
             <mat-card-title>Registered Package Transportations</mat-card-title>
-            <mat-card-subtitle>
-              you can retrieve all registered package transportation by clicking on the
-              <em>Query</em> button
-            </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <div *ngIf="transportationPerforming" class="lds-roller">
@@ -533,10 +521,6 @@
         <mat-card>
           <mat-card-header>
             <mat-card-title>Packages In Inventory </mat-card-title>
-            <mat-card-subtitle>
-              you can retrieve all packages registered in inventory by clicking on the
-              <em>Query</em> button
-            </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <div *ngIf="entryPerforming" class="lds-roller">
@@ -622,10 +606,6 @@
         <mat-card>
           <mat-card-header>
             <mat-card-title>Sold Packages</mat-card-title>
-            <mat-card-subtitle>
-              you can retrieve all sold packages by clicking on the
-              <em>Query</em> button
-            </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
             <div *ngIf="salePerforming" class="lds-roller">
@@ -898,8 +878,8 @@
     
             <ng-template #nodeTemplate let-node>
               <svg:g class="node node-box" (click)="onNodeClicked($event)">
-                <svg:ellipse id="{{node.id}}" [attr.cx]="node.dimension.width/(2)" [attr.cy]="node.dimension.height/(2)" [attr.rx]="node.dimension.width/(1.80)" [attr.ry]="node.dimension.height/(1.75)" [attr.fill]="node.data.color" />
-                <!-- <svg:rect id="{{node.id}}" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.fill]="node.data.color" /> -->
+                <!-- <svg:ellipse id="{{node.id}}" [attr.cx]="node.dimension.width/(2)" [attr.cy]="node.dimension.height/(2)" [attr.rx]="node.dimension.width/(1.80)" [attr.ry]="node.dimension.height/(1.75)" [attr.fill]="node.data.color" /> -->
+                <svg:rect id="{{node.id}}" [attr.width]="node.dimension.width" [attr.height]="node.dimension.height" [attr.rx]="10" [attr.ry]="10" [attr.fill]="node.data.color" />
                 <svg:text id="{{node.id}}" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height/(1.5)">{{node.label}}</svg:text>
               </svg:g>
             </ng-template>
