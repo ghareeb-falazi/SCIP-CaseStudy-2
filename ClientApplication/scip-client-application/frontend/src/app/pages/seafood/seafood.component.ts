@@ -110,13 +110,13 @@ export class SeafoodComponent implements OnInit {
       fishermanName: new FormControl('', Validators.required),
     });
     this.packageForm = this.formBuilder.group({
-      fishIds: this.formBuilder.array([], Validators.required),
+      fishIds: this.formBuilder.array([]),
       packageId: new FormControl('', Validators.required),
       processingFacilityName: new FormControl('', Validators.required),
     });
 
     this.shipmentForm = this.formBuilder.group({
-      fishIds: this.formBuilder.array([], Validators.required),
+      fishIds: this.formBuilder.array([]),
       toLocation: new FormControl('', Validators.required),
       shipmentCompanyName: new FormControl('', Validators.required),
     });
@@ -185,6 +185,7 @@ export class SeafoodComponent implements OnInit {
   }
 
   onRegisterShipment(shipment: any) {
+    console.log(shipment);
     this.performing = true;
     if (this.shipmentForm.valid && shipment.fishIds.length > 0) {
       this.apiService.registerShipment(shipment)

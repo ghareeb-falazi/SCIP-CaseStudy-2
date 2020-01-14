@@ -823,12 +823,12 @@ let SeafoodComponent = class SeafoodComponent {
             fishermanName: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
         });
         this.packageForm = this.formBuilder.group({
-            fishIds: this.formBuilder.array([], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+            fishIds: this.formBuilder.array([]),
             packageId: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
             processingFacilityName: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
         });
         this.shipmentForm = this.formBuilder.group({
-            fishIds: this.formBuilder.array([], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
+            fishIds: this.formBuilder.array([]),
             toLocation: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
             shipmentCompanyName: new _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormControl"]('', _angular_forms__WEBPACK_IMPORTED_MODULE_3__["Validators"].required),
         });
@@ -890,6 +890,7 @@ let SeafoodComponent = class SeafoodComponent {
         }
     }
     onRegisterShipment(shipment) {
+        console.log(shipment);
         this.performing = true;
         if (this.shipmentForm.valid && shipment.fishIds.length > 0) {
             this.apiService.registerShipment(shipment)
