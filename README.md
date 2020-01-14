@@ -16,8 +16,8 @@ Furthermore, it allows the end-customer to query the provenance of a given fish 
 ## Prerequisits
 
 - Active internet connection :)
-- Docker with Docker-Compose
-- Git bash (for Windows users)
+- [Docker](https://www.docker.com/) with [Docker-Compose](https://docs.docker.com/compose/)
+- [Git bash](https://git-scm.com/downloads) (for Windows users)
 - The ports 4200, 7050, 7051, 7054, 8080, 8081, 8082 8545 must be avaialable at the host machine.
 
 ## Setup
