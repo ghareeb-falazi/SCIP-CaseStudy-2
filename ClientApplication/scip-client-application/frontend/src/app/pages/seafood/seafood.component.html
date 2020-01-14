@@ -116,7 +116,7 @@
     <div class="wrapper">
       <mat-card class="form-card">
         <mat-card-header>
-          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>
+          <mat-card-title>Fill the form with all information about the shipment (hint: separate fish ids with a comma)</mat-card-title>
         </mat-card-header>
         <mat-card-content class="form-box">
           <form
@@ -227,7 +227,7 @@
             <div *ngIf="shipmentError !== ''" class="error-box">
               {{ shipmentError }}
             </div>
-          </mat-card-content> 
+          </mat-card-content>
         </mat-card>
       </div>
     </div>
@@ -236,13 +236,13 @@
   <!-- PACKAGE -->
   <mat-tab label="Processing Facility">
     <h2>
-      You can register a new fishes' package by filling the form and clicking on
+      You can register a new fish package by filling the form and clicking on
       the <em>Register Package</em> button.
     </h2>
     <div class="wrapper">
       <mat-card class="form-card">
         <mat-card-header>
-          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>
+          <mat-card-title>Fill the form with all information about the package (hint: separate fish ids with a comma)</mat-card-title>
         </mat-card-header>
         <mat-card-content class="form-box">
           <form
@@ -354,7 +354,7 @@
             </div>
           </mat-card-content>
         </mat-card>
-      </div>  
+      </div>
     </div>
   </mat-tab>
 
@@ -367,7 +367,7 @@
     <div class="wrapper">
       <mat-card class="form-card">
         <mat-card-header>
-          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>
+          <mat-card-title>Fill the form with all information about the distribution process</mat-card-title>
         </mat-card-header>
         <mat-card-content class="form-box">
           <form
@@ -467,16 +467,16 @@
   </mat-tab>
 
   <!-- INVENTORY -->
-  <mat-tab label="Inventory">
+  <mat-tab label="Retailer-Inventory">
     <h2>
-      You can register a new inventory entry by filling the form and clicking on
+      You can register a new fish package in the inventory of a retail enterprise by filling the form and clicking on
       the
       <em>Register Entry</em> button.
     </h2>
     <div class="wrapper">
       <mat-card class="form-card">
         <mat-card-header>
-          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>
+          <mat-card-title>Fill the form with all information about the inventory entry</mat-card-title>
         </mat-card-header>
         <mat-card-content class="form-box">
           <form
@@ -560,16 +560,16 @@
   </mat-tab>
 
   <!-- SALES -->
-  <mat-tab label="Retailer">
+  <mat-tab label="Retailer-Sales">
     <h2>
-      You can register a new fishes' package sale by filling the form and
+      You can register a new fish package sale by filling the form and
       clicking on the
       <em>Register Sale</em> button.
     </h2>
     <div class="wrapper">
       <mat-card class="form-card">
         <mat-card-header>
-          <mat-card-title>Fill the form with all information about the shipment</mat-card-title>
+          <mat-card-title>Fill the form with the id of the sold fish package</mat-card-title>
         </mat-card-header>
         <mat-card-content class="form-box">
           <form
@@ -643,9 +643,9 @@
   <!-- PROVENANCE -->
   <mat-tab label="Provenance" class="tab-provenance">
     <h2>
-      You can query the provenance of a specific package providing its identifier
+      You can query the provenance of a specific package by providing its identifier
       and clicking on the
-      <em>Get Provenance</em> button.
+      <em>Get Provenance</em> button.<br>
       Click on a specific node to get more information about it.
     </h2>
     <div class="prov-wrapper">
@@ -863,7 +863,7 @@
             [autoZoom]="true"
             [autoCenter]="true"
           >
-    
+
             <ng-template #defsTemplate>
               <svg:marker id="arrow" viewBox="0 -5 10 10" refX="8" refY="0" markerWidth="4" markerHeight="4" orient="auto">
                 <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
@@ -875,7 +875,7 @@
                 <svg:rect rx="5" ry="5" [attr.width]="cluster.dimension.width" [attr.height]="cluster.dimension.height" [attr.fill]="cluster.data.color" />
               </svg:g>
             </ng-template>
-    
+
             <ng-template #nodeTemplate let-node>
               <svg:g class="node node-box" (click)="onNodeClicked($event)">
                 <!-- <svg:ellipse id="{{node.id}}" [attr.cx]="node.dimension.width/(2)" [attr.cy]="node.dimension.height/(2)" [attr.rx]="node.dimension.width/(1.80)" [attr.ry]="node.dimension.height/(1.75)" [attr.fill]="node.data.color" /> -->
@@ -883,7 +883,7 @@
                 <svg:text id="{{node.id}}" alignment-baseline="central" [attr.x]="10" [attr.y]="node.dimension.height/(1.5)">{{node.label}}</svg:text>
               </svg:g>
             </ng-template>
-    
+
             <ng-template #linkTemplate let-link>
               <svg:g class="edge" (click)="onEdgeClicked($event)">
                 <svg:path class="line" stroke-width="2" marker-end="url(#arrow)">
@@ -901,3 +901,4 @@
     </div>
   </mat-tab>
 </mat-tab-group>
+<div id="bottom">* For convience, the Ethereum block time is set to 3 seconds in the underlying <a href="https://www.trufflesuite.com/ganache">Ganache</a> simulator.</div>

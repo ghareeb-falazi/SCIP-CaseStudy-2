@@ -401,7 +401,7 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: fish.occurrence.fishId,
-                  label: 'Fish Captured',
+                  label: `Fish <${fish.occurrence.fishId}> Captured`,
                   data: {
                     isoTimestamp: fish.isoTimestamp,
                     location: fish.occurrence.location,
@@ -456,7 +456,7 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: packageNodeId,
-                  label: 'Package ' + this.provenancePackage.occurrence.packageId + ' Registered',
+                  label: 'Package <' + this.provenancePackage.occurrence.packageId + '> Registered',
                   data: {
                     isoTimestamp: this.provenancePackage.isoTimestamp,
                     fishIds: this.provenancePackage.occurrence.fishIds,
@@ -489,7 +489,7 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: transportationNodeId,
-                  label: 'Package Transported',
+                  label: `Package <${this.provenanceTransportation.occurrence.packageId}> Transported`,
                   data: {
                     isoTimestamp: this.provenanceTransportation.isoTimestamp,
                     toLocation: this.provenanceTransportation.occurrence.toLocation,
@@ -520,7 +520,7 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: entryNodeId,
-                  label: 'Package Registered In Inventory',
+                  label: `Package <${this.provenanceEntry.occurrence.packageId}> Registered In Inventory`,
                   data: {
                     isoTimestamp: this.provenanceEntry.isoTimestamp,
                     retailerName: this.provenanceEntry.occurrence.retailerName,
@@ -550,7 +550,7 @@ export class SeafoodComponent implements OnInit {
                 ...this.nodes,
                 {
                   id: sellingNodeId,
-                  label: 'Package Sold',
+                  label: `Package <${this.provenanceSelling.occurrence.packageId}> Sold`,
                   data: {
                     isoTimestamp: this.provenanceSelling.isoTimestamp,
                     color: '#f1ff33',

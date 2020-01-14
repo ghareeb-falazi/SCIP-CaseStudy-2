@@ -270,3 +270,9 @@ mat-card mat-card-actions .query-btn {
     transform: rotate(360deg);
   }
 }
+
+#bottom {
+  position: fixed;
+  bottom: 30px;
+  width: 100%;
+}
