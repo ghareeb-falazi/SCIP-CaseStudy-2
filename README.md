@@ -44,8 +44,11 @@ Furthermore, it allows the end-customer to query the provenance of a given fish 
  
 ## Demo
 
-Coming soon!
-- __A Video of this demo is [available on Youtube]()__
+- After the `Start.sh` script is successfully executed, open the browser to http://localhost:4200.
+- Use the UI to add fish-catching entries to the blockchain, and then add further entries that refer to shipping the fish, packaging them, distributing packages to retailers, registering packages in retailers' inventory, and selling them. Behind the scenes, [SCIP Invocation messages](https://github.com/lampajr/scip#invocation) are sent to a [SCIP Gateway](https://github.com/ghareeb-falazi/BlockchainAccessLayer) that translates them into Ethereum trnasactions in this case.
+- Finally, use the _Provenance_ tab to query the provenance of a fish package. Behind the scenes, multiple [SCIP Query messages](https://github.com/lampajr/scip#querying) are sent to a [SCIP Gateway](https://github.com/ghareeb-falazi/BlockchainAccessLayer) to retrieve all the events relevant for the corresponding fish package and the contained fish. 
+- __A Video of this demo is [available on Youtube](https://youtu.be/Mx3maoWHQ1Y)__
+
 
 ## Notes
 
