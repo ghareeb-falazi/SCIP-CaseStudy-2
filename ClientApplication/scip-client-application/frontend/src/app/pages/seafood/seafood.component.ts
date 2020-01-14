@@ -31,8 +31,8 @@ export class SeafoodComponent implements OnInit {
   provenanceForm: FormGroup;
 
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  idsForPackage: string[] = [];
-  idsForShipment: string[] = [];
+  // idsForPackage: string[] = [];
+  // idsForShipment: string[] = [];
   selectable = true;
   removable = true;
   addOnBlur = true;
@@ -110,18 +110,16 @@ export class SeafoodComponent implements OnInit {
       fishermanName: new FormControl('', Validators.required),
     });
     this.packageForm = this.formBuilder.group({
-      fishIds: [this.idsForPackage],
+      fishIds: this.formBuilder.array([]),
       packageId: new FormControl('', Validators.required),
       processingFacilityName: new FormControl('', Validators.required),
     });
-    this.packageForm.controls.fishIds.setValue(this.idsForPackage);
 
     this.shipmentForm = this.formBuilder.group({
-      fishIds: [this.idsForShipment],
+      fishIds: this.formBuilder.array([]),
       toLocation: new FormControl('', Validators.required),
       shipmentCompanyName: new FormControl('', Validators.required),
     });
-    this.shipmentForm.controls.fishIds.setValue(this.idsForShipment);
 
     this.transportationForm = this.formBuilder.group({
       packageId: new FormControl('', Validators.required),
@@ -187,6 +185,7 @@ export class SeafoodComponent implements OnInit {
   }
 
   onRegisterShipment(shipment: any) {
+    console.log(shipment);
     this.performing = true;
     if (this.shipmentForm.valid && shipment.fishIds.length > 0) {
       this.apiService.registerShipment(shipment)
@@ -612,22 +611,23 @@ export class SeafoodComponent implements OnInit {
 
   removeIdFromPackage(id: string) {
     const controller = this.packageForm.controls.fishIds;
-    const index = this.idsForPackage.indexOf(id);
+    const index = controller.value.indexOf(id);
     if (index >= 0) {
-      this.idsForPackage.splice(index, 1);
+      controller.value.splice(index, 1);
     }
     controller.markAsDirty();
   }
 
   addIdInPackage(event: MatChipInputEvent): void {
+    const controller = this.packageForm.controls.fishIds;
     const input = event.input;
     const value = event.value;
 
     // Add a new id
     if ((value || '').trim()) {
-      this.idsForPackage.push(value);
+      controller.value.push(value);
 
-      this.packageForm.controls.fishIds.markAsDirty();
+      controller.markAsDirty();
       // Reset the input value
       input.value = '';
     }
@@ -635,22 +635,23 @@ export class SeafoodComponent implements OnInit {
 
   removeIdFromShipment(id: string) {
     const controller = this.shipmentForm.controls.fishIds;
-    const index = this.idsForShipment.indexOf(id);
+    const index = controller.value.indexOf(id);
     if (index >= 0) {
-      this.idsForShipment.splice(index, 1);
+      controller.value.splice(index, 1);
     }
     controller.markAsDirty();
   }
 
   addIdInShipment(event: MatChipInputEvent): void {
+    const controller = this.shipmentForm.controls.fishIds;
     const input = event.input;
     const value = event.value;
 
     // Add a new id
     if ((value || '').trim()) {
-      this.idsForShipment.push(value);
+      controller.value.push(value);
 
-      this.shipmentForm.controls.fishIds.markAsDirty();
+      controller.markAsDirty();
       // Reset the input value
       input.value = '';
     }

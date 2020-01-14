@@ -126,11 +126,11 @@
           <mat-form-field>
             <mat-chip-list
               #shipmentFishIds
-              formControlName="fishIds"
+              formArrayName="fishIds"
               aria-label="Ids selection"
             >
               <mat-chip
-                *ngFor="let id of idsForShipment"
+                *ngFor="let id of shipmentForm.controls.fishIds.value"
                 [selectable]="selectable"
                 [removable]="removable"
                 (removed)="removeIdFromShipment(id)"
@@ -251,11 +251,11 @@
             <mat-form-field>
               <mat-chip-list
                 #packageFishIds
-                formControlName="fishIds"
+                formArrayName="fishIds"
                 aria-label="Ids selection"
               >
                 <mat-chip
-                  *ngFor="let id of idsForPackage"
+                  *ngFor="let id of packageForm.controls.fishIds.value"
                   [selectable]="selectable"
                   [removable]="removable"
                   (removed)="removeIdFromPackage(id)"

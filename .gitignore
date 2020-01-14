@@ -105,3 +105,7 @@ testem.log
 .DS_Store
 Thumbs.db
 !.gitkeep
+
+# root privilaged scripts
+/AutomateSetup/Start-root.sh
+/AutomateSetup/Stop-root.sh
