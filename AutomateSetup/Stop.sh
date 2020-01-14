@@ -38,6 +38,9 @@ function removeUnwantedImages() {
       echo "---- BAL images available for deletion ----"
       docker rmi -f $DOCKER_IMAGE_IDS
     fi
+
+    echo "---- Cleaning Dangling Images ----"
+    docker rmi $(docker images -f "dangling=true" -q)
   fi
 }
 

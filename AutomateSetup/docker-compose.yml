@@ -34,7 +34,7 @@ services:
     build:
       context: ./ganache-cli
       target: ganache
-    command: ["ganache-cli", "-m", "smart contract composition", "--defaultBalanceEther", "100000000", "-l", "471238800", "-g", "1", "-v", "--keepAliveTimeout", "15000", "-b", "2"]
+    command: ["ganache-cli", "-m", "smart contract composition", "--defaultBalanceEther", "100000000", "-l", "471238800", "-g", "1", "-v", "--keepAliveTimeout", "15000", "-b", "3"]
     ports:
       - "8545:8545"
     networks: 
