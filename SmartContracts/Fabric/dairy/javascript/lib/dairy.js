@@ -171,7 +171,11 @@ class diary extends Contract {
     const sales = JSON.parse(salesAsBytes.toString());
     sales.push(cartonId);
     await ctx.stub.putState(cartonsSales, Buffer.from(JSON.stringify(sales)));
-    ctx.stub.setEvent('cartonSold', Buffer.from(cartonId));
+    ctx.stub.setEvent('cartonSold', Buffer.from(
+        JSON.stringify({
+          [cartonId]: retailerName,
+        })
+      ));
 
     console.info('============= END   : registerSelling ===========');
   }
