@@ -7,6 +7,7 @@
 # Exit on first error
 # Obtain CONTAINER_IDS and remove them
 # TODO Might want to make this optional - could clear other containers
+MODE=${1:-""}
 
 set -e
 
@@ -15,6 +16,11 @@ printf "\n---Copying Ethereum smart contract to working directory of ganache-cli
 cp -r ../SmartContracts/Ethereum/Seafood ./ganache-cli/Seafood
 
 printf "\n---Bringing up docker images...---\n"
+
+if [ "$MODE" = "fresh" ]; then
+    printf "\n---Executing docker-compose build --no-cache before up -d...---\n"
+    docker-compose build --no-cache
+fi
 
 docker-compose up -d
 

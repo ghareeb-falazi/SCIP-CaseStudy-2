@@ -29,8 +29,16 @@ Furthermore, it allows the end-customer to query the provenance of a given fish 
   > ./Start.sh
   ```
    This will pull/create the necessary docker images, execute the docker-compose file to bring up the various docker containers needed, and deploy the Ethereum and Fabric smart contracts.
+   If you manually change one of the involved `Dockerfile`'s, please use the option `fresh` when running the previous command, i.e., run:
+  ```
+  > cd AutomateSetup
+  > ./Start.sh fresh
+  ```
+  This will execute `docker-compose build --no-cache` before `executing docker-compose up -d`.
+
 - When the script is fully executed, you can proceed to the [Demo](#demo) section below.
 - At the end, you can bring down the network with the command 
+
 
   ```
   > ./Stop.sh
